@@ -14,10 +14,12 @@ AI agents are expected to perform most coding and GitHub work. Parallel agents s
 
 ## Git workflow
 
-- Start changes to source, tests, documentation, and other project files on a short-lived task branch from current `main`. Keep one coherent task per branch.
+- Use a short-lived task branch from current `main` for source code, tests, dependencies, deployment configuration, and changes to agent behavior rules. Keep one coherent task per branch.
 - Use descriptive branch names, such as `feat/card-search`, `fix/mobile-layout`, or `docs/project-guidelines`. Branch names are distinct from Conventional Commit messages.
-- Keep `main` reviewed, tested, and releasable. Do not routinely push directly to it. The initial repository commit predates this workflow.
-- Open a draft PR and run relevant available checks. Squash merge into `main` only when authorized, then clean up merged task branches as appropriate.
+- Small, non-behavioral documentation fixes, link additions, and design-reference entries may be batched into one English `docs:` commit and pushed directly to `main` after relevant checks, within the user's requested scope.
+- Keep `main` reviewed as appropriate, checked, and releasable. Direct pushes for other changes are not the routine workflow. The initial repository commit predates this workflow.
+- For task-branch changes, open a draft PR and run relevant available checks. Squash merge into `main` only when authorized, then clean up merged task branches as appropriate.
+- The documentation exception does not authorize unsolicited work or publication, or relax permission and security requirements.
 - There is no persistent `dev` branch. A bug found after a merge gets a fresh fix branch from latest `main`; do not resurrect the old feature branch.
 - Being on `main` does not prove deployment. Tags or releases may identify published versions.
 
