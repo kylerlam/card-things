@@ -2,15 +2,15 @@
 
 ## Purpose and scope
 
-CardThings is a card-based curated tools website supporting the owner's Douyin content. Build a useful tools site first. Sharing or open-sourcing the reusable framework is secondary, not a mandate to build a standalone commercial product or general platform.
+CardThings is a card-based website for organizing and showcasing collections. Prioritize the current site's confirmed practical requirements. Avoid speculative generalization or expansion into a commercial platform without an explicit scope decision.
 
-Keep personal collections, pCloud and affiliate configuration, and private data out of reusable examples. Never commit secrets.
+Separate deployment-specific content, configuration, and private data from reusable framework code and examples. Never commit secrets.
 
 ## Language and coordination
 
 Write repository descriptions, documentation, and authored explanatory text in English. Use English Conventional Commits, such as `fix(login): correct redirect`.
 
-AI agents are expected to perform most coding and GitHub work, with lulu coordinating. Parallel agents should use separate branches and worktrees as needed, coordinate edits to shared files, and agree on merge order.
+AI agents are expected to perform most coding and GitHub work. Parallel agents should use separate branches and worktrees as needed, coordinate edits to shared files, and agree on merge order.
 
 ## Git workflow
 

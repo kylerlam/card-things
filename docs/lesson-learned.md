@@ -9,9 +9,9 @@ Record confirmed, meaningful corrections that can prevent repeated mistakes. Kee
 - **Confirmed decision:** What did the user confirm?
 - **Prevention:** What should future work do differently?
 
-## Build the useful tools site first
+## Separate framework requirements from deployment context
 
-- **Context:** Defining CardThings and the scope of its reusable framework.
-- **Mistaken assumption:** The assistant expanded the project into an independently commercialized generic platform.
-- **Confirmed decision:** Build the owner's card-based useful tools site supporting Douyin content first. Framework reuse or open-sourcing is a secondary by-product.
-- **Prevention:** Anchor planning and implementation to the confirmed site purpose. Treat a standalone product or general platform as a separate scope decision requiring explicit user direction.
+- **Context:** Writing reusable project guidance and defining framework scope.
+- **Mistaken assumption:** One deployment's platform and operational context belonged in reusable requirements; framework reuse also implied a broader commercial platform.
+- **Confirmed decision:** Keep reusable guidance platform-neutral and separate deployment-specific content and configuration. Prioritize confirmed practical requirements without mandating a collection subject, business model, or coordinator identity.
+- **Prevention:** Check whether each proposed rule is a durable project requirement or deployment context. Keep only confirmed reusable decisions in project guidance, and require an explicit scope decision before expanding into a general or commercial platform.
