@@ -25,8 +25,8 @@ If the folder already exists, choose a different clone directory; do not overwri
 
 1. Edit `src/content/collection.json`: change the collection heading and introduction, define categories, and replace the card entries. Every card's `category` must match a category `id`. Start with the [complete one-card example](docs/development.md#start-with-one-card), which needs no additional files.
 2. Put your own covers in `public/images/`. In JSON, use a path such as `images/my-cover.webp`, without `public/` or a leading slash. Remove the starter sprite's `size` and `position` when using an ordinary image, and provide useful `alt` text. Set `example` to `false` after replacing the tutorial data with your own content.
-3. Use the [branding file map](docs/development.md#change-the-brand) to update the wordmark, browser title, home-button label, footer, and detail label. These are existing source edits; changing the collection heading alone does not rename the app.
-4. Run `npm run validate:content`, then rebuild and preview. Validation identifies invalid fields and missing images. Keep private data and credentials out of the source and covers.
+3. Edit `src/content/brand.ts` for the name, page metadata, favicon path, and theme colors. The [brand configuration guide](docs/development.md#change-the-brand) explains the typed fields and a blue-brand example; components read the same configuration.
+4. Run `npm run validate:brand` and `npm run validate:content`, then rebuild and preview. Validation identifies invalid fields, colors, and missing local assets. Keep private data and credentials out of the source and covers.
 
 Content is edited in files. There is no in-app editor or account system. Favorites stay in the current browser and origin; they do not sync between devices. Shared links carry filters and item IDs, not saved favorites.
 
@@ -35,12 +35,13 @@ Content is edited in files. There is no in-app editor or account system. Favorit
 After stopping the development server:
 
 ```sh
+npm run validate:brand
 npm run validate:content
 npm run build
 npm run preview
 ```
 
-Open the URL printed by Vite, usually `http://127.0.0.1:4173/`. `build` validates the content, checks TypeScript, and writes `dist/`; `preview` serves that existing build. Rebuild after editing source or content. Do not open `dist/index.html` directly as a `file://` URL.
+Open the URL printed by Vite, usually `http://127.0.0.1:4173/`. `build` validates the brand and content, checks TypeScript, and writes `dist/`; `preview` serves that existing build. Rebuild after editing source or content. Do not open `dist/index.html` directly as a `file://` URL.
 
 To inspect the built files under a real local subdirectory instead, stop the preview and run:
 
@@ -52,9 +53,10 @@ Open `http://127.0.0.1:4175/collections/card-things/`. This command also require
 
 ## Checks
 
-After any content edit:
+After a content or brand edit:
 
 ```sh
+npm run validate:brand
 npm run validate:content
 npm run build
 npm run format:check

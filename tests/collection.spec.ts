@@ -1,5 +1,6 @@
 import { test, expect } from '@playwright/test';
 import AxeBuilder from '@axe-core/playwright';
+import brand from '../src/content/brand';
 
 const cards = '.collection-card';
 
@@ -15,7 +16,7 @@ test('loads the collection without runtime errors or third-party requests', asyn
       external.push(request.url());
   });
   await page.goto('./');
-  await expect(page).toHaveTitle('CardThings — A home for good finds');
+  await expect(page).toHaveTitle(brand.metadata.title);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Good things, kept together.');
   await expect(page.locator(cards)).toHaveCount(12);
   await expect(page.locator('vite-error-overlay')).toHaveCount(0);

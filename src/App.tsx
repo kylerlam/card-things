@@ -7,6 +7,7 @@ import { Sidebar } from './components/Sidebar';
 import { CollectionCard } from './components/CollectionCard';
 import { ItemDialog } from './components/ItemDialog';
 import { Icon } from './components/Icon';
+import brand from './content/brand';
 
 export default function App() {
   const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail } = useCollectionUrl();
@@ -177,8 +178,8 @@ export default function App() {
           </section>
         )}
         <footer className="collection-footer">
-          <span>Thoughtfully collected. Always within reach.</span>
-          <span>Made with CardThings</span>
+          <span>{brand.footerNote}</span>
+          <span>Made with {brand.name}</span>
         </footer>
       </main>
       {selectedItem ? (

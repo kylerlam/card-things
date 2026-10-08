@@ -36,7 +36,7 @@ PY
 
 Quality 95 WebP preserves more source detail than the smaller quality 90 WebP while removing about 2 MB from the initial image request. PSNR is an objective error measure, not proof of perceptual equivalence. This is a lossy derivative: the original stays available for future edits. Visual checks compare book lettering, fine ribbon folds, paper texture, leaves, and gradients at native resolution and in the rendered card and detail views.
 
-The production directory shrank from 2,639,838 to 608,787 bytes (76.94%). The image is shared by all twelve cards and details. Regression checks enforce a 400,000-byte budget for this sample atlas and confirm the source PNG is not served by the production site.
+At the image-optimization milestone, the production directory shrank from 2,639,838 to 608,787 bytes (76.94%). The image is shared by all twelve cards and details. Regression checks enforce a 400,000-byte budget for this sample atlas and confirm the source PNG is not served by the production site.
 
 ## Controlled first-load measurements
 

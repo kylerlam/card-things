@@ -1,5 +1,6 @@
 import { collection } from '../lib/collection';
 import { Brand, Icon } from './Icon';
+import brand from '../content/brand';
 
 interface Props {
   category: string;
@@ -14,7 +15,7 @@ export function Sidebar({ category, favoritesOnly, favoriteCount, onNavigate }: 
       <button
         className="brand-button"
         onClick={() => onNavigate('all', false)}
-        aria-label="CardThings home"
+        aria-label={`${brand.name} home`}
       >
         <Brand />
       </button>
@@ -59,8 +60,8 @@ export function Sidebar({ category, favoritesOnly, favoriteCount, onNavigate }: 
         </div>
       </nav>
       <footer className="sidebar-footer">
-        <p>A home for good finds.</p>
-        <a href="https://github.com/kylerlam/card-things" target="_blank" rel="noreferrer">
+        <p>{brand.tagline}</p>
+        <a href={brand.repositoryUrl} target="_blank" rel="noreferrer">
           <Icon name="github" />
           View on GitHub<span className="sr-only"> (opens in a new tab)</span>
         </a>

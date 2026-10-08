@@ -4,6 +4,7 @@ import type { CollectionItem } from '../lib/types';
 import { CategoryLabel, Cover } from './CollectionCard';
 import { Icon } from './Icon';
 import { CopyLinkButton } from './CopyLinkButton';
+import brand from '../content/brand';
 
 export function ItemDialog({
   item,
@@ -107,12 +108,12 @@ export function ItemDialog({
           </div>
           <div>
             <dt>Collection</dt>
-            <dd>{collection.example ? 'Example collection' : 'CardThings'}</dd>
+            <dd>{collection.example ? 'Example collection' : brand.name}</dd>
           </div>
         </dl>
         {collection.example ? (
           <p className="example-note">
-            An illustrative entry made for the CardThings demo. Names, descriptions, and cover art
+            An illustrative entry made for the {brand.name} demo. Names, descriptions, and cover art
             are sample content.
           </p>
         ) : null}

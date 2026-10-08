@@ -18,6 +18,7 @@ npm run dev
 Keep the server running while viewing its printed URL. Stop it with Ctrl+C before running the following commands in the same terminal:
 
 ```sh
+npm run validate:brand
 npm run validate:content
 npm run build
 npm run preview
@@ -39,7 +40,7 @@ These are isolated Playwright browsers, not personal browser profiles. Mobile em
 
 Run the full browser suite against the bundled sample before customizing it. Its expected titles, category labels, item counts, and sample-atlas budget describe that dataset. After replacing the content, adapt the browser expectations to your collection; a failed demo-title assertion does not mean your valid collection cannot run. `npm run validate:content` and `npm run build` always check your current content. Stop previews on ports 4173 and 4175 before running the corresponding suites.
 
-The schema checks use independent fixtures and also validate the current collection. They still run after replacing the sample with a single card or an empty collection, without downloading browsers:
+The content and brand schema checks use independent invalid fixtures and also validate the current configuration. They still run after replacing the sample with a single card or an empty collection, without downloading browsers:
 
 ```sh
 npm test -- --project=content
@@ -104,22 +105,70 @@ To link a card to a real resource, add an optional `"url": "https://example.com/
 
 ### Change the brand
 
-Collection content and application branding currently have separate entry points. There is no central brand configuration or in-app brand editor. For a small rename such as “Studio Shelf,” make these existing source edits:
+Edit **`src/content/brand.ts`** for site identity, page metadata, and theme colors. This is the single brand configuration entry point; do not rename labels in individual components or add duplicate metadata to `index.html`.
 
-| Surface | File and exact entry point |
+The file ends with `satisfies BrandConfig`, which gives editor completion and compile-time checks for field names, value types, and required theme tokens. Keep that annotation. Runtime validation also rejects empty text, malformed colors, unknown fields, unsafe repository URLs, invalid favicon paths, and missing favicon files.
+
+| Setting | Where it appears |
 | --- | --- |
-| Collection heading and introduction | `title` and `description` in `src/content/collection.json` |
-| Visible wordmark and its two-card symbol | The `Brand()` component in `src/components/Icon.tsx`; replace `<span>CardThings</span>` and edit the adjacent SVG only if needed |
-| Accessible home-button name, sidebar tagline, repository link | `aria-label="CardThings home"`, the footer paragraph, and the GitHub `href` in `src/components/Sidebar.tsx` |
-| Bottom-page copy | The `collection-footer` in `src/App.tsx`, including “Made with CardThings” |
-| Collection name inside non-example details | The `'CardThings'` fallback in `src/components/ItemDialog.tsx` |
-| Browser tab title, page description, browser theme color | `<title>`, `meta name="description"`, and `meta name="theme-color"` in `index.html` |
-| Browser tab icon | `public/favicon.svg`; preserve that filename or also update its link in `index.html` |
-| Base colors and heading font | The `:root` variables in `src/styles.css`, especially `--green`, `--bg`, `--ink`, and `--serif` |
+| `name` | Wordmark, accessible home-button name, footer attribution, non-example detail label, and example disclaimer |
+| `tagline` | Sidebar footer |
+| `footerNote` | Bottom-page note |
+| `repositoryUrl` | Sidebar GitHub link; use an absolute HTTP(S) URL without credentials |
+| `metadata.title` and `metadata.description` | HTML title and description, present before client JavaScript runs |
+| `favicon` | Local icon path relative to `public/`, with a lowercase `.svg`, `.png`, or `.ico` extension |
+| `theme.accent` | Main buttons, selected filters, links, detail headings, saved favorites, and the browser's `theme-color` metadata |
+| `theme['brand-mark']`, `theme['brand-text']`, `theme.heading` | Wordmark symbol, wordmark text, and collection heading |
+| `theme['accent-hover']`, `theme['focus-ring']`, `theme['focus-border']`, `theme['focus-shadow']` | Button hover and keyboard/search focus states |
+| Remaining `theme` entries | Backgrounds, surfaces, text, borders, shadows, and element-specific interaction colors; names describe their role |
 
-For the minimal rename, update the wordmark, home-button label, browser title, and non-example detail label together; review the two footers and metadata for the wording you want. Keep the collection heading independent if it should differ from the brand. Category colors still come from JSON, and some heading, logo, focus, and hover colors are explicit CSS values, so changing `--green` alone is not a complete theme system.
+The default title and description interpolate the local `name` variable, so changing `const name = 'CardThings'` updates those mentions too. Customize the surrounding wording in `metadata` as needed. Collection headings and category colors remain in `collection.json`; they describe content, independently of the site brand.
 
-After edits, run validation and a production build, open a card with `example: false`, and check both a desktop and a narrow browser window. Verify the browser title, visible wordmark, home-button name, detail label, and footer; confirm longer names fit. Rebuild whenever you want the production preview to reflect source changes.
+For a small blue “Studio Shelf” variation, change the name and these existing values in the file, leaving the other tokens in place:
+
+```ts
+const name = 'Studio Shelf';
+
+// Inside the existing configuration:
+tagline: 'Notes and tools, together.',
+footerNote: 'A shelf for everyday work.',
+metadata: {
+  title: `${name} — Notes & resources`,
+  description: `Explore ${name}: notes, tools & ideas for creative work.`,
+},
+// Inside the existing theme object:
+accent: '#234e70',
+'accent-hover': '#17354d',
+'brand-mark': '#234e70',
+'brand-text': '#142b40',
+heading: '#142b40',
+'focus-ring': '#397fba',
+'focus-border': '#397fba',
+'focus-shadow': '#234e701a',
+'nav-active': '#e8eff7',
+```
+
+This is an edit guide, not a complete replacement file. Review the remaining state/background colors in the same `theme` object when designing a full palette. Colors use three-, six-, or eight-digit hex notation; eight digits can encode opacity for shadows and overlays. Valid syntax does not guarantee sufficient contrast, so run the accessibility checks after a palette change. Layout and fonts still live in `src/styles.css`.
+
+The favicon and cover images are assets: theme colors do not recolor their pixels. To use a different icon, put it in `public/` (for example `public/images/studio-favicon.svg`) and set `favicon: 'images/studio-favicon.svg'`. The favicon path is checked before development or building and remains relative under subdirectory hosting.
+
+Run:
+
+```sh
+npm run validate:brand
+npm run build
+npm run preview
+```
+
+`validate:brand` also runs automatically before development startup and production builds. A failure names the field, such as `brand.theme.accent: must be a three-, six-, or eight-digit hex color`, and exits unsuccessfully; missing required properties also fail TypeScript during the build. Fix the configuration before continuing. Metadata text is escaped when rendered into HTML, and color values cannot inject CSS.
+
+Restart the development server after brand edits so the server-generated metadata, theme, and client content all read the same configuration. Rebuild before checking production preview. Verify the wordmark, browser title/description, focus and hover states, and a detail with `example: false` at desktop and mobile sizes. For the brand checks only (installed Playwright browsers required):
+
+```sh
+npm test -- tests/brand.spec.ts
+```
+
+The original default theme preserves all existing color values. This configuration provides static customization; it does not add an editor, theme switcher, account, or backend.
 
 ### A short check after customization
 

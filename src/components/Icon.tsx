@@ -1,4 +1,5 @@
 import type { SVGProps } from 'react';
+import brand from '../content/brand';
 
 const paths = {
   link: 'M10 13a5 5 0 0 0 7 .5l3-3a5 5 0 0 0-7-7l-2 2M14 11a5 5 0 0 0-7-.5l-3 3a5 5 0 0 0 7 7l2-2',
@@ -49,7 +50,7 @@ export function Brand() {
         <rect x="3" y="3" width="23" height="27" rx="3" />
         <rect x="14" y="14" width="23" height="27" rx="3" />
       </svg>
-      <span>CardThings</span>
+      <span>{brand.name}</span>
     </span>
   );
 }

@@ -10,7 +10,7 @@ export default defineConfig({
     ?.filter((project) => project.name !== 'content')
     .map((project) => ({
       ...project,
-      testIgnore: '**/content.spec.ts',
+      testIgnore: ['**/content.spec.ts', '**/brand-config.spec.ts'],
     })),
   webServer: {
     command: 'npm run build && npm run preview:subpath',
