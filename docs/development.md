@@ -45,7 +45,7 @@ The collection has:
 - `categories`: entries with unique `id`, visible `label`, and CSS `color`.
 - `items`: entries conforming to `CollectionItem` in `src/lib/types.ts`.
 
-Each item needs a unique stable `id`, `title`, a `category` matching a category ID, `description`, `details`, `tags`, an ISO `YYYY-MM-DD` `added` date, and an `image`. Image `src` is relative to `public/`, without a leading slash; give it a meaningful `alt`. Ordinary image files need only `src` and `alt`; optional CSS `position` and `size` support art direction. The starter uses six generated covers in one local image sprite, reused across twelve entries.
+Each item needs a unique stable `id`, `title`, a `category` matching a category ID, `description`, `details`, `tags`, an ISO `YYYY-MM-DD` `added` date, and an `image`. Image `src` is relative to `public/`, without a leading slash; give it a meaningful `alt`. Ordinary image files need only `src` and `alt`; optional CSS `position` and `size` support art direction. The starter uses six generated covers in one local WebP sprite, reused across twelve entries. Its editable PNG source stays in `assets/source/`, outside the production build; see [asset notes](assets.md) for local regeneration and measurements.
 
 An optional absolute `http://` or `https://` `url` enables the detail view's “Visit resource” link. Content validation rejects malformed URLs, unsupported protocols, and embedded credentials; the renderer also ignores unsupported URLs defensively. The starter omits resource URLs because its items are illustrative. Keep private deployment content out of the public repository.
 

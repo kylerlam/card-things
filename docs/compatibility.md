@@ -45,4 +45,4 @@ If browsers are installed in a custom cache, set the same `PLAYWRIGHT_BROWSERS_P
 
 WebKit coverage is engine testing, not a claim of testing the installed Safari app or a physical iPhone. The mobile Chromium preset is not a physical Android test. Native browser permission prompts, OS clipboard readback outside Chromium, screen-reader interaction, and deployed CDN/cache behavior remain unverified. Automated axe checks do not replace a manual accessibility review.
 
-The local cover atlas is 2,384,451 bytes, substantially larger than the application bundles. A useful next step is to measure first-load behavior on a constrained network and compare an optimized image format while checking the existing crops and visual quality.
+The original 2,384,451-byte cover atlas prompted a subsequent local encoding and first-load investigation. See [asset notes](assets.md) for the selected derivative, measured results, and visual checks. Real-device and deployed-host performance remain separate validation work.

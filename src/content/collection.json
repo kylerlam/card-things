@@ -34,7 +34,7 @@
       "tags": ["Design", "Creative"],
       "added": "2026-10-08",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "0% 0%",
         "size": "300% auto",
         "alt": "A sculptural forest-green pleated ribbon"
@@ -49,7 +49,7 @@
       "tags": ["Architecture", "Inspiration"],
       "added": "2026-10-08",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "50% 0%",
         "size": "300% auto",
         "alt": "A sunlit peach-colored architectural arch"
@@ -64,7 +64,7 @@
       "tags": ["Essays", "Creativity"],
       "added": "2026-10-07",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "100% 0%",
         "size": "300% auto",
         "alt": "A lavender book with botanical shadows"
@@ -79,7 +79,7 @@
       "tags": ["Color", "Inspiration"],
       "added": "2026-10-07",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "0% 100%",
         "size": "300% auto",
         "alt": "Sculptural curves of rust-orange paper"
@@ -94,7 +94,7 @@
       "tags": ["Video", "Productivity"],
       "added": "2026-10-06",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "50% 100%",
         "size": "300% auto",
         "alt": "Blue geometric blocks and a sphere"
@@ -109,7 +109,7 @@
       "tags": ["Nature", "Journal"],
       "added": "2026-10-06",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "100% 100%",
         "size": "300% auto",
         "alt": "Green leaves against a pale wall"
@@ -124,7 +124,7 @@
       "tags": ["Essays", "Process"],
       "added": "2026-10-05",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "0% 0%",
         "size": "300% auto",
         "alt": "A sculptural forest-green pleated ribbon"
@@ -139,7 +139,7 @@
       "tags": ["Materials", "Design"],
       "added": "2026-10-05",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "50% 0%",
         "size": "300% auto",
         "alt": "A sunlit peach-colored architectural arch"
@@ -154,7 +154,7 @@
       "tags": ["Writing", "Productivity"],
       "added": "2026-10-04",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "100% 0%",
         "size": "300% auto",
         "alt": "A lavender book with botanical shadows"
@@ -169,7 +169,7 @@
       "tags": ["Art", "Materials"],
       "added": "2026-10-04",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "0% 100%",
         "size": "300% auto",
         "alt": "Sculptural curves of rust-orange paper"
@@ -184,7 +184,7 @@
       "tags": ["Process", "Creativity"],
       "added": "2026-10-03",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "50% 100%",
         "size": "300% auto",
         "alt": "Blue geometric blocks and a sphere"
@@ -199,7 +199,7 @@
       "tags": ["Nature", "Inspiration"],
       "added": "2026-10-03",
       "image": {
-        "src": "images/collection-covers.png",
+        "src": "images/collection-covers.webp",
         "position": "100% 100%",
         "size": "300% auto",
         "alt": "Green leaves against a pale wall"

@@ -19,8 +19,11 @@ test('loads the collection without runtime errors or third-party requests', asyn
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Good things, kept together.');
   await expect(page.locator(cards)).toHaveCount(12);
   await expect(page.locator('vite-error-overlay')).toHaveCount(0);
-  const image = await page.request.get('images/collection-covers.png');
+  const image = await page.request.get('images/collection-covers.webp');
   expect(image.ok()).toBe(true);
+  expect(image.headers()['content-type']).toContain('image/webp');
+  // Keep the shared sample atlas within the verified first-load budget.
+  expect((await image.body()).byteLength).toBeLessThan(400_000);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });

@@ -34,7 +34,9 @@ test('built assets load from the mount without root-level assets or SPA fallback
   const favicon = await request.get('favicon.svg');
   expect(favicon.status()).toBe(200);
   expect(favicon.headers()['content-type']).toContain('image/svg+xml');
-  expect((await request.get('/images/collection-covers.png')).status()).toBe(404);
+  // Editable source artwork must not ship with the static site.
+  expect((await request.get('images/collection-covers.png')).status()).toBe(404);
+  expect((await request.get('/images/collection-covers.webp')).status()).toBe(404);
   expect((await request.get('not-an-app-route')).status()).toBe(404);
 });
 
