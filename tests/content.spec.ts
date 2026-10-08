@@ -3,14 +3,35 @@ import { mkdtempSync, writeFileSync, rmSync, readFileSync } from 'node:fs';
 import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
-const content: Collection = JSON.parse(
-  readFileSync(new URL('../src/content/collection.json', import.meta.url), 'utf8'),
-);
 import { parseCollection, validateCollection } from '../src/lib/validateCollection';
 import type { Collection } from '../src/lib/types';
 
-test('accepts the example collection, empty collections, and valid optional values', () => {
-  expect(validateCollection(content)).toEqual([]);
+// Negative cases must not depend on how many cards the user keeps in their collection.
+const content: Collection = {
+  title: 'Validation fixture',
+  description: 'Independent data for schema checks.',
+  example: true,
+  categories: [
+    { id: 'notes', label: 'Notes', color: '#234e70' },
+    { id: 'resources', label: 'Resources', color: '#668b6b' },
+  ],
+  items: [1, 2].map((number) => ({
+    id: `note-${number}`,
+    title: `Note ${number}`,
+    category: 'notes',
+    description: 'A validation example.',
+    details: 'Used only by the validation tests.',
+    tags: ['Example'],
+    added: '2026-10-08',
+    image: { src: 'favicon.svg', alt: 'Two overlapping cards' },
+  })),
+};
+
+test('accepts the current collection, empty collections, and valid optional values', () => {
+  const current = JSON.parse(
+    readFileSync(new URL('../src/content/collection.json', import.meta.url), 'utf8'),
+  );
+  expect(validateCollection(current)).toEqual([]);
   const example: Collection = structuredClone(content);
   example.items[0].added = '2024-02-29';
   example.items[0].url = 'https://example.com/resource';

@@ -8,11 +8,16 @@ The example collection is illustrative. It does not represent real tools, endors
 
 ## Run and verify
 
-Tested with Node.js 22.14 and npm. Use a maintained Node.js version compatible with the pinned Vite version.
+Use Node.js 22.14 or later in the 22.x line and npm. The clean-copy checks used Node.js 22.14.0 and npm 11.2.0. The validation and subpath-preview scripts rely on Node's built-in TypeScript stripping. No separate global TypeScript installation is required.
 
 ```sh
 npm ci
 npm run dev
+```
+
+Keep the server running while viewing its printed URL. Stop it with Ctrl+C before running the following commands in the same terminal:
+
+```sh
 npm run validate:content
 npm run build
 npm run preview
@@ -32,7 +37,17 @@ The default test runner starts or reuses `http://127.0.0.1:4173`. The content pr
 
 These are isolated Playwright browsers, not personal browser profiles. Mobile emulation is not physical-device validation, and Playwright WebKit is not the installed Safari app. See [compatibility verification](compatibility.md) for the tested versions, results, clipboard limits, and known coverage gaps.
 
+Run the full browser suite against the bundled sample before customizing it. Its expected titles, category labels, item counts, and sample-atlas budget describe that dataset. After replacing the content, adapt the browser expectations to your collection; a failed demo-title assertion does not mean your valid collection cannot run. `npm run validate:content` and `npm run build` always check your current content. Stop previews on ports 4173 and 4175 before running the corresponding suites.
+
+The schema checks use independent fixtures and also validate the current collection. They still run after replacing the sample with a single card or an empty collection, without downloading browsers:
+
+```sh
+npm test -- --project=content
+```
+
 `npm run format:check` checks the application, validation script, test, and configuration files. `npm run format` formats those files without rewriting the existing project policy documents.
+
+If a hand-edited JSON or source file fails the formatting check, run `npm run format`, review the changes, and rerun the check. A formatting failure is separate from content validation.
 
 ## Replace the collection
 
@@ -48,6 +63,73 @@ The collection has:
 Each item needs a unique stable `id`, `title`, a `category` matching a category ID, `description`, `details`, `tags`, an ISO `YYYY-MM-DD` `added` date, and an `image`. Image `src` is relative to `public/`, without a leading slash; give it a meaningful `alt`. Ordinary image files need only `src` and `alt`; optional CSS `position` and `size` support art direction. The starter uses six generated covers in one local WebP sprite, reused across twelve entries. Its editable PNG source stays in `assets/source/`, outside the production build; see [asset notes](assets.md) for local regeneration and measurements.
 
 An optional absolute `http://` or `https://` `url` enables the detail view's “Visit resource” link. Content validation rejects malformed URLs, unsupported protocols, and embedded credentials; the renderer also ignores unsupported URLs defensively. The starter omits resource URLs because its items are illustrative. Keep private deployment content out of the public repository.
+
+### Start with one card
+
+Replace the entire contents of `src/content/collection.json` with the following valid starting point. It uses the repository's existing `public/favicon.svg` as a temporary cover, so you can verify the edit before adding an image. This tutorial entry remains explicitly labeled as example content.
+
+```json
+{
+  "title": "Studio Shelf",
+  "description": "Notes and resources for my creative work.",
+  "example": true,
+  "categories": [
+    { "id": "notes", "label": "Notes", "color": "#234e70" }
+  ],
+  "items": [
+    {
+      "id": "first-note",
+      "title": "My first note",
+      "category": "notes",
+      "description": "A short introduction to this entry.",
+      "details": "Replace this paragraph with your own context or notes.",
+      "tags": ["Personal"],
+      "added": "2026-10-08",
+      "image": {
+        "src": "favicon.svg",
+        "alt": "Two overlapping rectangular cards"
+      }
+    }
+  ]
+}
+```
+
+Run `npm run validate:content`; expect `Collection valid: 1 items, 1 categories.` Then run `npm run dev` and check that the heading, Notes category, one card, and its details appear.
+
+To use your own cover, copy a supported browser image, such as a WebP, PNG, JPEG, or SVG, into `public/images/my-cover.webp` using its actual extension. Change `image.src` to `images/my-cover.webp` and describe that image in `image.alt`. The starting point above already omits sprite-specific `size` and `position`; keep them omitted for ordinary centered covers. Run validation again. File paths are case-sensitive on many hosts, so match the filename exactly.
+
+To add a category, add an object to `categories` with a unique lowercase hyphenated `id`, its visible `label`, and a three- or six-digit hex `color`. Set each card's `category` to that ID. To add a card, copy the complete item object, assign a unique stable `id`, and replace its text, date, tags, and image. An empty tag list `[]` is allowed. IDs appear in shared links and saved favorites, so avoid changing an established ID unnecessarily.
+
+To link a card to a real resource, add an optional `"url": "https://example.com/"` field to the item, replacing the demonstration address with your own HTTP(S) URL. Omit the field entirely when there is no resource link. After replacing the tutorial text and artwork with your own content, set the top-level `example` to `false` to remove the example badge and detail disclaimer. This flag does not change the app's brand name.
+
+### Change the brand
+
+Collection content and application branding currently have separate entry points. There is no central brand configuration or in-app brand editor. For a small rename such as “Studio Shelf,” make these existing source edits:
+
+| Surface | File and exact entry point |
+| --- | --- |
+| Collection heading and introduction | `title` and `description` in `src/content/collection.json` |
+| Visible wordmark and its two-card symbol | The `Brand()` component in `src/components/Icon.tsx`; replace `<span>CardThings</span>` and edit the adjacent SVG only if needed |
+| Accessible home-button name, sidebar tagline, repository link | `aria-label="CardThings home"`, the footer paragraph, and the GitHub `href` in `src/components/Sidebar.tsx` |
+| Bottom-page copy | The `collection-footer` in `src/App.tsx`, including “Made with CardThings” |
+| Collection name inside non-example details | The `'CardThings'` fallback in `src/components/ItemDialog.tsx` |
+| Browser tab title, page description, browser theme color | `<title>`, `meta name="description"`, and `meta name="theme-color"` in `index.html` |
+| Browser tab icon | `public/favicon.svg`; preserve that filename or also update its link in `index.html` |
+| Base colors and heading font | The `:root` variables in `src/styles.css`, especially `--green`, `--bg`, `--ink`, and `--serif` |
+
+For the minimal rename, update the wordmark, home-button label, browser title, and non-example detail label together; review the two footers and metadata for the wording you want. Keep the collection heading independent if it should differ from the brand. Category colors still come from JSON, and some heading, logo, focus, and hover colors are explicit CSS values, so changing `--green` alone is not a complete theme system.
+
+After edits, run validation and a production build, open a card with `example: false`, and check both a desktop and a narrow browser window. Verify the browser title, visible wordmark, home-button name, detail label, and footer; confirm longer names fit. Rebuild whenever you want the production preview to reflect source changes.
+
+### A short check after customization
+
+1. Confirm the heading, category labels/counts, covers, and detail text match your JSON.
+2. Search for a word in your card, filter its category, and sort by title.
+3. Open details, save a favorite, close with Escape, and reload. Test favorites on the same host and port because browser storage is origin-specific.
+4. Copy a detail link, open it in another tab, refresh, and close the details. Check that the item and filters restore.
+5. Check a narrow window for horizontal overflow and use Tab to reach the main controls.
+
+If an edit is rejected, fix the named field or missing `public/` image and rerun validation. If a preview shows old content, stop it, run `npm run build`, and restart it. If a port is occupied, stop the server you started or follow Vite's printed URL; the fixed subpath preview requires port 4175 to be free.
 
 ## Validate content
 
