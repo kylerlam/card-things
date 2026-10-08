@@ -1,0 +1,209 @@
+{
+  "title": "Good things, kept together.",
+  "description": "A little library of tools, ideas, and things worth coming back to.",
+  "example": true,
+  "categories": [
+    {
+      "id": "tools",
+      "label": "Tools",
+      "color": "#668b6b"
+    },
+    {
+      "id": "projects",
+      "label": "Projects",
+      "color": "#ef9872"
+    },
+    {
+      "id": "reading",
+      "label": "Reading",
+      "color": "#aa8ac2"
+    },
+    {
+      "id": "bookmarks",
+      "label": "Bookmarks",
+      "color": "#437fc4"
+    }
+  ],
+  "items": [
+    {
+      "id": "orbit-studio",
+      "title": "Orbit Studio",
+      "category": "tools",
+      "description": "A calmer space to shape your next idea.",
+      "details": "An imagined creative workspace for collecting references, arranging ideas, and finding a little more focus. This example shows how a useful tool can sit alongside the projects and writing it inspires.",
+      "tags": ["Design", "Creative"],
+      "added": "2026-10-08",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "0% 0%",
+        "size": "300% auto",
+        "alt": "A sculptural forest-green pleated ribbon"
+      }
+    },
+    {
+      "id": "quiet-spaces",
+      "title": "Quiet Spaces",
+      "category": "projects",
+      "description": "An exploration of light, space, and slower living.",
+      "details": "A fictional architectural study of sunlit courtyards, simple materials, and places with room to breathe. A project card can tell the story behind a body of work, with context that goes beyond its cover.",
+      "tags": ["Architecture", "Inspiration"],
+      "added": "2026-10-08",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "50% 0%",
+        "size": "300% auto",
+        "alt": "A sunlit peach-colored architectural arch"
+      }
+    },
+    {
+      "id": "art-of-noticing",
+      "title": "The Art of Noticing",
+      "category": "reading",
+      "description": "Small observations. A different way of seeing.",
+      "details": "An illustrative reading entry about making room for everyday curiosity. Use this space for a short review, a favorite idea in your own words, or a note about why an article belongs in your collection.",
+      "tags": ["Essays", "Creativity"],
+      "added": "2026-10-07",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "100% 0%",
+        "size": "300% auto",
+        "alt": "A lavender book with botanical shadows"
+      }
+    },
+    {
+      "id": "color-field-notes",
+      "title": "Color Field Notes",
+      "category": "bookmarks",
+      "description": "Colors, textures, and moments from the everyday.",
+      "details": "A sample reference library for palettes discovered in ordinary places: folded paper, weathered walls, and changing light. Bookmarks can have the same rich context as every other kind of collection item.",
+      "tags": ["Color", "Inspiration"],
+      "added": "2026-10-07",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "0% 100%",
+        "size": "300% auto",
+        "alt": "Sculptural curves of rust-orange paper"
+      }
+    },
+    {
+      "id": "frame-by-frame",
+      "title": "Frame by Frame",
+      "category": "tools",
+      "description": "Thoughtful tools for creative work, one frame at a time.",
+      "details": "An imagined toolkit for exploring sequences, rhythm, and visual storytelling. This is demonstration content, with no account, subscription, or external service behind it.",
+      "tags": ["Video", "Productivity"],
+      "added": "2026-10-06",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "50% 100%",
+        "size": "300% auto",
+        "alt": "Blue geometric blocks and a sphere"
+      }
+    },
+    {
+      "id": "growing-archive",
+      "title": "A Growing Archive",
+      "category": "projects",
+      "description": "Notes, plants, and small experiments in a calmer life.",
+      "details": "A fictional botanical journal that follows leaves, growth, and the changing seasons. Use project cards for work in progress as well as finished pieces.",
+      "tags": ["Nature", "Journal"],
+      "added": "2026-10-06",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "100% 100%",
+        "size": "300% auto",
+        "alt": "Green leaves against a pale wall"
+      }
+    },
+    {
+      "id": "gentle-systems",
+      "title": "Gentle Systems",
+      "category": "reading",
+      "description": "A few good habits for a more considered creative practice.",
+      "details": "A sample essay entry about building a practice that leaves room for exploration. Keep a concise summary in the card and longer context in the detail view.",
+      "tags": ["Essays", "Process"],
+      "added": "2026-10-05",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "0% 0%",
+        "size": "300% auto",
+        "alt": "A sculptural forest-green pleated ribbon"
+      }
+    },
+    {
+      "id": "material-library",
+      "title": "Material Library",
+      "category": "bookmarks",
+      "description": "A tactile collection of surfaces and simple materials.",
+      "details": "An illustrative resource for paper, stone, cloth, and clay. Collection categories describe what an item is; tags connect themes across different kinds of items.",
+      "tags": ["Materials", "Design"],
+      "added": "2026-10-05",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "50% 0%",
+        "size": "300% auto",
+        "alt": "A sunlit peach-colored architectural arch"
+      }
+    },
+    {
+      "id": "margin-notes",
+      "title": "Margin Notes",
+      "category": "tools",
+      "description": "A small place for ideas that arrive between other things.",
+      "details": "A fictional note-taking tool for capturing fragments before they disappear. This example can be replaced with a real resource by adding an optional HTTP or HTTPS URL to its data.",
+      "tags": ["Writing", "Productivity"],
+      "added": "2026-10-04",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "100% 0%",
+        "size": "300% auto",
+        "alt": "A lavender book with botanical shadows"
+      }
+    },
+    {
+      "id": "paper-perspectives",
+      "title": "Paper Perspectives",
+      "category": "projects",
+      "description": "Finding unexpected form in an ordinary sheet of paper.",
+      "details": "A sample series of folded-paper studies. Strong cover imagery gives a collection its character while the framework stays useful across different subjects.",
+      "tags": ["Art", "Materials"],
+      "added": "2026-10-04",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "0% 100%",
+        "size": "300% auto",
+        "alt": "Sculptural curves of rust-orange paper"
+      }
+    },
+    {
+      "id": "on-making-time",
+      "title": "On Making Time",
+      "category": "reading",
+      "description": "A thoughtful pause for the work that matters.",
+      "details": "An illustrative reading note on attention, creative routines, and unhurried work. All entries in this starter collection are original demonstration copy.",
+      "tags": ["Process", "Creativity"],
+      "added": "2026-10-03",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "50% 100%",
+        "size": "300% auto",
+        "alt": "Blue geometric blocks and a sphere"
+      }
+    },
+    {
+      "id": "everyday-nature",
+      "title": "Everyday Nature",
+      "category": "bookmarks",
+      "description": "A field guide to looking a little closer.",
+      "details": "A sample bookmark for nature-inspired observations and reference material. Replace this entry with your own public resource, image, and description when building a collection.",
+      "tags": ["Nature", "Inspiration"],
+      "added": "2026-10-03",
+      "image": {
+        "src": "images/collection-covers.webp",
+        "position": "100% 100%",
+        "size": "300% auto",
+        "alt": "Green leaves against a pale wall"
+      }
+    }
+  ]
+}
