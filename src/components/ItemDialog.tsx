@@ -50,17 +50,21 @@ export function ItemDialog({
       }}
       onKeyDown={(event) => {
         if (event.key !== 'Tab') return;
-        const controls =
-          event.currentTarget.querySelectorAll<HTMLElement>('button, a[href], input');
-        const first = controls[0];
-        const last = controls[controls.length - 1];
-        if (event.shiftKey && document.activeElement === first) {
-          event.preventDefault();
-          last.focus();
-        } else if (!event.shiftKey && document.activeElement === last) {
-          event.preventDefault();
-          first.focus();
-        }
+        const controls = Array.from(
+          event.currentTarget.querySelectorAll<HTMLElement>(
+            'button:not([disabled]), a[href], input:not([disabled])',
+          ),
+        );
+        if (!controls.length) return;
+        // Keep every dialog control reachable regardless of macOS tab-focus preferences.
+        const current = controls.indexOf(document.activeElement as HTMLElement);
+        const next = event.shiftKey
+          ? current <= 0
+            ? controls.length - 1
+            : current - 1
+          : (current + 1) % controls.length;
+        event.preventDefault();
+        controls[next].focus();
       }}
       onClick={(event) => {
         if (event.target !== event.currentTarget) return;

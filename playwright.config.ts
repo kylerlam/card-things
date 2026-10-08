@@ -11,13 +11,28 @@ export default defineConfig({
     { name: 'content', testMatch: '**/content.spec.ts' },
     {
       name: 'desktop-chromium',
-      testIgnore: '**/content.spec.ts',
+      testIgnore: ['**/content.spec.ts', '**/static-deployment.spec.ts'],
       use: { ...devices['Desktop Chrome'], viewport: { width: 1440, height: 1000 } },
     },
     {
       name: 'mobile-chromium',
-      testIgnore: '**/content.spec.ts',
+      testIgnore: ['**/content.spec.ts', '**/static-deployment.spec.ts'],
       use: { ...devices['Pixel 7'], viewport: { width: 390, height: 844 } },
+    },
+    {
+      name: 'desktop-firefox',
+      testIgnore: ['**/content.spec.ts', '**/static-deployment.spec.ts'],
+      use: { ...devices['Desktop Firefox'], viewport: { width: 1440, height: 1000 } },
+    },
+    {
+      name: 'desktop-webkit',
+      testIgnore: ['**/content.spec.ts', '**/static-deployment.spec.ts'],
+      use: { ...devices['Desktop Safari'], viewport: { width: 1440, height: 1000 } },
+    },
+    {
+      name: 'mobile-webkit',
+      testIgnore: ['**/content.spec.ts', '**/static-deployment.spec.ts'],
+      use: { ...devices['iPhone 13'] },
     },
   ],
   webServer: {

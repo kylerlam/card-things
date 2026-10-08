@@ -14,19 +14,19 @@ test('loads the collection without runtime errors or third-party requests', asyn
     if (!new URL(request.url()).hostname.match(/^(127\.0\.0\.1|localhost)$/))
       external.push(request.url());
   });
-  await page.goto('/');
+  await page.goto('./');
   await expect(page).toHaveTitle('CardThings — A home for good finds');
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Good things, kept together.');
   await expect(page.locator(cards)).toHaveCount(12);
   await expect(page.locator('vite-error-overlay')).toHaveCount(0);
-  const image = await page.request.get('/images/collection-covers.png');
+  const image = await page.request.get('images/collection-covers.png');
   expect(image.ok()).toBe(true);
   expect(errors).toEqual([]);
   expect(external).toEqual([]);
 });
 
 test('combines normalized search and category filters', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   await page.getByRole('searchbox', { name: 'Search collection' }).fill('  DESIGN  ');
   await expect(page.locator(cards)).toHaveCount(2);
   await page
@@ -41,7 +41,7 @@ test('combines normalized search and category filters', async ({ page }) => {
 });
 
 test('handles empty, whitespace, and zero-match combinations', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   const search = page.getByRole('searchbox');
   await search.fill('   ');
   await expect(page.locator(cards)).toHaveCount(12);
@@ -62,7 +62,7 @@ test('handles empty, whitespace, and zero-match combinations', async ({ page }) 
 });
 
 test('sorts titles and returns to recent order', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   await page.getByLabel('Sort items').selectOption('title');
   await expect(page.locator(cards).first()).toContainText('A Growing Archive');
   await page.getByLabel('Sort items').selectOption('recent');
@@ -70,7 +70,7 @@ test('sorts titles and returns to recent order', async ({ page }) => {
 });
 
 test('favorites survive reload and repeated toggles remain consistent', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   await page.getByRole('button', { name: 'Favorites 0', exact: true }).click();
   await expect(page.getByText('A place for your favorites.')).toBeVisible();
   await page.getByRole('button', { name: 'Explore all items' }).click();
@@ -91,7 +91,7 @@ test('favorites survive reload and repeated toggles remain consistent', async ({
 test('detail opens repeatedly, closes by button and Escape, and restores focus', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('./');
   const open = page.getByRole('button', { name: 'View Orbit Studio', exact: true });
   for (let i = 0; i < 3; i++) {
     await open.click();
@@ -110,7 +110,7 @@ test('detail opens repeatedly, closes by button and Escape, and restores focus',
 test('detail traps keyboard focus, supports favorites, and closes on backdrop', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('./');
   await page.getByRole('button', { name: 'View Orbit Studio', exact: true }).click();
   await page.keyboard.press('Shift+Tab');
   await expect(page.getByRole('button', { name: 'Copy item link' })).toBeFocused();
@@ -133,7 +133,7 @@ test('detail traps keyboard focus, supports favorites, and closes on backdrop', 
 });
 
 test('keyboard search shortcut and Enter activate details', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   await expect(page.getByRole('searchbox')).toBeVisible();
   await page.keyboard.press('/');
   await expect(page.getByRole('searchbox')).toBeFocused();
@@ -150,7 +150,7 @@ test('keyboard search shortcut and Enter activate details', async ({ page }) => 
 test('no horizontal overflow at narrow and wide sizes, including details', async ({ page }) => {
   for (const width of [320, 390, 768, 1024, 1440]) {
     await page.setViewportSize({ width, height: 900 });
-    await page.goto('/');
+    await page.goto('./');
     expect(await page.evaluate(() => document.documentElement.scrollWidth <= innerWidth)).toBe(
       true,
     );
@@ -167,7 +167,7 @@ test('no horizontal overflow at narrow and wide sizes, including details', async
 });
 
 test('collection and dialog pass automated accessibility checks', async ({ page }) => {
-  await page.goto('/');
+  await page.goto('./');
   expect(
     (
       await new AxeBuilder({ page })
@@ -187,7 +187,7 @@ test('collection and dialog pass automated accessibility checks', async ({ page 
 
 test('invalid or unavailable storage does not break the collection', async ({ page }) => {
   await page.addInitScript(() => localStorage.setItem('cardthings:favorites:v1', '{bad-json'));
-  await page.goto('/');
+  await page.goto('./');
   await expect(page.locator(cards)).toHaveCount(12);
   await page.evaluate(() => {
     Storage.prototype.setItem = () => {
@@ -206,7 +206,7 @@ test('invalid or unavailable storage does not break the collection', async ({ pa
 test('removing the last favorite from details restores a usable empty collection', async ({
   page,
 }) => {
-  await page.goto('/');
+  await page.goto('./');
   await page.getByRole('button', { name: 'Favorite Orbit Studio', exact: true }).click();
   await page.getByRole('button', { name: 'Favorites 1', exact: true }).click();
   await page.getByRole('button', { name: 'View Orbit Studio', exact: true }).click();

@@ -40,7 +40,15 @@ export function CollectionCard({
 }) {
   return (
     <article className="collection-card">
-      <button className="card-open" onClick={onOpen} aria-label={`View ${item.title}`}>
+      <button
+        className="card-open"
+        onClick={(event) => {
+          // WebKit does not consistently focus buttons activated by a pointer.
+          event.currentTarget.focus({ preventScroll: true });
+          onOpen();
+        }}
+        aria-label={`View ${item.title}`}
+      >
         <Cover item={item} />
         <div className="card-copy">
           <CategoryLabel category={item.category} />

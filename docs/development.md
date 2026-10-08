@@ -21,11 +21,16 @@ npm run preview
 For browser tests:
 
 ```sh
-npx playwright install chromium
+npx playwright install chromium firefox webkit
 npm test
+npm run test:static
 ```
 
-The test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; two browser projects cover desktop Chromium and a mobile Chromium viewport. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, unavailable storage, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback. Mobile emulation is not physical-device or Safari validation.
+The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, unavailable storage, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
+
+`npm run test:static` builds the production files, starts a local static server on port 4175, and reruns all browser cases under `/collections/card-things/`. It also checks mounted assets, query and anchor preservation, direct refreshes, the directory redirect, and explicit `index.html` URLs. This server has no SPA fallback or root-level application assets. Port 4175 must be free before running this command.
+
+These are isolated Playwright browsers, not personal browser profiles. Mobile emulation is not physical-device validation, and Playwright WebKit is not the installed Safari app. See [compatibility verification](compatibility.md) for the tested versions, results, clipboard limits, and known coverage gaps.
 
 `npm run format:check` checks the application, validation script, test, and configuration files. `npm run format` formats those files without rewriting the existing project policy documents.
 
@@ -68,11 +73,20 @@ Search edits form one history entry until the field loses focus. Category, view,
 
 ## Interaction and access
 
-Press `/` outside an editable field to focus search. All navigation and cards are keyboard operable. Details use a native modal dialog: Escape, the close button, or the backdrop dismisses it; focus returns to the triggering card when it remains present. Reduced-motion settings disable decorative transitions. Favorites are independently operable from opening a card.
+Press `/` outside an editable field to focus search. All navigation and cards are keyboard operable. Details use a native modal dialog: Escape, the close button, or the backdrop dismisses it; focus returns to the triggering card when it remains present. Pointer activation explicitly focuses the card, and Tab/Shift+Tab cycle through enabled dialog controls to accommodate engine differences in button focus. Reduced-motion settings disable decorative transitions. Favorites are independently operable from opening a card.
 
 ## Static hosting
 
 `npm run build` produces static files in `dist/`; `base: './'` keeps bundled paths relative for subdirectory hosting. There is no client-side route fallback requirement. Any static host that serves the directory can be used. This milestone does not configure or publish a deployment.
+
+To inspect the same subdirectory setup used by the production tests:
+
+```sh
+npm run build
+npm run preview:subpath
+```
+
+Open `http://127.0.0.1:4175/collections/card-things/`. The server binds only to loopback and is a local verification tool. A deployed host must serve the directory index and redirect the bare directory URL to its trailing-slash form while preserving the query string.
 
 ## Current boundaries
 
