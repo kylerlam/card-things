@@ -1,6 +1,7 @@
-import { useEffect, useRef, useState } from 'react';
+import { useEffect, useRef } from 'react';
 import { collection, filterItems } from './lib/collection';
-import type { CollectionItem } from './lib/types';
+import { useCollectionUrl } from './lib/useCollectionUrl';
+import { CopyLinkButton } from './components/CopyLinkButton';
 import { useFavorites } from './lib/useFavorites';
 import { Sidebar } from './components/Sidebar';
 import { CollectionCard } from './components/CollectionCard';
@@ -8,11 +9,9 @@ import { ItemDialog } from './components/ItemDialog';
 import { Icon } from './components/Icon';
 
 export default function App() {
-  const [query, setQuery] = useState('');
-  const [category, setCategory] = useState('all');
-  const [favoritesOnly, setFavoritesOnly] = useState(false);
-  const [sort, setSort] = useState('recent');
-  const [selectedItem, setSelectedItem] = useState<CollectionItem | null>(null);
+  const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail } = useCollectionUrl();
+  const { query, category, favoritesOnly, sort, itemId } = view;
+  const selectedItem = collection.items.find((item) => item.id === itemId);
   const { favorites, toggleFavorite, savedLocally } = useFavorites();
   const searchRef = useRef<HTMLInputElement>(null);
   const items = filterItems(collection.items, query, category, favorites, favoritesOnly, sort);
@@ -40,9 +39,7 @@ export default function App() {
   }, []);
 
   function navigate(nextCategory: string, nextFavorites: boolean) {
-    setCategory(nextCategory);
-    setFavoritesOnly(nextFavorites);
-    setQuery('');
+    updateView({ category: nextCategory, favoritesOnly: nextFavorites, query: '', itemId: '' });
   }
 
   return (
@@ -62,12 +59,15 @@ export default function App() {
             Collection<span aria-hidden="true">/</span>
             <span>{currentLabel}</span>
           </p>
-          {collection.example ? (
-            <span className="example-status">
-              <span />
-              Example collection
-            </span>
-          ) : null}
+          <div className="topbar-actions">
+            {collection.example ? (
+              <span className="example-status">
+                <span />
+                Example collection
+              </span>
+            ) : null}
+            <CopyLinkButton url={shareUrl} label="Copy collection link" />
+          </div>
         </header>
         <section className="intro" aria-labelledby="page-title">
           <h1 id="page-title">{favoritesOnly ? 'Keep your favorites close.' : collection.title}</h1>
@@ -88,14 +88,16 @@ export default function App() {
             type="search"
             placeholder="Search your collection..."
             value={query}
-            onChange={(event) => setQuery(event.target.value)}
+            maxLength={200}
+            onBlur={finishSearch}
+            onChange={(event) => updateQuery(event.target.value)}
           />
           {query ? (
             <button
               className="icon-button"
               aria-label="Clear search"
               onClick={() => {
-                setQuery('');
+                updateView({ query: '' });
                 searchRef.current?.focus();
               }}
             >
@@ -114,7 +116,7 @@ export default function App() {
               <button
                 key={entry.id}
                 aria-pressed={category === entry.id}
-                onClick={() => setCategory(entry.id)}
+                onClick={() => updateView({ category: entry.id })}
               >
                 {entry.label}
               </button>
@@ -124,7 +126,13 @@ export default function App() {
             <label htmlFor="sort" className="sr-only">
               Sort items
             </label>
-            <select id="sort" value={sort} onChange={(event) => setSort(event.target.value)}>
+            <select
+              id="sort"
+              value={sort}
+              onChange={(event) =>
+                updateView({ sort: event.target.value === 'title' ? 'title' : 'recent' })
+              }
+            >
               <option value="recent">Recently added</option>
               <option value="title">Title: A to Z</option>
             </select>
@@ -143,7 +151,7 @@ export default function App() {
                 key={item.id}
                 item={item}
                 favorite={favorites.includes(item.id)}
-                onOpen={() => setSelectedItem(item)}
+                onOpen={() => updateView({ itemId: item.id })}
                 onFavorite={() => toggleFavorite(item.id)}
               />
             ))}
@@ -175,10 +183,12 @@ export default function App() {
       </main>
       {selectedItem ? (
         <ItemDialog
+          key={selectedItem.id}
           item={selectedItem}
+          shareUrl={shareUrl}
           favorite={favorites.includes(selectedItem.id)}
           onFavorite={() => toggleFavorite(selectedItem.id)}
-          onClose={() => setSelectedItem(null)}
+          onClose={closeDetail}
         />
       ) : null}
     </>

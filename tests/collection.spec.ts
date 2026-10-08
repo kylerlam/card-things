@@ -56,7 +56,7 @@ test('handles empty, whitespace, and zero-match combinations', async ({ page }) 
   await expect(page.locator(cards)).toHaveCount(12);
   await expect(search).toHaveValue('');
   await search.fill('no-such-resource-xyz');
-  await expect(page.getByRole('status').first()).toHaveText('0 items');
+  await expect(page.locator('.result-count')).toHaveText('0 items');
   await page.getByRole('button', { name: 'Clear search' }).click();
   await expect(page.locator(cards)).toHaveCount(12);
 });
@@ -113,12 +113,16 @@ test('detail traps keyboard focus, supports favorites, and closes on backdrop', 
   await page.goto('/');
   await page.getByRole('button', { name: 'View Orbit Studio', exact: true }).click();
   await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('button', { name: 'Copy item link' })).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
   await expect(page.getByRole('button', { name: 'Save to favorites' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('button', { name: 'Saved to favorites' })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Copy item link' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Close details' })).toBeFocused();
   await page.mouse.click(2, 2);

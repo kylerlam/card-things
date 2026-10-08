@@ -6,7 +6,7 @@ CardThings presents collection items as cards, providing a clear, flexible way t
 
 ## Preview the collection
 
-The experimental frontend uses React, TypeScript, and Vite. It includes an explicitly labeled example collection with search, categories, sorting, favorites, and item details.
+The experimental frontend uses React, TypeScript, and Vite. It includes an explicitly labeled example collection with search, categories, sorting, favorites, shareable views, and item details. Content validation runs before development startup and production builds.
 
 ```sh
 npm ci

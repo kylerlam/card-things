@@ -5,11 +5,13 @@
   "type": "module",
   "scripts": {
     "dev": "vite --host 127.0.0.1",
-    "build": "tsc -b && vite build",
+    "build": "npm run validate:content && tsc -b && vite build",
     "preview": "vite preview --host 127.0.0.1",
     "test": "playwright test",
-    "format": "prettier --write src tests index.html package.json tsconfig.json vite.config.ts playwright.config.ts .prettierrc.json",
-    "format:check": "prettier --check src tests index.html package.json tsconfig.json vite.config.ts playwright.config.ts .prettierrc.json"
+    "format": "prettier --write src scripts tests index.html package.json tsconfig.json vite.config.ts playwright.config.ts .prettierrc.json",
+    "format:check": "prettier --check src scripts tests index.html package.json tsconfig.json vite.config.ts playwright.config.ts .prettierrc.json",
+    "validate:content": "node --experimental-strip-types scripts/validate-content.ts",
+    "predev": "npm run validate:content"
   },
   "dependencies": {
     "react": "19.3.0",

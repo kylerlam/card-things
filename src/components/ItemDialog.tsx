@@ -3,14 +3,17 @@ import { collection, safeItemUrl } from '../lib/collection';
 import type { CollectionItem } from '../lib/types';
 import { CategoryLabel, Cover } from './CollectionCard';
 import { Icon } from './Icon';
+import { CopyLinkButton } from './CopyLinkButton';
 
 export function ItemDialog({
   item,
+  shareUrl,
   favorite,
   onFavorite,
   onClose,
 }: {
   item: CollectionItem;
+  shareUrl: string;
   favorite: boolean;
   onFavorite: () => void;
   onClose: () => void;
@@ -27,9 +30,10 @@ export function ItemDialog({
     return () => {
       dialog.close();
       document.body.style.overflow = previousOverflow;
-      const target = returnFocus.current?.isConnected
-        ? returnFocus.current
-        : document.querySelector('main');
+      const target =
+        returnFocus.current?.isConnected && returnFocus.current !== document.body
+          ? returnFocus.current
+          : document.querySelector('main');
       target?.focus();
     };
   }, []);
@@ -46,7 +50,8 @@ export function ItemDialog({
       }}
       onKeyDown={(event) => {
         if (event.key !== 'Tab') return;
-        const controls = event.currentTarget.querySelectorAll<HTMLElement>('button, a[href]');
+        const controls =
+          event.currentTarget.querySelectorAll<HTMLElement>('button, a[href], input');
         const first = controls[0];
         const last = controls[controls.length - 1];
         if (event.shiftKey && document.activeElement === first) {
@@ -112,6 +117,7 @@ export function ItemDialog({
             <Icon name="heart" fill={favorite ? 'currentColor' : 'none'} />
             {favorite ? 'Saved to favorites' : 'Save to favorites'}
           </button>
+          <CopyLinkButton url={shareUrl} label="Copy item link" />
           {url ? (
             <a className="secondary-button" href={url} target="_blank" rel="noreferrer">
               Visit resource

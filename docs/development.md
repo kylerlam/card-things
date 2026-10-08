@@ -13,6 +13,7 @@ Tested with Node.js 22.14 and npm. Use a maintained Node.js version compatible w
 ```sh
 npm ci
 npm run dev
+npm run validate:content
 npm run build
 npm run preview
 ```
@@ -24,9 +25,9 @@ npx playwright install chromium
 npm test
 ```
 
-The test runner starts or reuses `http://127.0.0.1:4173`. Its two projects cover desktop Chromium and a mobile Chromium viewport. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, unavailable storage, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, and automated axe checks. Mobile emulation is not physical-device or Safari validation.
+The test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; two browser projects cover desktop Chromium and a mobile Chromium viewport. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, unavailable storage, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback. Mobile emulation is not physical-device or Safari validation.
 
-`npm run format:check` checks the new application, test, and configuration files. `npm run format` formats those files without rewriting the existing project policy documents.
+`npm run format:check` checks the application, validation script, test, and configuration files. `npm run format` formats those files without rewriting the existing project policy documents.
 
 ## Replace the collection
 
@@ -41,7 +42,29 @@ The collection has:
 
 Each item needs a unique stable `id`, `title`, a `category` matching a category ID, `description`, `details`, `tags`, an ISO `YYYY-MM-DD` `added` date, and an `image`. Image `src` is relative to `public/`, without a leading slash; give it a meaningful `alt`. Ordinary image files need only `src` and `alt`; optional CSS `position` and `size` support art direction. The starter uses six generated covers in one local image sprite, reused across twelve entries.
 
-An optional absolute `http://` or `https://` `url` enables the detail view's “Visit resource” link. Unsupported protocols and malformed URLs are ignored. The starter omits resource URLs because its items are illustrative. Keep private deployment content out of the public repository.
+An optional absolute `http://` or `https://` `url` enables the detail view's “Visit resource” link. Content validation rejects malformed URLs, unsupported protocols, and embedded credentials; the renderer also ignores unsupported URLs defensively. The starter omits resource URLs because its items are illustrative. Keep private deployment content out of the public repository.
+
+## Validate content
+
+Run `npm run validate:content` after editing the collection. It also runs automatically before the development server starts and before each production build. It validates the JSON structure, required strings, unique item/category IDs, category references, real calendar dates, unique non-empty tags, safe resource URLs, accessible image descriptions, supported image styles, and the existence of image files in `public/`. Failures identify the offending field, such as `items[2].added`, and stop the build with a nonzero exit code. The current development server does not continuously validate content edits; rerun the command while editing.
+
+IDs use lowercase letters, numbers, and single hyphens between words; category ID `all` is reserved. Category colors use three- or six-digit hex values. Image paths use letters, numbers, dots, hyphens, underscores, and slashes without traversal segments. Image `position` accepts one or two basic alignment keywords, percentages, or pixel values. Image `size` accepts `cover`, `contain`, or one or two `auto`, percentage, or pixel values.
+
+## Share and restore a view
+
+Use “Copy link” in the header to share a collection view, or inside details to share that item with the current filters. When clipboard access is unavailable, the button provides a selectable address for manual copying. URLs preserve their host, deployment subdirectory, and anchor. A localhost link only works on the machine running the preview; public sharing requires a separately configured static host.
+
+| Parameter | Meaning | Default |
+| --- | --- | --- |
+| `q` | Search text, capped at 200 characters | Empty |
+| `category` | A category ID from the collection | All categories |
+| `sort` | `title` for alphabetical order | Recently added |
+| `view` | `favorites` for this browser's favorites | All items |
+| `item` | A valid item ID to open its details | No detail open |
+
+Default and unknown parameters are removed. Invalid IDs and unsupported values fall back safely; duplicate parameters use their first value. An existing item can open even when the current filters exclude it. Sharing the favorites view never transfers the saved favorite IDs: another browser still uses its own local favorites.
+
+Search edits form one history entry until the field loses focus. Category, view, and sort choices create discrete entries; repeated selections create none. Back and Forward restore filters and detail visibility. Closing a detail opened inside the app goes back to its collection view, so Forward can reopen it. Closing a directly loaded shared detail removes only `item` and stays in the collection.
 
 ## Interaction and access
 
@@ -53,4 +76,4 @@ Press `/` outside an editable field to focus search. All navigation and cards ar
 
 ## Current boundaries
 
-Content is edited in JSON, not in an in-app editor. Filters reset on reload. Favorites do not sync across tabs or devices. The collection is small and loaded at build time; pagination, import/export, runtime schema validation, and very large collections are future work. No additional backend or framework is required for this milestone.
+Content is edited in JSON, not in an in-app editor. Favorites do not sync across tabs or devices. The collection is small and loaded at build time; pagination, import/export, and very large collections are future work. Validation happens before building; this app does not fetch unvalidated content from a server at runtime. No additional backend or framework is required for this milestone.
