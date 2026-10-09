@@ -24,12 +24,14 @@ export function CollectionDataDialog({
   source,
   onImport,
   onReset,
+  onOpenSettings,
   onClose,
 }: {
   collection: Collection;
   source: 'bundled' | 'imported';
   onImport: (collection: Collection) => boolean;
   onReset: () => boolean;
+  onOpenSettings: () => void;
   onClose: () => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
@@ -191,6 +193,18 @@ export function CollectionDataDialog({
           </dd>
         </div>
       </dl>
+      <div className="data-actions">
+        <div>
+          <h3>Edit collection</h3>
+          <p>
+            Change the title, description, category names, and category colors in a guided form.
+          </p>
+        </div>
+        <button className="secondary-button" onClick={onOpenSettings}>
+          <Icon name="edit" />
+          Collection settings
+        </button>
+      </div>
       <div className="data-actions">
         <div>
           <h3>Start your own</h3>

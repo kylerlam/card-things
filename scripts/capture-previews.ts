@@ -37,6 +37,17 @@ try {
 
   await desktop.getByRole('button', { name: 'Manage collection data' }).click();
   await desktop.screenshot({ path: `${output}collection-data-desktop.png` });
+  await desktop.getByRole('button', { name: 'Collection settings' }).click();
+  const desktopSettings = desktop.getByRole('dialog', { name: 'Collection settings' });
+  await desktopSettings.getByLabel('Title').fill('Useful things, kept together.');
+  await desktopSettings
+    .getByRole('group', { name: 'Category 1' })
+    .getByLabel('Name')
+    .fill('Utilities');
+  await desktopSettings.getByLabel('Title').focus();
+  await desktop.screenshot({ path: `${output}collection-settings-desktop.png` });
+  await desktopSettings.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await desktop.getByRole('button', { name: 'Manage collection data' }).click();
   await desktop.getByLabel('Import collection JSON').setInputFiles({
     name: 'missing-image.json',
     mimeType: 'application/json',
@@ -88,6 +99,13 @@ try {
   await mobileEditor.getByLabel('Title').focus();
   await mobile.screenshot({ path: `${output}card-editor-mobile.png` });
   await mobileEditor.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await mobile.getByRole('button', { name: 'Manage collection data' }).click();
+  await mobile.getByRole('button', { name: 'Collection settings' }).click();
+  const mobileSettings = mobile.getByRole('dialog', { name: 'Collection settings' });
+  await mobileSettings.getByLabel('Title').fill('Useful things, kept together.');
+  await mobileSettings.getByLabel('Title').focus();
+  await mobile.screenshot({ path: `${output}collection-settings-mobile.png` });
+  await mobileSettings.getByRole('button', { name: 'Cancel', exact: true }).click();
   await mobile.getByRole('button', { name: /^Favorites 0$/ }).click();
   await mobile.screenshot({ path: `${output}favorites-empty-mobile.png` });
   await mobile.close();
