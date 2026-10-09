@@ -6,7 +6,7 @@ export interface CollectionItem {
   details: string;
   tags: string[];
   added: string;
-  image: { src: string; position?: string; size?: string; alt: string };
+  image?: { src: string; position?: string; size?: string; alt: string };
   url?: string;
 }
 

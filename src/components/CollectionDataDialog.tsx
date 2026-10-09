@@ -2,9 +2,22 @@ import { useLayoutEffect, useRef, useState } from 'react';
 import type { Collection } from '../lib/types';
 import { validateCollection } from '../lib/validateCollection';
 import { unavailableCollectionImages } from '../lib/collectionImages';
+import { createStarterCollection, starterFilename } from '../lib/starterCollection';
 import { Icon } from './Icon';
 
 const maximumFileSize = 1_000_000;
+
+function downloadJson(collection: Collection, filename: string) {
+  const blob = new Blob([`${JSON.stringify(collection, null, 2)}\n`], {
+    type: 'application/json',
+  });
+  const url = URL.createObjectURL(blob);
+  const link = document.createElement('a');
+  link.href = url;
+  link.download = filename;
+  link.click();
+  window.setTimeout(() => URL.revokeObjectURL(url), 0);
+}
 
 export function CollectionDataDialog({
   collection,
@@ -61,18 +74,22 @@ export function CollectionDataDialog({
         return;
       }
       const next = value as Collection;
-      setChecking(true);
-      const uniqueImages = new Set(next.items.map((item) => item.image.src)).size;
-      setStatus(
-        `Checking ${uniqueImages} local ${uniqueImages === 1 ? 'image' : 'images'} before import…`,
-      );
-      const imageErrors = await unavailableCollectionImages(next);
-      if (cancelled.current) return;
-      setChecking(false);
-      if (imageErrors.length) {
-        setStatus('');
-        setErrors(imageErrors);
-        return;
+      const uniqueImages = new Set(
+        next.items.flatMap((item) => (item.image ? [item.image.src] : [])),
+      ).size;
+      if (uniqueImages) {
+        setChecking(true);
+        setStatus(
+          `Checking ${uniqueImages} local ${uniqueImages === 1 ? 'image' : 'images'} before import…`,
+        );
+        const imageErrors = await unavailableCollectionImages(next);
+        if (cancelled.current) return;
+        setChecking(false);
+        if (imageErrors.length) {
+          setStatus('');
+          setErrors(imageErrors);
+          return;
+        }
       }
       const saved = onImport(next);
       setStatus(
@@ -88,21 +105,19 @@ export function CollectionDataDialog({
   }
 
   function exportCollection() {
-    const blob = new Blob([`${JSON.stringify(collection, null, 2)}\n`], {
-      type: 'application/json',
-    });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
     const name =
       collection.title
         .toLocaleLowerCase()
         .replace(/[^a-z0-9]+/g, '-')
         .replace(/^-|-$/g, '') || 'collection';
-    link.href = url;
-    link.download = `${name}.json`;
-    link.click();
-    window.setTimeout(() => URL.revokeObjectURL(url), 0);
+    downloadJson(collection, `${name}.json`);
     setStatus(`Exported ${collection.items.length} items as JSON.`);
+  }
+
+  function downloadStarter() {
+    downloadJson(createStarterCollection(), starterFilename);
+    setErrors([]);
+    setStatus('Downloaded a ready-to-edit starter collection. Images are optional.');
   }
 
   function resetCollection() {
@@ -159,8 +174,8 @@ export function CollectionDataDialog({
         </button>
       </div>
       <p id="data-description" className="data-dialog-intro">
-        Move a collection between CardThings sites with one JSON file. Imported data stays in this
-        browser and never leaves this device.
+        Start with a ready-to-edit file or move a collection between CardThings sites. Imported data
+        stays in this browser and never leaves this device.
       </p>
       <dl className="data-summary">
         <div>
@@ -178,9 +193,19 @@ export function CollectionDataDialog({
       </dl>
       <div className="data-actions">
         <div>
+          <h3>Start your own</h3>
+          <p>Download a valid one-card JSON file, edit its text, then import it here.</p>
+        </div>
+        <button className="secondary-button" onClick={downloadStarter}>
+          <Icon name="download" />
+          Starter JSON
+        </button>
+      </div>
+      <div className="data-actions">
+        <div>
           <h3>Import JSON</h3>
           <p>
-            Choose a valid collection file up to 1 MB. The current collection changes only after
+            Choose a CardThings JSON file up to 1 MB. The current collection changes only after
             validation.
           </p>
         </div>
@@ -247,8 +272,8 @@ export function CollectionDataDialog({
         </p>
       ) : null}
       <p className="data-note">
-        Image paths must point to files already available in this site's <code>public/</code>{' '}
-        directory. Favorites remain separate browser data.
+        Images are optional. When used, paths must point to files already available in this site's{' '}
+        <code>public/</code> directory. Favorites remain separate browser data.
       </p>
     </dialog>
   );

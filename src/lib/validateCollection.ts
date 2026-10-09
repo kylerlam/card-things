@@ -104,6 +104,7 @@ export function validateCollection(value: unknown): string[] {
           }
         check(valid, `${path}.url`, 'must be an absolute HTTP(S) URL without embedded credentials');
       }
+      if (item.image === undefined) return;
       if (!isRecord(item.image)) {
         errors.push(`${path}.image: must be an object`);
         return;

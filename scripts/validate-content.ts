@@ -9,7 +9,9 @@ const publicDirectory = fileURLToPath(new URL('../public/', import.meta.url));
 
 try {
   const collection = parseCollection(JSON.parse(readFileSync(source, 'utf8')));
-  const missing = [...new Set(collection.items.map((item) => item.image.src))].filter((image) => {
+  const missing = [
+    ...new Set(collection.items.flatMap((item) => (item.image ? [item.image.src] : []))),
+  ].filter((image) => {
     try {
       return !statSync(resolve(publicDirectory, image)).isFile();
     } catch {

@@ -1,4 +1,5 @@
 import { test, expect } from '@playwright/test';
+import AxeBuilder from '@axe-core/playwright';
 import { readFileSync } from 'node:fs';
 
 const importedCollection = {
@@ -63,6 +64,33 @@ test('keeps the active view when an imported local image cannot load', async ({ 
   await expect(page).toHaveURL(/\?q=orbit&category=tools$/);
   await expect(page.getByRole('button', { name: 'View Orbit Studio' })).toBeVisible();
   await expect(page.locator('.collection-card')).toHaveCount(1);
+});
+
+test('downloads and imports a zero-asset starter collection', async ({ page }) => {
+  await page.goto('./');
+  await openData(page);
+  const downloadPromise = page.waitForEvent('download');
+  await page.getByRole('button', { name: 'Starter JSON' }).click();
+  const download = await downloadPromise;
+  expect(download.suggestedFilename()).toBe('cardthings-starter.json');
+  const starter = JSON.parse(readFileSync((await download.path())!, 'utf8'));
+  expect(starter.items).toHaveLength(1);
+  expect(starter.items[0].image).toBeUndefined();
+  expect(starter.items[0].added).toMatch(/^\d{4}-\d{2}-\d{2}$/);
+  await importJson(page, starter);
+  await expect(page.getByRole('dialog').getByRole('status')).toContainText('Imported 1 items');
+  await page.getByRole('button', { name: 'Close collection data' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('My Collection');
+  await expect(page.locator('.cover-generated')).toHaveCount(1);
+  await page.getByRole('button', { name: 'View My first item' }).click();
+  await expect(page.getByRole('dialog').locator('.cover-generated')).toBeVisible();
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
 });
 
 test('imports a collection, normalizes its view, and restores it after reload', async ({

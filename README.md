@@ -2,7 +2,7 @@
 
 A small collection browser built with React, TypeScript, and Vite. Browse cards, search, filter by category, sort, save browser-local favorites, import or export a collection as JSON, and share a filtered view or an item's details. The included twelve entries are fictional example content.
 
-This experimental frontend currently lives on `freya/lab`. The default `main` branch still contains the initial documentation, so use the branch in the command below to try the app. See the [rendered preview index](docs/previews/README.md) for committed desktop, mobile, dialog, validation, synchronization, empty-state, and image-fallback screenshots from this version.
+This experimental frontend currently lives on `freya/lab`. The default `main` branch still contains the initial documentation, so use the branch in the command below to try the app. See the [rendered preview index](docs/previews/README.md) for committed desktop, mobile, dialog, starter, validation, synchronization, empty-state, and image-fallback screenshots from this version.
 
 ## Quick start
 
@@ -23,12 +23,14 @@ If the folder already exists, choose a different clone directory; do not overwri
 
 ## Make it your collection
 
+For the shortest path, open **Collection data**, download **Starter JSON**, edit the plain-text values, and import the file. The starter is already valid and needs no image files; CardThings creates a category-colored text cover. This browser-local workflow does not change the repository or publish a site.
+
 1. Edit `src/content/collection.json`: change the collection heading and introduction, define categories, and replace the card entries. Every card's `category` must match a category `id`. Start with the [complete one-card example](docs/development.md#start-with-one-card), which needs no additional files.
-2. Put your own covers in `public/images/`. In JSON, use a path such as `images/my-cover.webp`, without `public/` or a leading slash. Remove the starter sprite's `size` and `position` when using an ordinary image, and provide useful `alt` text. Set `example` to `false` after replacing the tutorial data with your own content.
+2. Images are optional. To add a custom cover, put it in `public/images/` and use a path such as `images/my-cover.webp`, without `public/` or a leading slash. Remove the starter sprite's `size` and `position` when using an ordinary image, and provide useful `alt` text. Set `example` to `false` after replacing the tutorial data with your own content.
 3. Edit `src/content/brand.ts` for the name, page metadata, favicon path, and theme colors. The [brand configuration guide](docs/development.md#change-the-brand) explains the typed fields and a blue-brand example; components read the same configuration.
 4. Run `npm run validate:brand` and `npm run validate:content`, then rebuild and preview. Validation identifies invalid fields, colors, and missing local assets. Keep private data and credentials out of the source and covers.
 
-Content can be edited in files or moved between CardThings sites with the **Collection data** control. Runtime imports are validated before they replace the active collection, including a same-site check for every referenced local image. A failed preflight keeps the current collection unchanged and identifies each unavailable path; later image failures show an accessible fallback. Successful imports stay in browser-local storage and can be reset to the bundled example. Collection changes and favorites update across other open tabs on the same origin, with an on-page notice; malformed external changes are ignored. There is no full in-app editor or account system. Local data does not sync between devices or travel in exported JSON. Shared links carry filters and item IDs, not collection data or saved favorites.
+Content can be edited in files or moved between CardThings sites with the **Collection data** control. Its downloadable starter provides a valid one-card file, and items without images receive generated covers. Runtime imports are validated before they replace the active collection, including a same-site check for every referenced local image. A failed preflight keeps the current collection unchanged and identifies each unavailable path; later image failures show an accessible fallback. Successful imports stay in browser-local storage and can be reset to the bundled example. Collection changes and favorites update across other open tabs on the same origin, with an on-page notice; malformed external changes are ignored. There is no full in-app editor or account system. Local data does not sync between devices or travel in exported JSON. Shared links carry filters and item IDs, not collection data or saved favorites.
 
 ## Build and preview locally
 

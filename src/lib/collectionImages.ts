@@ -29,17 +29,20 @@ export function canLoadCollectionImage(src: string) {
 }
 
 export async function unavailableCollectionImages(collection: Collection) {
-  const paths = [...new Set(collection.items.map((item) => item.image.src))];
+  const imageItems = collection.items.flatMap((item, index) =>
+    item.image ? [{ image: item.image, index }] : [],
+  );
+  const paths = [...new Set(imageItems.map(({ image }) => image.src))];
   const results = new Map(
     await Promise.all(
       paths.map(async (path) => [path, await canLoadCollectionImage(path)] as const),
     ),
   );
-  return collection.items.flatMap((item, index) =>
-    results.get(item.image.src)
+  return imageItems.flatMap(({ image, index }) =>
+    results.get(image.src)
       ? []
       : [
-          `items[${index}].image.src: could not load public/${item.image.src} as an image from this site`,
+          `items[${index}].image.src: could not load public/${image.src} as an image from this site`,
         ],
   );
 }

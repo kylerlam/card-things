@@ -1,6 +1,7 @@
 import { chromium } from '@playwright/test';
 import { mkdir } from 'node:fs/promises';
 import { fileURLToPath } from 'node:url';
+import { createStarterCollection } from '../src/lib/starterCollection.ts';
 
 const baseUrl = process.env.CARDTHINGS_PREVIEW_URL || 'http://127.0.0.1:4173/';
 const output = fileURLToPath(new URL('../docs/previews/', import.meta.url));
@@ -47,6 +48,14 @@ try {
   });
   await desktop.getByRole('alert').waitFor();
   await desktop.screenshot({ path: `${output}collection-data-image-error-desktop.png` });
+  await desktop.getByLabel('Import collection JSON').setInputFiles({
+    name: 'cardthings-starter.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(JSON.stringify(createStarterCollection(new Date('2026-10-09T00:00:00Z')))),
+  });
+  await desktop.getByRole('status').filter({ hasText: 'Imported 1 items' }).waitFor();
+  await desktop.getByRole('button', { name: 'Close collection data' }).click();
+  await desktop.screenshot({ path: `${output}starter-collection-desktop.png` });
   await desktop.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
