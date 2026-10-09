@@ -559,6 +559,21 @@ main {
   line-height: 1.5;
   color: var(--notice-text);
 }
+.sync-notices {
+  display: grid;
+  gap: 4px;
+  margin: -4px 0 24px;
+  padding: 10px 14px;
+  border: 1px solid var(--border);
+  border-radius: 9px;
+  background: var(--subtle-surface);
+  color: var(--notice-text);
+  font-size: 12px;
+  line-height: 1.5;
+}
+.sync-notices p {
+  margin: 0;
+}
 .item-dialog {
   width: min(580px, calc(100vw - 32px));
   max-height: calc(100dvh - 48px);

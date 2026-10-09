@@ -64,6 +64,18 @@ try {
   await fallback.getByText('Image unavailable').first().waitFor();
   await fallback.screenshot({ path: `${output}image-fallback-mobile.png` });
   await fallback.close();
+
+  const syncContext = await browser.newContext({ viewport: { width: 1440, height: 1000 } });
+  const syncTarget = await syncContext.newPage();
+  await syncTarget.goto(baseUrl);
+  await syncTarget.evaluate(() => localStorage.clear());
+  await syncTarget.reload();
+  const syncWriter = await syncContext.newPage();
+  await syncWriter.goto(baseUrl);
+  await syncWriter.getByRole('button', { name: 'Favorite Orbit Studio' }).click();
+  await syncTarget.getByText('Favorites updated from another tab.').waitFor();
+  await syncTarget.screenshot({ path: `${output}cross-tab-favorites-desktop.png` });
+  await syncContext.close();
 } finally {
   await browser.close();
 }

@@ -32,6 +32,12 @@ These images are captured from the running CardThings application and committed 
 
 ![CardThings missing image import feedback](collection-data-image-error-desktop.png)
 
+## Cross-tab favorites synchronization
+
+1440 × 1000 Chromium viewport after a second tab favorites Orbit Studio. The receiving tab updates its count and control state, then explains the external change in the page.
+
+![CardThings cross-tab favorites synchronization notice](cross-tab-favorites-desktop.png)
+
 ## Empty favorites — mobile
 
 390 × 844 Chromium viewport showing the actionable empty state.

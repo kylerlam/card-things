@@ -18,12 +18,18 @@ export default function App() {
     savedLocally: collectionSaved,
     importCollection,
     resetCollection,
+    syncMessage: collectionSyncMessage,
   } = useCollectionData();
   const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail } =
     useCollectionUrl(collection);
   const { query, category, favoritesOnly, sort, itemId } = view;
   const selectedItem = collection.items.find((item) => item.id === itemId);
-  const { favorites, toggleFavorite, savedLocally } = useFavorites(collection.items);
+  const {
+    favorites,
+    toggleFavorite,
+    savedLocally,
+    syncMessage: favoritesSyncMessage,
+  } = useFavorites(collection.items);
   const [dataOpen, setDataOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const items = filterItems(collection.items, query, category, favorites, favoritesOnly, sort);
@@ -95,6 +101,12 @@ export default function App() {
             <CopyLinkButton url={shareUrl} label="Copy collection link" />
           </div>
         </header>
+        {collectionSyncMessage || favoritesSyncMessage ? (
+          <div className="sync-notices" role="status" aria-live="polite">
+            {collectionSyncMessage ? <p>{collectionSyncMessage}</p> : null}
+            {favoritesSyncMessage ? <p>{favoritesSyncMessage}</p> : null}
+          </div>
+        ) : null}
         <section className="intro" aria-labelledby="page-title">
           <h1 id="page-title">{favoritesOnly ? 'Keep your favorites close.' : collection.title}</h1>
           <p>
