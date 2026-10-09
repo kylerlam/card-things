@@ -180,7 +180,7 @@ export function CollectionDataDialog({
       <dl className="data-summary">
         <div>
           <dt>Active source</dt>
-          <dd>{source === 'imported' ? 'Imported JSON' : 'Bundled collection'}</dd>
+          <dd>{source === 'imported' ? 'Browser collection' : 'Bundled collection'}</dd>
         </div>
         <div>
           <dt>Contents</dt>
@@ -238,10 +238,10 @@ export function CollectionDataDialog({
         <div className="data-reset">
           {confirmReset ? (
             <div className="reset-confirm" role="group" aria-label="Confirm collection reset">
-              <p>Replace the imported collection with the bundled example?</p>
+              <p>Replace the browser collection with the bundled example?</p>
               <div>
                 <button className="secondary-button" onClick={() => setConfirmReset(false)}>
-                  Keep imported
+                  Keep browser copy
                 </button>
                 <button className="primary-button" onClick={resetCollection}>
                   Reset collection

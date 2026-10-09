@@ -14,6 +14,18 @@ These images are captured from the running CardThings application and committed 
 
 ![CardThings collection at mobile width](collection-mobile.png)
 
+## Guided card editor — desktop
+
+1440 × 1000 Chromium viewport with a new card draft. Required content, optional metadata, and the beginning of the cover section fit in one scrollable modal.
+
+![CardThings guided card editor at desktop width](card-editor-desktop.png)
+
+## Guided card editor — mobile
+
+390 × 844 Chromium viewport with the same add-card flow in its single-column mobile layout.
+
+![CardThings guided card editor at mobile width](card-editor-mobile.png)
+
 ## Item details
 
 1440 × 1000 Chromium viewport with the Orbit Studio detail dialog open.

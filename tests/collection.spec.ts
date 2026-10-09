@@ -131,12 +131,16 @@ test('detail traps keyboard focus, supports favorites, and closes on backdrop', 
   await page.keyboard.press('Shift+Tab');
   await expect(page.getByRole('button', { name: 'Copy item link' })).toBeFocused();
   await page.keyboard.press('Shift+Tab');
+  await expect(page.getByRole('button', { name: 'Edit card' })).toBeFocused();
+  await page.keyboard.press('Shift+Tab');
   await expect(page.getByRole('button', { name: 'Save to favorites' })).toBeFocused();
   await page.keyboard.press('Enter');
   await expect(page.getByRole('button', { name: 'Saved to favorites' })).toHaveAttribute(
     'aria-pressed',
     'true',
   );
+  await page.keyboard.press('Tab');
+  await expect(page.getByRole('button', { name: 'Edit card' })).toBeFocused();
   await page.keyboard.press('Tab');
   await expect(page.getByRole('button', { name: 'Copy item link' })).toBeFocused();
   await page.keyboard.press('Tab');

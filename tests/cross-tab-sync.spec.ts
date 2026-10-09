@@ -90,6 +90,33 @@ test('synchronizes collection import and reset while canonicalizing the active v
   await expect(peer.getByRole('button', { name: 'View Orbit Studio' })).toBeVisible();
 });
 
+test('synchronizes cards created and edited in the local workspace', async ({ page }) => {
+  await page.goto('./');
+  const peer = await page.context().newPage();
+  await peer.goto('./');
+
+  await page.getByRole('button', { name: 'Add card', exact: true }).click();
+  const editor = page.getByRole('dialog', { name: 'Add a card' });
+  await editor.getByLabel('Title').fill('Shared Field Notes');
+  await editor.getByLabel('Category').selectOption('tools');
+  await editor.getByLabel('Short description').fill('Created in one open browser tab.');
+  await editor.getByLabel('Details').fill('The peer tab should receive this saved card.');
+  await editor.getByRole('button', { name: 'Add card', exact: true }).click();
+
+  await expect(peer.getByText('Collection updated from another tab.')).toBeVisible();
+  await expect(peer.getByRole('button', { name: 'View Shared Field Notes' })).toBeVisible();
+  await page
+    .getByRole('dialog', { name: 'Shared Field Notes' })
+    .getByRole('button', { name: 'Edit card' })
+    .click();
+  const edit = page.getByRole('dialog', { name: 'Edit card' });
+  await edit.getByLabel('Title').fill('Shared Research Notes');
+  await edit.getByRole('button', { name: 'Save changes' }).click();
+  await expect(peer.getByRole('button', { name: 'View Shared Field Notes' })).toHaveCount(0);
+  await expect(peer.getByRole('button', { name: 'View Shared Research Notes' })).toBeVisible();
+  await expect(peer.locator('.collection-card')).toHaveCount(13);
+});
+
 test('ignores malformed external values without disrupting active state', async ({ page }) => {
   await page.goto('./?category=tools&item=orbit-studio');
   const peer = await page.context().newPage();

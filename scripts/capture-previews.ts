@@ -16,6 +16,21 @@ try {
   await desktop.reload();
   await desktop.screenshot({ path: `${output}collection-desktop.png` });
 
+  await desktop.getByRole('button', { name: 'Add card', exact: true }).click();
+  const desktopEditor = desktop.getByRole('dialog', { name: 'Add a card' });
+  await desktopEditor.getByLabel('Title').fill('Field Notes');
+  await desktopEditor.getByLabel('Category').selectOption('tools');
+  await desktopEditor
+    .getByLabel('Short description')
+    .fill('A practical reference added directly in the browser.');
+  await desktopEditor
+    .getByLabel('Details')
+    .fill('Keep the useful context, instructions, and next steps together.');
+  await desktopEditor.getByLabel('Tags (optional)').fill('Research, Reference');
+  await desktopEditor.getByLabel('Title').focus();
+  await desktop.screenshot({ path: `${output}card-editor-desktop.png` });
+  await desktopEditor.getByRole('button', { name: 'Cancel', exact: true }).click();
+
   await desktop.getByRole('button', { name: 'View Orbit Studio' }).click();
   await desktop.screenshot({ path: `${output}item-detail-desktop.png` });
   await desktop.getByRole('button', { name: 'Close details' }).click();
@@ -63,6 +78,16 @@ try {
   await mobile.evaluate(() => localStorage.clear());
   await mobile.reload();
   await mobile.screenshot({ path: `${output}collection-mobile.png` });
+  await mobile.getByRole('button', { name: 'Add card', exact: true }).click();
+  const mobileEditor = mobile.getByRole('dialog', { name: 'Add a card' });
+  await mobileEditor.getByLabel('Title').fill('Field Notes');
+  await mobileEditor.getByLabel('Category').selectOption('tools');
+  await mobileEditor
+    .getByLabel('Short description')
+    .fill('A practical reference added directly in the browser.');
+  await mobileEditor.getByLabel('Title').focus();
+  await mobile.screenshot({ path: `${output}card-editor-mobile.png` });
+  await mobileEditor.getByRole('button', { name: 'Cancel', exact: true }).click();
   await mobile.getByRole('button', { name: /^Favorites 0$/ }).click();
   await mobile.screenshot({ path: `${output}favorites-empty-mobile.png` });
   await mobile.close();

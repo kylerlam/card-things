@@ -2,9 +2,9 @@
 
 ## Scope
 
-This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, browser-local favorites, a downloadable starter, and validated JSON import/export. Items may use local images or generated text covers. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
+This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, guided card creation and editing, browser-local favorites, a downloadable starter, and validated JSON import/export. Items may use local images or generated text covers. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
 
-The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites use the versioned `cardthings:favorites:v1` key, and imported collection data uses the separate versioned `cardthings:collection:v1` key. Changes synchronize across other open tabs on the same origin, but not between browsers or devices. If storage is unavailable, favorites and a newly imported collection still work for the current visit with an explanatory status message.
+The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites use the versioned `cardthings:favorites:v1` key, and the browser collection uses the separate versioned `cardthings:collection:v1` key. Imports and guided card changes synchronize across other open tabs on the same origin, but not between browsers or devices. If storage is unavailable, favorites and collection changes still work for the current visit with an explanatory status message.
 
 ## Run and verify
 
@@ -32,7 +32,7 @@ npm test
 npm run test:static
 ```
 
-The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, starter download and zero-asset import, two-tab collection and favorite synchronization, malformed external values, storage removal and unavailability, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
+The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise guided card creation and editing, invalid and cancelled drafts, local image preflight, stable links and favorites, search/filter combinations, empty states, sorting, starter download and zero-asset import, two-tab collection and favorite synchronization, malformed external values, storage removal and unavailability, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
 
 `npm run test:static` builds the production files, starts a local static server on port 4175, and reruns all browser cases under `/collections/card-things/`. It also checks mounted assets, query and anchor preservation, direct refreshes, the directory redirect, and explicit `index.html` URLs. This server has no SPA fallback or root-level application assets. Port 4175 must be free before running this command.
 
@@ -50,6 +50,16 @@ npm test -- --project=content
 
 If a hand-edited JSON or source file fails the formatting check, run `npm run format`, review the changes, and rerun the check. A formatting failure is separate from content validation.
 
+## Add and edit cards in the browser
+
+Choose **Add card** in the page header to create one entry without editing JSON. Open an existing card and choose **Edit card** to update it. The form includes every ordinary card content field: title, existing category, short description, details, comma-separated tags, date, optional resource link, and optional local image path and description.
+
+New IDs are generated from the title and made unique. Editing preserves the existing ID, shared detail link, favorite, and any bundled image art direction when its path stays unchanged. The first saved form change creates a browser-local, non-example copy of the active collection. Saving clears active search and category filters only when revealing a newly created card; editing returns to the same detail. Cancelling never mutates collection data.
+
+Leaving both cover fields empty creates a generated cover. A supplied image must pass the same safe relative-path validation and same-site loading check as an imported collection before the card can be saved. Resource links accept absolute HTTP(S) addresses without embedded credentials. Inline messages identify invalid fields and focus the first one needing attention.
+
+The guided editor intentionally does not add or rename categories, change the collection heading, delete cards, upload image bytes, or publish a site. Use JSON for those collection-level changes. Saved cards use the same browser storage and cross-tab update path as imports, and remain available for the visit with a warning when storage is unavailable.
+
 ## Import and export in the browser
 
 Open **Collection data** in the page header to move a collection without rebuilding the site:
@@ -58,15 +68,15 @@ Open **Collection data** in the page header to move a collection without rebuild
 2. Choose a `.json` file up to 1 MB. The browser runs the same structural validation used by the build, then loads each referenced local image from the current site before changing anything. Invalid files or unavailable images leave the active collection and URL state untouched and list the failing fields.
 3. A valid import becomes active immediately and is saved only in this browser. Search and category filters reset; the current sort choice remains. Reloading the same origin restores the imported collection.
 4. Use **Export** to download the exact active collection. Favorites are browser state and are intentionally excluded.
-5. Use **Restore bundled collection**, then confirm, to remove the browser-local import and return to `src/content/collection.json`.
+5. Use **Restore bundled collection**, then confirm, to remove the browser collection and return to `src/content/collection.json`.
 
 The `image` object is optional. Without it, CardThings creates a decorative text cover from the item title and category color, so a JSON file can be useful by itself. When `image` is present, it can reference only a safe local path: the JSON file does not contain image bytes, so `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax, then verifies that every referenced path loads as an image from the same site. It never requests a remote image URL from imported data. A later loading failure in an active collection replaces the blank cover with an accessible “Image unavailable” fallback. The build-time validation command still checks referenced bundled image files directly. Imported data never leaves the device, and collection URLs do not embed or transfer it.
 
-An import, reset, favorite change, or storage clear is reflected in other open CardThings tabs on the same origin. The receiving tab shows a plain-language status. Search, sort, and the favorites view remain active; a category or open detail that does not exist in the new collection is removed from the URL so the page remains usable. Invalid JSON or an invalid stored shape from another tab is ignored without replacing the current state. Storage-event handlers update memory only and do not write the received value back, preventing feedback loops.
+An add, edit, import, reset, favorite change, or storage clear is reflected in other open CardThings tabs on the same origin. The receiving tab shows a plain-language status. Search, sort, and the favorites view remain active; a category or open detail that does not exist in the new collection is removed from the URL so the page remains usable. Invalid JSON or an invalid stored shape from another tab is ignored without replacing the current state. Storage-event handlers update memory only and do not write the received value back, preventing feedback loops.
 
 ## Rendered version previews
 
-The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, the zero-asset starter, rejected missing-image feedback, same-origin tab synchronization, the mobile empty-favorites state, and the runtime image fallback.
+The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection and guided editor at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, the zero-asset starter, rejected missing-image feedback, same-origin tab synchronization, the mobile empty-favorites state, and the runtime image fallback.
 
 Install Chromium once with `npx playwright install chromium`. Then start the exact local capture target in one terminal:
 
