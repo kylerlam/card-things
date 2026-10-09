@@ -11,6 +11,7 @@ export function ItemDialog({
   shareUrl,
   favorite,
   onFavorite,
+  onEdit,
   onClose,
   collection,
 }: {
@@ -18,6 +19,7 @@ export function ItemDialog({
   shareUrl: string;
   favorite: boolean;
   onFavorite: () => void;
+  onEdit: () => void;
   onClose: () => void;
   collection: Collection;
 }) {
@@ -123,6 +125,10 @@ export function ItemDialog({
           <button className="primary-button" aria-pressed={favorite} onClick={onFavorite}>
             <Icon name="heart" fill={favorite ? 'currentColor' : 'none'} />
             {favorite ? 'Saved to favorites' : 'Save to favorites'}
+          </button>
+          <button className="secondary-button" onClick={onEdit}>
+            <Icon name="edit" />
+            Edit card
           </button>
           <CopyLinkButton url={shareUrl} label="Copy item link" />
           {url ? (

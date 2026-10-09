@@ -4,6 +4,7 @@ import { tmpdir } from 'node:os';
 import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { parseCollection, validateCollection } from '../src/lib/validateCollection';
+import { buildCardUpdate, createCardDraft } from '../src/lib/cardEditor';
 import type { Collection } from '../src/lib/types';
 
 // Negative cases must not depend on how many cards the user keeps in their collection.
@@ -41,6 +42,47 @@ test('accepts the current collection, empty collections, and valid optional valu
   delete example.items[0].image;
   expect(parseCollection(example)).toEqual(example);
   expect(validateCollection({ ...example, categories: [], items: [] })).toEqual([]);
+});
+
+test('builds a trimmed card with a unique stable ID and generated-cover default', () => {
+  const draft = createCardDraft(content, undefined, new Date('2026-10-09T00:00:00Z'));
+  Object.assign(draft, {
+    title: ' Note 1 ',
+    category: 'notes',
+    description: ' A browser-created note. ',
+    details: ' Useful context. ',
+    tags: ' Research, Reference ',
+  });
+  const result = buildCardUpdate(content, draft);
+  expect(result.errors).toEqual({});
+  expect(result.item).toEqual({
+    id: 'note-1-2',
+    title: 'Note 1',
+    category: 'notes',
+    description: 'A browser-created note.',
+    details: 'Useful context.',
+    tags: ['Research', 'Reference'],
+    added: '2026-10-09',
+  });
+  expect(result.collection?.example).toBe(false);
+});
+
+test('keeps an edited card ID and existing image art direction while reporting field errors', () => {
+  const collection = structuredClone(content);
+  collection.items[0].image!.position = 'left top';
+  collection.items[0].image!.size = '600% 200%';
+  const draft = createCardDraft(collection, collection.items[0]);
+  draft.title = 'Edited note';
+  const result = buildCardUpdate(collection, draft, collection.items[0].id);
+  expect(result.item?.id).toBe('note-1');
+  expect(result.item?.image).toEqual(collection.items[0].image);
+
+  draft.url = 'javascript:alert(1)';
+  draft.tags = 'same, Same';
+  const invalid = buildCardUpdate(collection, draft, collection.items[0].id);
+  expect(invalid.collection).toBeUndefined();
+  expect(invalid.errors.url).toContain('absolute HTTP(S) URL');
+  expect(invalid.errors.tags).toContain('unique within this item');
 });
 
 const cases: [string, (data: Collection) => void, string][] = [

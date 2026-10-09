@@ -6,15 +6,15 @@ Verified on macOS ARM64 on 2026-10-09 using Node.js 22.14 and Playwright 1.64.0.
 
 | Project | Engine version | Viewport / emulation | Development root | Production subdirectory |
 | --- | --- | --- | --- | --- |
-| Desktop Chromium | 156.0.8078.4 | 1440 × 1000 | 36 passed | 40 passed |
-| Mobile Chromium | 156.0.8078.4 | Pixel 7 preset, 390 × 844 | 36 passed | 40 passed |
-| Desktop Firefox | 157.0 | 1440 × 1000 | 36 passed | 40 passed |
-| Desktop WebKit | 27.2 | 1440 × 1000 | 36 passed | 40 passed |
-| Mobile WebKit | 27.2 | iPhone 13 preset, 390 × 664 | 36 passed | 40 passed |
+| Desktop Chromium | 156.0.8078.4 | 1440 × 1000 | 42 passed | 46 passed |
+| Mobile Chromium | 156.0.8078.4 | Pixel 7 preset, 390 × 844 | 42 passed | 46 passed |
+| Desktop Firefox | 157.0 | 1440 × 1000 | 42 passed | 46 passed |
+| Desktop WebKit | 27.2 | 1440 × 1000 | 42 passed | 46 passed |
+| Mobile WebKit | 27.2 | iPhone 13 preset, 390 × 664 | 42 passed | 46 passed |
 
-The development run also passes 18 content and 16 brand validation cases: 214 total. The production run passes 200 browser cases. Both final runs have zero failures, skips, or retries. Production testing includes fresh brand/content validation, a TypeScript check, and a Vite build.
+The development run also passes 20 content and 16 brand validation cases: 246 total. The production run passes 230 browser cases. Both final runs have zero failures, skips, or retries. Production testing includes fresh brand/content validation, a TypeScript check, and a Vite build.
 
-Every browser project exercises search, combined filters, sorting, favorites and storage failures, two-tab collection and favorite synchronization, malformed external values, removal and clear behavior, feedback-loop prevention, starter download and zero-asset import, generated card/detail covers, same-site image preflight, unchanged state after a rejected image, runtime image fallback, exact JSON export, import persistence, confirmed reset, dialogs, pointer and keyboard interactions, responsive overflow, automated axe accessibility checks, console health, network requests, URL normalization, refresh, Back/Forward, share links, and manual clipboard fallback. Narrow-layout cases include a 320px viewport.
+Every browser project exercises guided card creation and editing, cancelled and repeated drafts, field validation, stable links and favorites, editor storage failures, two-tab card synchronization, search, combined filters, sorting, malformed external values, removal and clear behavior, feedback-loop prevention, starter download and zero-asset import, generated card/detail covers, same-site image preflight, unchanged state after a rejected image, runtime image fallback, exact JSON export, import persistence, confirmed reset, dialogs, pointer and keyboard interactions, responsive overflow, automated axe accessibility checks, console health, network requests, URL normalization, refresh, Back/Forward, share links, and manual clipboard fallback. Narrow-layout cases include the editor at a 320px viewport.
 
 ## Brand configuration verification
 

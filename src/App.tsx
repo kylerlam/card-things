@@ -10,6 +10,8 @@ import { Icon } from './components/Icon';
 import brand from './content/brand';
 import { useCollectionData } from './lib/useCollectionData';
 import { CollectionDataDialog } from './components/CollectionDataDialog';
+import { CardEditorDialog } from './components/CardEditorDialog';
+import type { CollectionItem } from './lib/types';
 
 export default function App() {
   const {
@@ -31,7 +33,10 @@ export default function App() {
     syncMessage: favoritesSyncMessage,
   } = useFavorites(collection.items);
   const [dataOpen, setDataOpen] = useState(false);
+  const [editor, setEditor] = useState<{ item?: CollectionItem } | null>(null);
+  const [editorMessage, setEditorMessage] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
+  const addCardRef = useRef<HTMLButtonElement>(null);
   const items = filterItems(collection.items, query, category, favorites, favoritesOnly, sort);
   const currentLabel = favoritesOnly
     ? 'Favorites'
@@ -82,7 +87,7 @@ export default function App() {
             {source === 'imported' ? (
               <span className="example-status imported-status">
                 <span />
-                Imported collection
+                Browser collection
               </span>
             ) : collection.example ? (
               <span className="example-status">
@@ -90,6 +95,18 @@ export default function App() {
                 Example collection
               </span>
             ) : null}
+            <button
+              ref={addCardRef}
+              className="copy-link-button add-card-button"
+              aria-label="Add card"
+              onClick={() => {
+                setEditorMessage('');
+                setEditor({});
+              }}
+            >
+              <Icon name="plus" />
+              <span className="add-label">Add card</span>
+            </button>
             <button
               className="copy-link-button data-button"
               aria-label="Manage collection data"
@@ -101,8 +118,9 @@ export default function App() {
             <CopyLinkButton url={shareUrl} label="Copy collection link" />
           </div>
         </header>
-        {collectionSyncMessage || favoritesSyncMessage ? (
+        {editorMessage || collectionSyncMessage || favoritesSyncMessage ? (
           <div className="sync-notices" role="status" aria-live="polite">
+            {editorMessage ? <p>{editorMessage}</p> : null}
             {collectionSyncMessage ? <p>{collectionSyncMessage}</p> : null}
             {favoritesSyncMessage ? <p>{favoritesSyncMessage}</p> : null}
           </div>
@@ -226,15 +244,43 @@ export default function App() {
           <span>Made with {brand.name}</span>
         </footer>
       </main>
-      {selectedItem ? (
+      {selectedItem && !editor ? (
         <ItemDialog
           key={selectedItem.id}
           item={selectedItem}
           shareUrl={shareUrl}
           favorite={favorites.includes(selectedItem.id)}
           onFavorite={() => toggleFavorite(selectedItem.id)}
+          onEdit={() => {
+            setEditorMessage('');
+            setEditor({ item: selectedItem });
+          }}
           onClose={closeDetail}
           collection={collection}
+        />
+      ) : null}
+      {editor ? (
+        <CardEditorDialog
+          key={editor.item?.id || 'new-card'}
+          collection={collection}
+          item={editor.item}
+          onSave={(next, item) => {
+            const saved = importCollection(next);
+            const editing = Boolean(editor.item);
+            setEditor(null);
+            setEditorMessage(
+              saved
+                ? `${item.title} saved in this browser.`
+                : `${item.title} is available for this visit. Browser storage is unavailable.`,
+            );
+            if (!editing)
+              updateView({ category: 'all', favoritesOnly: false, query: '', itemId: item.id });
+          }}
+          onCancel={() => {
+            const creating = !editor.item;
+            setEditor(null);
+            if (creating) window.requestAnimationFrame(() => addCardRef.current?.focus());
+          }}
         />
       ) : null}
       {dataOpen ? (

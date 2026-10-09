@@ -100,7 +100,9 @@ test('imports a collection, normalizes its view, and restores it after reload', 
   await openData(page);
   await importJson(page, importedCollection);
   await expect(page.getByRole('dialog').getByRole('status')).toContainText('Imported 1 items');
-  await expect(page.getByRole('dialog').getByText('Imported JSON', { exact: true })).toBeVisible();
+  await expect(
+    page.getByRole('dialog').getByText('Browser collection', { exact: true }),
+  ).toBeVisible();
   await page.getByRole('button', { name: 'Close collection data' }).click();
   await expect(page).toHaveURL(/\?sort=title$/);
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Portable Notes');
@@ -120,7 +122,7 @@ test('exports the exact active collection and resets with confirmation', async (
   expect(download.suggestedFilename()).toBe('portable-notes.json');
   expect(JSON.parse(readFileSync((await download.path())!, 'utf8'))).toEqual(importedCollection);
   await page.getByRole('button', { name: 'Restore bundled collection' }).click();
-  await expect(page.getByText('Replace the imported collection')).toBeVisible();
+  await expect(page.getByText('Replace the browser collection')).toBeVisible();
   await page.getByRole('button', { name: 'Reset collection' }).click();
   await expect(page.getByRole('dialog').getByRole('status')).toContainText(
     'Restored the bundled example collection',
