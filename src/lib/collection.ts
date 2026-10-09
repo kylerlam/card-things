@@ -1,7 +1,7 @@
 import content from '../content/collection.json';
 import type { Collection, CollectionItem } from './types';
 
-export const collection: Collection = content;
+export const bundledCollection: Collection = content;
 
 export function filterItems(
   items: CollectionItem[],

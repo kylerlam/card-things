@@ -1,15 +1,16 @@
-import { collection } from '../lib/collection';
 import { Brand, Icon } from './Icon';
 import brand from '../content/brand';
+import type { Collection } from '../lib/types';
 
 interface Props {
+  collection: Collection;
   category: string;
   favoritesOnly: boolean;
   favoriteCount: number;
   onNavigate: (category: string, favoritesOnly: boolean) => void;
 }
 
-export function Sidebar({ category, favoritesOnly, favoriteCount, onNavigate }: Props) {
+export function Sidebar({ collection, category, favoritesOnly, favoriteCount, onNavigate }: Props) {
   return (
     <aside className="sidebar">
       <button

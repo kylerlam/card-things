@@ -1,5 +1,5 @@
-import { useEffect, useRef } from 'react';
-import { collection, filterItems } from './lib/collection';
+import { useEffect, useRef, useState } from 'react';
+import { filterItems } from './lib/collection';
 import { useCollectionUrl } from './lib/useCollectionUrl';
 import { CopyLinkButton } from './components/CopyLinkButton';
 import { useFavorites } from './lib/useFavorites';
@@ -8,12 +8,23 @@ import { CollectionCard } from './components/CollectionCard';
 import { ItemDialog } from './components/ItemDialog';
 import { Icon } from './components/Icon';
 import brand from './content/brand';
+import { useCollectionData } from './lib/useCollectionData';
+import { CollectionDataDialog } from './components/CollectionDataDialog';
 
 export default function App() {
-  const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail } = useCollectionUrl();
+  const {
+    collection,
+    source,
+    savedLocally: collectionSaved,
+    importCollection,
+    resetCollection,
+  } = useCollectionData();
+  const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail } =
+    useCollectionUrl(collection);
   const { query, category, favoritesOnly, sort, itemId } = view;
   const selectedItem = collection.items.find((item) => item.id === itemId);
-  const { favorites, toggleFavorite, savedLocally } = useFavorites();
+  const { favorites, toggleFavorite, savedLocally } = useFavorites(collection.items);
+  const [dataOpen, setDataOpen] = useState(false);
   const searchRef = useRef<HTMLInputElement>(null);
   const items = filterItems(collection.items, query, category, favorites, favoritesOnly, sort);
   const currentLabel = favoritesOnly
@@ -49,6 +60,7 @@ export default function App() {
         Skip to collection
       </a>
       <Sidebar
+        collection={collection}
         category={category}
         favoritesOnly={favoritesOnly}
         favoriteCount={favorites.length}
@@ -61,12 +73,25 @@ export default function App() {
             <span>{currentLabel}</span>
           </p>
           <div className="topbar-actions">
-            {collection.example ? (
+            {source === 'imported' ? (
+              <span className="example-status imported-status">
+                <span />
+                Imported collection
+              </span>
+            ) : collection.example ? (
               <span className="example-status">
                 <span />
                 Example collection
               </span>
             ) : null}
+            <button
+              className="copy-link-button data-button"
+              aria-label="Manage collection data"
+              onClick={() => setDataOpen(true)}
+            >
+              <Icon name="data" />
+              <span className="data-label">Collection data</span>
+            </button>
             <CopyLinkButton url={shareUrl} label="Copy collection link" />
           </div>
         </header>
@@ -145,6 +170,12 @@ export default function App() {
             Favorites are available for this visit. Your browser could not save them for next time.
           </p>
         ) : null}
+        {!collectionSaved ? (
+          <p role="status" className="storage-note">
+            Collection changes are available for this visit. Your browser could not save them for
+            next time.
+          </p>
+        ) : null}
         {items.length ? (
           <section className="card-grid" aria-label="Collection items">
             {items.map((item) => (
@@ -154,6 +185,7 @@ export default function App() {
                 favorite={favorites.includes(item.id)}
                 onOpen={() => updateView({ itemId: item.id })}
                 onFavorite={() => toggleFavorite(item.id)}
+                collection={collection}
               />
             ))}
           </section>
@@ -190,6 +222,22 @@ export default function App() {
           favorite={favorites.includes(selectedItem.id)}
           onFavorite={() => toggleFavorite(selectedItem.id)}
           onClose={closeDetail}
+          collection={collection}
+        />
+      ) : null}
+      {dataOpen ? (
+        <CollectionDataDialog
+          collection={collection}
+          source={source}
+          onImport={(next) => {
+            updateView({ category: 'all', favoritesOnly: false, query: '', itemId: '' });
+            return importCollection(next);
+          }}
+          onReset={() => {
+            updateView({ category: 'all', favoritesOnly: false, query: '', itemId: '' });
+            return resetCollection();
+          }}
+          onClose={() => setDataOpen(false)}
         />
       ) : null}
     </>

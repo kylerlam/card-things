@@ -1,8 +1,8 @@
 # CardThings
 
-A small collection browser built with React, TypeScript, and Vite. Browse cards, search, filter by category, sort, save browser-local favorites, and share a filtered view or an item's details. The included twelve entries are fictional example content.
+A small collection browser built with React, TypeScript, and Vite. Browse cards, search, filter by category, sort, save browser-local favorites, import or export a collection as JSON, and share a filtered view or an item's details. The included twelve entries are fictional example content.
 
-This experimental frontend currently lives on `feat/freya-collection-v1`. The default `main` branch still contains the initial documentation, so use the branch in the command below to try the app.
+This experimental frontend currently lives on `freya/lab`. The default `main` branch still contains the initial documentation, so use the branch in the command below to try the app. See the [rendered preview index](docs/previews/README.md) for committed desktop, mobile, detail, data-management, and empty-state screenshots from this version.
 
 ## Quick start
 
@@ -11,7 +11,7 @@ You need Git, Node.js 22.14 or later in the 22.x line, and npm. The verified set
 In a terminal, clone into a new directory:
 
 ```sh
-git clone --branch feat/freya-collection-v1 --single-branch https://github.com/kylerlam/card-things.git
+git clone --branch freya/lab --single-branch https://github.com/kylerlam/card-things.git
 cd card-things
 npm ci
 npm run dev
@@ -28,7 +28,7 @@ If the folder already exists, choose a different clone directory; do not overwri
 3. Edit `src/content/brand.ts` for the name, page metadata, favicon path, and theme colors. The [brand configuration guide](docs/development.md#change-the-brand) explains the typed fields and a blue-brand example; components read the same configuration.
 4. Run `npm run validate:brand` and `npm run validate:content`, then rebuild and preview. Validation identifies invalid fields, colors, and missing local assets. Keep private data and credentials out of the source and covers.
 
-Content is edited in files. There is no in-app editor or account system. Favorites stay in the current browser and origin; they do not sync between devices. Shared links carry filters and item IDs, not saved favorites.
+Content can be edited in files or moved between CardThings sites with the **Collection data** control. Runtime imports are validated before they replace the active collection, stay in browser-local storage, and can be reset to the bundled example. Referenced images must already exist in the site's `public/` directory. There is no full in-app editor or account system. Favorites stay in the current browser and origin; they do not sync between devices or travel in exported JSON. Shared links carry filters and item IDs, not collection data or saved favorites.
 
 ## Build and preview locally
 

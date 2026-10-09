@@ -1,24 +1,24 @@
 # Compatibility verification
 
-Verified on macOS ARM64 on 2026-10-08 using Node.js 22.14 and Playwright 1.64.0. The checks use official Playwright browser builds in isolated profiles.
+Verified on macOS ARM64 on 2026-10-09 using Node.js 22.14 and Playwright 1.64.0. The checks use official Playwright browser builds in isolated profiles.
 
 ## Coverage
 
 | Project | Engine version | Viewport / emulation | Development root | Production subdirectory |
 | --- | --- | --- | --- | --- |
-| Desktop Chromium | 156.0.8078.4 | 1440 × 1000 | 25 passed | 29 passed |
-| Mobile Chromium | 156.0.8078.4 | Pixel 7 preset, 390 × 844 | 25 passed | 29 passed |
-| Desktop Firefox | 157.0 | 1440 × 1000 | 25 passed | 29 passed |
-| Desktop WebKit | 27.2 | 1440 × 1000 | 25 passed | 29 passed |
-| Mobile WebKit | 27.2 | iPhone 13 preset, 390 × 664 | 25 passed | 29 passed |
+| Desktop Chromium | 156.0.8078.4 | 1440 × 1000 | 29 passed | 33 passed |
+| Mobile Chromium | 156.0.8078.4 | Pixel 7 preset, 390 × 844 | 29 passed | 33 passed |
+| Desktop Firefox | 157.0 | 1440 × 1000 | 29 passed | 33 passed |
+| Desktop WebKit | 27.2 | 1440 × 1000 | 29 passed | 33 passed |
+| Mobile WebKit | 27.2 | iPhone 13 preset, 390 × 664 | 29 passed | 33 passed |
 
-The development run also passes 18 content and 16 brand validation cases: 159 total. The production run passes 145 browser cases. Both final runs have zero failures, skips, or retries. Production testing includes fresh brand/content validation, a TypeScript check, and a Vite build.
+The development run also passes 18 content and 16 brand validation cases: 179 total. The production run passes 165 browser cases. Both final runs have zero failures, skips, or retries. Production testing includes fresh brand/content validation, a TypeScript check, and a Vite build.
 
-Every browser project exercises search, combined filters, sorting, favorites and storage failures, dialogs, pointer and keyboard interactions, responsive overflow, automated axe accessibility checks, console health, network requests, URL normalization, refresh, Back/Forward, share links, and manual clipboard fallback. Narrow-layout cases include a 320px viewport.
+Every browser project exercises search, combined filters, sorting, favorites and storage failures, validated collection import, exact JSON export, import persistence, confirmed reset, dialogs, pointer and keyboard interactions, responsive overflow, automated axe accessibility checks, console health, network requests, URL normalization, refresh, Back/Forward, share links, and manual clipboard fallback. Narrow-layout cases include a 320px viewport.
 
 ## Brand configuration verification
 
-Brand checks cover initial HTML metadata and theme values with JavaScript disabled, visible identity, detail labels, real control colors, focus states, and desktop hover states. An isolated copy with a blue Studio Shelf palette, alternate metadata/favicon, and `example: false` passed 15 focused development checks and all 145 production checks across the same five projects. The default collection and palette remain in the repository.
+Brand checks cover initial HTML metadata and theme values with JavaScript disabled, visible identity, detail labels, real control colors, focus states, and desktop hover states. An isolated copy with a blue Studio Shelf palette, alternate metadata/favicon, and `example: false` passed 15 focused development checks in the earlier milestone. The default collection and palette remain in the repository.
 
 Default desktop and mobile collection/detail captures retained identical element geometry, colors, borders, outlines, and shadows after extraction into `src/content/brand.ts`. Three of four screenshots were pixel-identical; the desktop detail had 30 changed pixels out of 1,440,000 despite equal measured styles and geometry. Visual review found no layout or appearance regression.
 

@@ -187,6 +187,15 @@ test('collection and dialog pass automated accessibility checks', async ({ page 
         .analyze()
     ).violations,
   ).toEqual([]);
+  await page.getByRole('button', { name: 'Close details' }).click();
+  await page.getByRole('button', { name: 'Manage collection data' }).click();
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
 });
 
 test('invalid or unavailable storage does not break the collection', async ({ page }) => {
