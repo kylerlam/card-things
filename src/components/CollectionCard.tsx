@@ -1,5 +1,4 @@
-import { collection } from '../lib/collection';
-import type { CollectionItem } from '../lib/types';
+import type { CollectionItem, Collection } from '../lib/types';
 import { Icon } from './Icon';
 
 export function Cover({ item, className = '' }: { item: CollectionItem; className?: string }) {
@@ -17,7 +16,13 @@ export function Cover({ item, className = '' }: { item: CollectionItem; classNam
   );
 }
 
-export function CategoryLabel({ category }: { category: string }) {
+export function CategoryLabel({
+  category,
+  collection,
+}: {
+  category: string;
+  collection: Collection;
+}) {
   const entry = collection.categories.find((value) => value.id === category);
   return (
     <span className="category-label">
@@ -32,11 +37,13 @@ export function CollectionCard({
   favorite,
   onOpen,
   onFavorite,
+  collection,
 }: {
   item: CollectionItem;
   favorite: boolean;
   onOpen: () => void;
   onFavorite: () => void;
+  collection: Collection;
 }) {
   return (
     <article className="collection-card">
@@ -51,7 +58,7 @@ export function CollectionCard({
       >
         <Cover item={item} />
         <div className="card-copy">
-          <CategoryLabel category={item.category} />
+          <CategoryLabel category={item.category} collection={collection} />
           <h2>
             {item.title}
             <Icon name="arrow" />

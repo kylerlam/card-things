@@ -30,3 +30,5 @@ The current bootstrap is documentation only. Find actual project checks when the
 Consult relevant entries in `docs/lesson-learned.md` during planning and before repeating affected work. Record confirmed, meaningful corrections rather than every disagreement or temporary preference. Promote only durable, confirmed project decisions into this file.
 
 Creating a Markdown file does not automatically load it or provide permanent model learning. Do not create skills until a concrete recurring workflow warrants a separately scoped decision. Preserve existing skills; do not migrate them now.
+
+For every reviewable frontend version on the lab branch, commit current screenshots of each distinct page and important UI state under `docs/previews/`. Screenshots must come from the rendered application, use stable filenames that Git can version, include mobile when the layout materially differs, and be linked from the preview index in the README. Document the viewport and repeatable capture command. Never substitute a mockup or independently drawn image for rendered evidence; report a capture blocker instead.

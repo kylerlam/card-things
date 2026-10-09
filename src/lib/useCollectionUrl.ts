@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from 'react';
-import { collection } from './collection';
+import type { Collection } from './types';
 
 interface ViewState {
   query: string;
@@ -9,7 +9,7 @@ interface ViewState {
   itemId: string;
 }
 
-function readView(): ViewState {
+function readView(collection: Collection): ViewState {
   const params = new URLSearchParams(window.location.search);
   const category = params.get('category') || 'all';
   const itemId = params.get('item') || '';
@@ -33,14 +33,14 @@ function viewUrl(view: ViewState) {
   return url.href;
 }
 
-export function useCollectionUrl() {
-  const [view, setView] = useState(readView);
+export function useCollectionUrl(collection: Collection) {
+  const [view, setView] = useState(() => readView(collection));
   const editingSearch = useRef(false);
   const closingDetail = useRef(false);
 
   useEffect(() => {
     function syncLocation() {
-      const next = readView();
+      const next = readView(collection);
       const canonical = viewUrl(next);
       if (canonical !== window.location.href)
         window.history.replaceState(window.history.state, '', canonical);
@@ -51,10 +51,10 @@ export function useCollectionUrl() {
     syncLocation();
     window.addEventListener('popstate', syncLocation);
     return () => window.removeEventListener('popstate', syncLocation);
-  }, []);
+  }, [collection]);
 
   function writeView(patch: Partial<ViewState>, mode: 'push' | 'replace') {
-    const current = readView();
+    const current = readView(collection);
     const next = { ...current, ...patch };
     const url = viewUrl(next);
     if (url === viewUrl(current)) return false;
@@ -82,7 +82,7 @@ export function useCollectionUrl() {
 
   function closeDetail() {
     if (closingDetail.current) return;
-    const current = readView();
+    const current = readView(collection);
     if (!current.itemId) return;
     const detail = window.history.state?.cardthingsDetail;
     if (

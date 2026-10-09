@@ -2,9 +2,9 @@
 
 ## Scope
 
-This first experimental milestone is a static collection browser. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, and browser-local favorites. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
+This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, browser-local favorites, and validated JSON import/export. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
 
-The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites stay in this browser, use the versioned `cardthings:favorites:v1` key, and do not sync between devices. If storage is unavailable, favorites still work for the current visit with an explanatory status message.
+The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites stay in this browser, use the versioned `cardthings:favorites:v1` key, and do not sync between devices. Imported collection data uses the separate versioned `cardthings:collection:v1` key. If storage is unavailable, favorites and a newly imported collection still work for the current visit with an explanatory status message.
 
 ## Run and verify
 
@@ -49,6 +49,35 @@ npm test -- --project=content
 `npm run format:check` checks the application, validation script, test, and configuration files. `npm run format` formats those files without rewriting the existing project policy documents.
 
 If a hand-edited JSON or source file fails the formatting check, run `npm run format`, review the changes, and rerun the check. A formatting failure is separate from content validation.
+
+## Import and export in the browser
+
+Open **Collection data** in the page header to move a collection without rebuilding the site:
+
+1. Choose a `.json` file up to 1 MB. The browser runs the same structural validation used by the build before changing anything. Invalid files leave the active collection untouched and list the failing fields.
+2. A valid import becomes active immediately and is saved only in this browser. Search and category filters reset; the current sort choice remains. Reloading the same origin restores the imported collection.
+3. Use **Export** to download the exact active collection. Favorites are browser state and are intentionally excluded.
+4. Use **Restore bundled collection**, then confirm, to remove the browser-local import and return to `src/content/collection.json`.
+
+Imports can reference only safe local image paths. The JSON file does not contain image bytes, so each `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax; the build-time validation command additionally checks that bundled image files exist. Imported data never leaves the device, and collection URLs do not embed or transfer it.
+
+## Rendered version previews
+
+The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, and the mobile empty-favorites state.
+
+Install Chromium once with `npx playwright install chromium`. Then start the exact local capture target in one terminal:
+
+```sh
+npm run dev -- --port 4173 --strictPort
+```
+
+In a second terminal, regenerate the tracked images from the rendered application:
+
+```sh
+npm run capture:previews
+```
+
+Set `CARDTHINGS_PREVIEW_URL` only when intentionally capturing another already-running origin. Review every regenerated image before committing it with the matching code. The script clears its isolated browser storage and does not use a personal browser profile.
 
 ## Replace the collection
 
@@ -221,4 +250,4 @@ Open `http://127.0.0.1:4175/collections/card-things/`. The server binds only to 
 
 ## Current boundaries
 
-Content is edited in JSON, not in an in-app editor. Favorites do not sync across tabs or devices. The collection is small and loaded at build time; pagination, import/export, and very large collections are future work. Validation happens before building; this app does not fetch unvalidated content from a server at runtime. No additional backend or framework is required for this milestone.
+There is no field-by-field in-app editor or image uploader. Favorites do not sync across tabs or devices. The collection remains small and fully client-side; pagination and very large collections are future work. Bundled content is validated before building, and runtime JSON is validated before activation. The app does not fetch collection data from a server. No additional backend or framework is required for this milestone.

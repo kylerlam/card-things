@@ -1,6 +1,6 @@
 import { useLayoutEffect, useRef } from 'react';
-import { collection, safeItemUrl } from '../lib/collection';
-import type { CollectionItem } from '../lib/types';
+import { safeItemUrl } from '../lib/collection';
+import type { Collection, CollectionItem } from '../lib/types';
 import { CategoryLabel, Cover } from './CollectionCard';
 import { Icon } from './Icon';
 import { CopyLinkButton } from './CopyLinkButton';
@@ -12,12 +12,14 @@ export function ItemDialog({
   favorite,
   onFavorite,
   onClose,
+  collection,
 }: {
   item: CollectionItem;
   shareUrl: string;
   favorite: boolean;
   onFavorite: () => void;
   onClose: () => void;
+  collection: Collection;
 }) {
   const ref = useRef<HTMLDialogElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
@@ -86,7 +88,7 @@ export function ItemDialog({
         </button>
       </div>
       <div className="dialog-content">
-        <CategoryLabel category={item.category} />
+        <CategoryLabel category={item.category} collection={collection} />
         <h2 id="detail-title">{item.title}</h2>
         <p id="detail-description" className="detail-description">
           {item.description}
