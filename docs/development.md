@@ -2,7 +2,7 @@
 
 ## Scope
 
-This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, guided card creation and editing, browser-local favorites, a downloadable starter, and validated JSON import/export. Items may use local images or generated text covers. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
+This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, guided collection settings and card editing, browser-local favorites, a downloadable starter, and validated JSON import/export. Items may use local images or generated text covers. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
 
 The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites use the versioned `cardthings:favorites:v1` key, and the browser collection uses the separate versioned `cardthings:collection:v1` key. Imports and guided card changes synchronize across other open tabs on the same origin, but not between browsers or devices. If storage is unavailable, favorites and collection changes still work for the current visit with an explanatory status message.
 
@@ -32,7 +32,7 @@ npm test
 npm run test:static
 ```
 
-The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise guided card creation and editing, invalid and cancelled drafts, local image preflight, stable links and favorites, search/filter combinations, empty states, sorting, starter download and zero-asset import, two-tab collection and favorite synchronization, malformed external values, storage removal and unavailability, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
+The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise guided collection settings and card editing, invalid and cancelled drafts, stable category and card IDs, local image preflight, stable links and favorites, search/filter combinations, empty states, sorting, starter download and zero-asset import, exact export, two-tab collection and favorite synchronization, malformed external values, storage removal and unavailability, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
 
 `npm run test:static` builds the production files, starts a local static server on port 4175, and reruns all browser cases under `/collections/card-things/`. It also checks mounted assets, query and anchor preservation, direct refreshes, the directory redirect, and explicit `index.html` URLs. This server has no SPA fallback or root-level application assets. Port 4175 must be free before running this command.
 
@@ -58,7 +58,15 @@ New IDs are generated from the title and made unique. Editing preserves the exis
 
 Leaving both cover fields empty creates a generated cover. A supplied image must pass the same safe relative-path validation and same-site loading check as an imported collection before the card can be saved. Resource links accept absolute HTTP(S) addresses without embedded credentials. Inline messages identify invalid fields and focus the first one needing attention.
 
-The guided editor intentionally does not add or rename categories, change the collection heading, delete cards, upload image bytes, or publish a site. Use JSON for those collection-level changes. Saved cards use the same browser storage and cross-tab update path as imports, and remain available for the visit with a warning when storage is unavailable.
+The card editor intentionally does not create categories, delete cards, upload image bytes, or publish a site. Use the collection settings flow for collection copy and category additions or appearance, and JSON for unsupported bulk changes. Saved cards use the same browser storage and cross-tab update path as imports, and remain available for the visit with a warning when storage is unavailable.
+
+## Edit collection settings in the browser
+
+Open **Collection data**, then choose **Collection settings**. The form changes the visible collection title and description, category names, and category colors, and can add a category. Color controls combine a native picker with an editable three- or six-digit hex value. The same schema used for JSON validates the whole result before it becomes active.
+
+Existing category IDs are read-only. Renaming “Tools” to “Utilities,” for example, leaves its `tools` ID, assigned cards, active category URL, and saved favorites unchanged. A new category gets a unique lowercase ID from its initial name; editing its visible name later in the same draft does not rewrite that ID. Category removal is not offered, so a settings edit cannot detach populated cards. Cancelling or pressing Escape discards the whole draft.
+
+Saving creates a browser-local, non-example collection through the same storage and cross-tab path as card editing and import. Active valid filters and details remain in place. When browser storage is unavailable, the settings still apply for the current visit and the page explains the limitation. Site name, metadata, theme, and favicon remain static code configuration in `src/content/brand.ts` rather than browser collection data.
 
 ## Import and export in the browser
 
@@ -72,11 +80,11 @@ Open **Collection data** in the page header to move a collection without rebuild
 
 The `image` object is optional. Without it, CardThings creates a decorative text cover from the item title and category color, so a JSON file can be useful by itself. When `image` is present, it can reference only a safe local path: the JSON file does not contain image bytes, so `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax, then verifies that every referenced path loads as an image from the same site. It never requests a remote image URL from imported data. A later loading failure in an active collection replaces the blank cover with an accessible “Image unavailable” fallback. The build-time validation command still checks referenced bundled image files directly. Imported data never leaves the device, and collection URLs do not embed or transfer it.
 
-An add, edit, import, reset, favorite change, or storage clear is reflected in other open CardThings tabs on the same origin. The receiving tab shows a plain-language status. Search, sort, and the favorites view remain active; a category or open detail that does not exist in the new collection is removed from the URL so the page remains usable. Invalid JSON or an invalid stored shape from another tab is ignored without replacing the current state. Storage-event handlers update memory only and do not write the received value back, preventing feedback loops.
+A card or settings edit, import, reset, favorite change, or storage clear is reflected in other open CardThings tabs on the same origin. The receiving tab shows a plain-language status. Search, sort, and the favorites view remain active; a category or open detail that does not exist in the new collection is removed from the URL so the page remains usable. Invalid JSON or an invalid stored shape from another tab is ignored without replacing the current state. Storage-event handlers update memory only and do not write the received value back, preventing feedback loops.
 
 ## Rendered version previews
 
-The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection and guided editor at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, the zero-asset starter, rejected missing-image feedback, same-origin tab synchronization, the mobile empty-favorites state, and the runtime image fallback.
+The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection, guided editor, and collection settings at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, the zero-asset starter, rejected missing-image feedback, same-origin tab synchronization, the mobile empty-favorites state, and the runtime image fallback.
 
 Install Chromium once with `npx playwright install chromium`. Then start the exact local capture target in one terminal:
 
@@ -259,4 +267,4 @@ Open `http://127.0.0.1:4175/collections/card-things/`. The server binds only to 
 
 ## Current boundaries
 
-There is no field-by-field in-app editor or image uploader. Favorites do not sync across tabs or devices. The collection remains small and fully client-side; pagination and very large collections are future work. Bundled content is validated before building, and runtime JSON is validated before activation. The app does not fetch collection data from a server. No additional backend or framework is required for this milestone.
+The browser workspace edits cards, collection copy, and category additions or appearance. It intentionally does not remove categories or cards, upload image bytes, or change site branding and metadata. Favorites and collection changes sync between open tabs on the same origin, but not between browsers or devices. The collection remains small and fully client-side; pagination and very large collections are future work. Bundled content is validated before building, and runtime changes are validated before activation. The app does not fetch collection data from a server. No additional backend or framework is required for this milestone.

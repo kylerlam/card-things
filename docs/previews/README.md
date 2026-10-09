@@ -38,6 +38,18 @@ These images are captured from the running CardThings application and committed 
 
 ![CardThings collection data dialog](collection-data-desktop.png)
 
+## Collection settings — desktop
+
+1440 × 1000 Chromium viewport with a collection title draft and the stable-ID category controls.
+
+![CardThings collection settings at desktop width](collection-settings-desktop.png)
+
+## Collection settings — mobile
+
+390 × 844 Chromium viewport with the same guided settings flow in its single-column layout.
+
+![CardThings collection settings at mobile width](collection-settings-mobile.png)
+
 ## Zero-asset starter collection
 
 1440 × 1000 Chromium viewport after importing the downloaded one-card starter. Its generated cover uses the item initials and category color without an image request.

@@ -5,6 +5,12 @@ import { join } from 'node:path';
 import { spawnSync } from 'node:child_process';
 import { parseCollection, validateCollection } from '../src/lib/validateCollection';
 import { buildCardUpdate, createCardDraft } from '../src/lib/cardEditor';
+import {
+  buildCollectionSettingsUpdate,
+  createCategoryId,
+  createCollectionSettingsDraft,
+  normalizePickerColor,
+} from '../src/lib/collectionSettings';
 import type { Collection } from '../src/lib/types';
 
 // Negative cases must not depend on how many cards the user keeps in their collection.
@@ -83,6 +89,50 @@ test('keeps an edited card ID and existing image art direction while reporting f
   expect(invalid.collection).toBeUndefined();
   expect(invalid.errors.url).toContain('absolute HTTP(S) URL');
   expect(invalid.errors.tags).toContain('unique within this item');
+});
+
+test('builds trimmed settings without changing category IDs or item references', () => {
+  const draft = createCollectionSettingsDraft(content);
+  draft.title = ' Portable shelf ';
+  draft.description = ' Useful things kept nearby. ';
+  draft.categories[0].label = 'Field notes';
+  draft.categories[0].color = '#123456';
+  const result = buildCollectionSettingsUpdate(content, draft);
+  expect(result.errors).toEqual({ categories: {}, form: [] });
+  expect(result.collection).toMatchObject({
+    title: 'Portable shelf',
+    description: 'Useful things kept nearby.',
+    example: false,
+  });
+  expect(result.collection?.categories[0]).toEqual({
+    id: 'notes',
+    label: 'Field notes',
+    color: '#123456',
+  });
+  expect(result.collection?.items[0]).toEqual(content.items[0]);
+});
+
+test('generates valid unique category IDs and normalizes picker colors', () => {
+  expect(createCategoryId('Notes', content.categories)).toBe('notes-2');
+  expect(createCategoryId('All', content.categories)).toBe('all-2');
+  expect(createCategoryId('工具', content.categories)).toBe('category');
+  expect(normalizePickerColor('#abc')).toBe('#aabbcc');
+  expect(normalizePickerColor('invalid')).toBe('#3f6b58');
+});
+
+test('maps invalid collection settings back to their editable fields', () => {
+  const draft = createCollectionSettingsDraft(content);
+  draft.title = '';
+  draft.description = '   ';
+  draft.categories[0].label = '';
+  draft.categories[1].color = 'red';
+  const result = buildCollectionSettingsUpdate(content, draft);
+  expect(result.collection).toBeUndefined();
+  expect(result.errors.title).toContain('non-empty string');
+  expect(result.errors.description).toContain('non-empty string');
+  expect(result.errors.categories[0].label).toContain('non-empty string');
+  expect(result.errors.categories[1].color).toContain('hex color');
+  expect(result.errors.form).toEqual([]);
 });
 
 const cases: [string, (data: Collection) => void, string][] = [

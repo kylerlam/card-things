@@ -11,6 +11,7 @@ import brand from './content/brand';
 import { useCollectionData } from './lib/useCollectionData';
 import { CollectionDataDialog } from './components/CollectionDataDialog';
 import { CardEditorDialog } from './components/CardEditorDialog';
+import { CollectionSettingsDialog } from './components/CollectionSettingsDialog';
 import type { CollectionItem } from './lib/types';
 
 export default function App() {
@@ -33,10 +34,12 @@ export default function App() {
     syncMessage: favoritesSyncMessage,
   } = useFavorites(collection.items);
   const [dataOpen, setDataOpen] = useState(false);
+  const [settingsOpen, setSettingsOpen] = useState(false);
   const [editor, setEditor] = useState<{ item?: CollectionItem } | null>(null);
-  const [editorMessage, setEditorMessage] = useState('');
+  const [workspaceMessage, setWorkspaceMessage] = useState('');
   const searchRef = useRef<HTMLInputElement>(null);
   const addCardRef = useRef<HTMLButtonElement>(null);
+  const dataButtonRef = useRef<HTMLButtonElement>(null);
   const items = filterItems(collection.items, query, category, favorites, favoritesOnly, sort);
   const currentLabel = favoritesOnly
     ? 'Favorites'
@@ -100,7 +103,7 @@ export default function App() {
               className="copy-link-button add-card-button"
               aria-label="Add card"
               onClick={() => {
-                setEditorMessage('');
+                setWorkspaceMessage('');
                 setEditor({});
               }}
             >
@@ -108,6 +111,7 @@ export default function App() {
               <span className="add-label">Add card</span>
             </button>
             <button
+              ref={dataButtonRef}
               className="copy-link-button data-button"
               aria-label="Manage collection data"
               onClick={() => setDataOpen(true)}
@@ -118,9 +122,9 @@ export default function App() {
             <CopyLinkButton url={shareUrl} label="Copy collection link" />
           </div>
         </header>
-        {editorMessage || collectionSyncMessage || favoritesSyncMessage ? (
+        {workspaceMessage || collectionSyncMessage || favoritesSyncMessage ? (
           <div className="sync-notices" role="status" aria-live="polite">
-            {editorMessage ? <p>{editorMessage}</p> : null}
+            {workspaceMessage ? <p>{workspaceMessage}</p> : null}
             {collectionSyncMessage ? <p>{collectionSyncMessage}</p> : null}
             {favoritesSyncMessage ? <p>{favoritesSyncMessage}</p> : null}
           </div>
@@ -252,7 +256,7 @@ export default function App() {
           favorite={favorites.includes(selectedItem.id)}
           onFavorite={() => toggleFavorite(selectedItem.id)}
           onEdit={() => {
-            setEditorMessage('');
+            setWorkspaceMessage('');
             setEditor({ item: selectedItem });
           }}
           onClose={closeDetail}
@@ -268,7 +272,7 @@ export default function App() {
             const saved = importCollection(next);
             const editing = Boolean(editor.item);
             setEditor(null);
-            setEditorMessage(
+            setWorkspaceMessage(
               saved
                 ? `${item.title} saved in this browser.`
                 : `${item.title} is available for this visit. Browser storage is unavailable.`,
@@ -295,7 +299,27 @@ export default function App() {
             updateView({ category: 'all', favoritesOnly: false, query: '', itemId: '' });
             return resetCollection();
           }}
+          onOpenSettings={() => {
+            setDataOpen(false);
+            setSettingsOpen(true);
+          }}
           onClose={() => setDataOpen(false)}
+        />
+      ) : null}
+      {settingsOpen ? (
+        <CollectionSettingsDialog
+          collection={collection}
+          returnFocusTarget={dataButtonRef.current}
+          onSave={(next) => {
+            const saved = importCollection(next);
+            setSettingsOpen(false);
+            setWorkspaceMessage(
+              saved
+                ? 'Collection settings saved in this browser.'
+                : 'Collection settings are available for this visit. Browser storage is unavailable.',
+            );
+          }}
+          onCancel={() => setSettingsOpen(false)}
         />
       ) : null}
     </>
