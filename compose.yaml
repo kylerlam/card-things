@@ -1,0 +1,32 @@
+services:
+  app:
+    build:
+      context: .
+      target: runner
+    restart: unless-stopped
+    ports:
+      - "${CARDTHINGS_PORT:-3000}:3000"
+    environment: &runtime-environment
+      DATABASE_URL: /app/data/cardthings.sqlite
+      UPLOAD_DIR: /app/uploads
+      BETTER_AUTH_URL: ${BETTER_AUTH_URL:-http://127.0.0.1:3000}
+      BETTER_AUTH_SECRET: ${BETTER_AUTH_SECRET:?Set BETTER_AUTH_SECRET in .env}
+    volumes:
+      - cardthings-data:/app/data
+      - cardthings-uploads:/app/uploads
+
+  manager:
+    profiles: ["tools"]
+    build:
+      context: .
+      target: manager
+    environment: *runtime-environment
+    volumes:
+      - cardthings-data:/app/data
+      - cardthings-uploads:/app/uploads
+
+volumes:
+  cardthings-data:
+    name: ${CARDTHINGS_DATA_VOLUME:-cardthings-data}
+  cardthings-uploads:
+    name: ${CARDTHINGS_UPLOADS_VOLUME:-cardthings-uploads}
