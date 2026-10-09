@@ -29,6 +29,18 @@ test('loads the collection without runtime errors or third-party requests', asyn
   expect(external).toEqual([]);
 });
 
+test('shows an accessible fallback when a collection image fails at runtime', async ({ page }) => {
+  await page.route('**/images/collection-covers.webp', (route) => route.abort('failed'));
+  await page.goto('./');
+  await expect(page.locator('.cover-fallback')).toHaveCount(12);
+  await expect(page.locator('.collection-card').first().getByRole('img')).toHaveAttribute(
+    'aria-label',
+    /Image unavailable\.$/,
+  );
+  await page.getByRole('button', { name: 'View Orbit Studio' }).click();
+  await expect(page.getByRole('dialog').getByText('Image unavailable')).toBeVisible();
+});
+
 test('combines normalized search and category filters', async ({ page }) => {
   await page.goto('./');
   await page.getByRole('searchbox', { name: 'Search collection' }).fill('  DESIGN  ');

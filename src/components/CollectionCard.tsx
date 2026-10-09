@@ -1,18 +1,45 @@
+import { useEffect, useState } from 'react';
 import type { CollectionItem, Collection } from '../lib/types';
+import { canLoadCollectionImage, collectionImageUrl } from '../lib/collectionImages';
 import { Icon } from './Icon';
 
 export function Cover({ item, className = '' }: { item: CollectionItem; className?: string }) {
+  const [available, setAvailable] = useState<boolean>();
+
+  useEffect(() => {
+    let current = true;
+    setAvailable(undefined);
+    void canLoadCollectionImage(item.image.src).then((result) => {
+      if (current) setAvailable(result);
+    });
+    return () => {
+      current = false;
+    };
+  }, [item.image.src]);
+
+  const unavailable = available === false;
   return (
     <div
-      className={`cover ${className}`}
+      className={`cover ${unavailable ? 'cover-unavailable' : ''} ${className}`}
       role="img"
-      aria-label={item.image.alt}
-      style={{
-        backgroundImage: `url(${import.meta.env.BASE_URL}${item.image.src})`,
-        backgroundPosition: item.image.position || 'center',
-        backgroundSize: item.image.size || 'cover',
-      }}
-    />
+      aria-label={`${item.image.alt}${unavailable ? '. Image unavailable.' : ''}`}
+      style={
+        unavailable
+          ? undefined
+          : {
+              backgroundImage: `url(${collectionImageUrl(item.image.src)})`,
+              backgroundPosition: item.image.position || 'center',
+              backgroundSize: item.image.size || 'cover',
+            }
+      }
+    >
+      {unavailable ? (
+        <span className="cover-fallback">
+          <Icon name="image" />
+          Image unavailable
+        </span>
+      ) : null}
+    </div>
   );
 }
 

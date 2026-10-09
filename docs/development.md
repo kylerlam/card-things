@@ -54,16 +54,16 @@ If a hand-edited JSON or source file fails the formatting check, run `npm run fo
 
 Open **Collection data** in the page header to move a collection without rebuilding the site:
 
-1. Choose a `.json` file up to 1 MB. The browser runs the same structural validation used by the build before changing anything. Invalid files leave the active collection untouched and list the failing fields.
+1. Choose a `.json` file up to 1 MB. The browser runs the same structural validation used by the build, then loads each unique local image from the current site before changing anything. Invalid files or unavailable images leave the active collection and URL state untouched and list the failing fields.
 2. A valid import becomes active immediately and is saved only in this browser. Search and category filters reset; the current sort choice remains. Reloading the same origin restores the imported collection.
 3. Use **Export** to download the exact active collection. Favorites are browser state and are intentionally excluded.
 4. Use **Restore bundled collection**, then confirm, to remove the browser-local import and return to `src/content/collection.json`.
 
-Imports can reference only safe local image paths. The JSON file does not contain image bytes, so each `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax; the build-time validation command additionally checks that bundled image files exist. Imported data never leaves the device, and collection URLs do not embed or transfer it.
+Imports can reference only safe local image paths. The JSON file does not contain image bytes, so each `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax, then verifies that every unique path loads as an image from the same site. It never requests a remote URL from imported data. A later loading failure in an active collection replaces the blank cover with an accessible “Image unavailable” fallback. The build-time validation command still checks bundled image files directly. Imported data never leaves the device, and collection URLs do not embed or transfer it.
 
 ## Rendered version previews
 
-The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, and the mobile empty-favorites state.
+The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, rejected missing-image feedback, the mobile empty-favorites state, and the runtime image fallback.
 
 Install Chromium once with `npx playwright install chromium`. Then start the exact local capture target in one terminal:
 
