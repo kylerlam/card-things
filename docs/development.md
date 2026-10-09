@@ -4,7 +4,7 @@
 
 This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, browser-local favorites, and validated JSON import/export. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
 
-The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites stay in this browser, use the versioned `cardthings:favorites:v1` key, and do not sync between devices. Imported collection data uses the separate versioned `cardthings:collection:v1` key. If storage is unavailable, favorites and a newly imported collection still work for the current visit with an explanatory status message.
+The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites use the versioned `cardthings:favorites:v1` key, and imported collection data uses the separate versioned `cardthings:collection:v1` key. Changes synchronize across other open tabs on the same origin, but not between browsers or devices. If storage is unavailable, favorites and a newly imported collection still work for the current visit with an explanatory status message.
 
 ## Run and verify
 
@@ -32,7 +32,7 @@ npm test
 npm run test:static
 ```
 
-The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, unavailable storage, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
+The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, two-tab collection and favorite synchronization, malformed external values, storage removal and unavailability, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
 
 `npm run test:static` builds the production files, starts a local static server on port 4175, and reruns all browser cases under `/collections/card-things/`. It also checks mounted assets, query and anchor preservation, direct refreshes, the directory redirect, and explicit `index.html` URLs. This server has no SPA fallback or root-level application assets. Port 4175 must be free before running this command.
 
@@ -61,9 +61,11 @@ Open **Collection data** in the page header to move a collection without rebuild
 
 Imports can reference only safe local image paths. The JSON file does not contain image bytes, so each `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax, then verifies that every unique path loads as an image from the same site. It never requests a remote URL from imported data. A later loading failure in an active collection replaces the blank cover with an accessible “Image unavailable” fallback. The build-time validation command still checks bundled image files directly. Imported data never leaves the device, and collection URLs do not embed or transfer it.
 
+An import, reset, favorite change, or storage clear is reflected in other open CardThings tabs on the same origin. The receiving tab shows a plain-language status. Search, sort, and the favorites view remain active; a category or open detail that does not exist in the new collection is removed from the URL so the page remains usable. Invalid JSON or an invalid stored shape from another tab is ignored without replacing the current state. Storage-event handlers update memory only and do not write the received value back, preventing feedback loops.
+
 ## Rendered version previews
 
-The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, rejected missing-image feedback, the mobile empty-favorites state, and the runtime image fallback.
+The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, rejected missing-image feedback, same-origin tab synchronization, the mobile empty-favorites state, and the runtime image fallback.
 
 Install Chromium once with `npx playwright install chromium`. Then start the exact local capture target in one terminal:
 
