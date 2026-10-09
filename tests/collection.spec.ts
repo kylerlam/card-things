@@ -218,6 +218,10 @@ test('invalid or unavailable storage does not break the collection', async ({ pa
   await page.addInitScript(() => localStorage.setItem('cardthings:favorites:v1', '{bad-json'));
   await page.goto('./');
   await expect(page.locator(cards)).toHaveCount(12);
+  await expect(page.getByText('Saved favorites could not be read')).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem('cardthings:favorites:v1'))).toBe(
+    '{bad-json',
+  );
   await page.evaluate(() => {
     Storage.prototype.setItem = () => {
       throw new Error('Storage unavailable');
@@ -230,6 +234,32 @@ test('invalid or unavailable storage does not break the collection', async ({ pa
   await expect(
     page.getByRole('button', { name: 'Unfavorite Orbit Studio', exact: true }),
   ).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('warns without overwriting collection data that cannot be read at startup', async ({
+  page,
+}) => {
+  await page.addInitScript(() => localStorage.setItem('cardthings:collection:v1', '{bad-json'));
+  await page.goto('./');
+  await expect(page.locator(cards)).toHaveCount(12);
+  await expect(page.getByText('The saved browser collection could not be read')).toBeVisible();
+  expect(await page.evaluate(() => localStorage.getItem('cardthings:collection:v1'))).toBe(
+    '{bad-json',
+  );
+});
+
+test('warns when browser storage cannot be read at startup', async ({ page }) => {
+  await page.addInitScript(() => {
+    Storage.prototype.getItem = () => {
+      throw new Error('Storage unavailable');
+    };
+  });
+  await page.goto('./');
+  await expect(page.locator(cards)).toHaveCount(12);
+  await expect(page.getByText('Browser storage could not be read')).toBeVisible();
+  await expect(page.getByText('Browser favorites could not be read')).toBeVisible();
+  await expect(page.getByText('Collection changes are available for this visit')).toBeVisible();
+  await expect(page.getByText('Favorites are available for this visit')).toBeVisible();
 });
 
 test('removing the last favorite from details restores a usable empty collection', async ({

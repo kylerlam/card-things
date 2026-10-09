@@ -117,6 +117,27 @@ test('synchronizes cards created and edited in the local workspace', async ({ pa
   await expect(peer.locator('.collection-card')).toHaveCount(13);
 });
 
+test('clears an obsolete local save notice after an external collection replacement', async ({
+  page,
+}) => {
+  await page.goto('./');
+  const peer = await page.context().newPage();
+  await peer.goto('./');
+
+  await page.getByRole('button', { name: 'Manage collection data' }).click();
+  await page.getByRole('button', { name: 'Collection settings' }).click();
+  const settings = page.getByRole('dialog', { name: 'Collection settings' });
+  await settings.getByLabel('Title').fill('Temporary Shared Shelf');
+  await settings.getByRole('button', { name: 'Save settings' }).click();
+  await expect(page.getByText('Collection settings saved in this browser.')).toBeVisible();
+
+  await peer.getByRole('button', { name: 'Manage collection data' }).click();
+  await peer.getByRole('button', { name: 'Restore bundled collection' }).click();
+  await peer.getByRole('button', { name: 'Reset collection' }).click();
+  await expect(page.getByText('Bundled collection restored from another tab.')).toBeVisible();
+  await expect(page.getByText('Collection settings saved in this browser.')).toHaveCount(0);
+});
+
 test('ignores malformed external values without disrupting active state', async ({ page }) => {
   await page.goto('./?category=tools&item=orbit-studio');
   const peer = await page.context().newPage();
