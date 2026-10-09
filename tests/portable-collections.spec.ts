@@ -45,6 +45,26 @@ test('validates imports before replacing the active collection', async ({ page }
   await expect(page.locator('.collection-card')).toHaveCount(12);
 });
 
+test('keeps the active view when an imported local image cannot load', async ({ page }) => {
+  const missingImage = structuredClone(importedCollection);
+  missingImage.items[0].image.src = 'images/missing-import.png';
+  await page.goto('./?q=orbit&category=tools');
+  await openData(page);
+  await importJson(page, missingImage);
+  const alert = page.getByRole('alert');
+  await expect(alert).toContainText('Collection not imported');
+  await expect(alert).toContainText(
+    'items[0].image.src: could not load public/images/missing-import.png as an image from this site',
+  );
+  await expect(
+    page.getByRole('dialog').getByText('Bundled collection', { exact: true }),
+  ).toBeVisible();
+  await page.getByRole('button', { name: 'Close collection data' }).click();
+  await expect(page).toHaveURL(/\?q=orbit&category=tools$/);
+  await expect(page.getByRole('button', { name: 'View Orbit Studio' })).toBeVisible();
+  await expect(page.locator('.collection-card')).toHaveCount(1);
+});
+
 test('imports a collection, normalizes its view, and restores it after reload', async ({
   page,
 }) => {

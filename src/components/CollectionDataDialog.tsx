@@ -1,6 +1,7 @@
 import { useLayoutEffect, useRef, useState } from 'react';
 import type { Collection } from '../lib/types';
 import { validateCollection } from '../lib/validateCollection';
+import { unavailableCollectionImages } from '../lib/collectionImages';
 import { Icon } from './Icon';
 
 const maximumFileSize = 1_000_000;
@@ -24,15 +25,19 @@ export function CollectionDataDialog({
   const [errors, setErrors] = useState<string[]>([]);
   const [status, setStatus] = useState('');
   const [confirmReset, setConfirmReset] = useState(false);
+  const [checking, setChecking] = useState(false);
+  const cancelled = useRef(false);
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current!;
+    cancelled.current = false;
     returnFocus.current = document.activeElement as HTMLElement;
     const previousOverflow = document.body.style.overflow;
     dialog.showModal();
     document.body.style.overflow = 'hidden';
     closeRef.current?.focus();
     return () => {
+      cancelled.current = true;
       dialog.close();
       document.body.style.overflow = previousOverflow;
       returnFocus.current?.focus();
@@ -56,6 +61,19 @@ export function CollectionDataDialog({
         return;
       }
       const next = value as Collection;
+      setChecking(true);
+      const uniqueImages = new Set(next.items.map((item) => item.image.src)).size;
+      setStatus(
+        `Checking ${uniqueImages} local ${uniqueImages === 1 ? 'image' : 'images'} before import…`,
+      );
+      const imageErrors = await unavailableCollectionImages(next);
+      if (cancelled.current) return;
+      setChecking(false);
+      if (imageErrors.length) {
+        setStatus('');
+        setErrors(imageErrors);
+        return;
+      }
       const saved = onImport(next);
       setStatus(
         saved
@@ -63,6 +81,8 @@ export function CollectionDataDialog({
           : `Imported ${next.items.length} items for this visit. Browser storage is unavailable.`,
       );
     } catch {
+      if (cancelled.current) return;
+      setChecking(false);
       setErrors(['File: must contain valid JSON']);
     }
   }
@@ -171,6 +191,7 @@ export function CollectionDataDialog({
             type="file"
             accept="application/json,.json"
             aria-label="Import collection JSON"
+            disabled={checking}
             onChange={(event) => {
               void importFile(event.target.files?.[0]);
               event.currentTarget.value = '';

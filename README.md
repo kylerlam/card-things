@@ -2,7 +2,7 @@
 
 A small collection browser built with React, TypeScript, and Vite. Browse cards, search, filter by category, sort, save browser-local favorites, import or export a collection as JSON, and share a filtered view or an item's details. The included twelve entries are fictional example content.
 
-This experimental frontend currently lives on `freya/lab`. The default `main` branch still contains the initial documentation, so use the branch in the command below to try the app. See the [rendered preview index](docs/previews/README.md) for committed desktop, mobile, detail, data-management, and empty-state screenshots from this version.
+This experimental frontend currently lives on `freya/lab`. The default `main` branch still contains the initial documentation, so use the branch in the command below to try the app. See the [rendered preview index](docs/previews/README.md) for committed desktop, mobile, dialog, validation, empty-state, and image-fallback screenshots from this version.
 
 ## Quick start
 
@@ -28,7 +28,7 @@ If the folder already exists, choose a different clone directory; do not overwri
 3. Edit `src/content/brand.ts` for the name, page metadata, favicon path, and theme colors. The [brand configuration guide](docs/development.md#change-the-brand) explains the typed fields and a blue-brand example; components read the same configuration.
 4. Run `npm run validate:brand` and `npm run validate:content`, then rebuild and preview. Validation identifies invalid fields, colors, and missing local assets. Keep private data and credentials out of the source and covers.
 
-Content can be edited in files or moved between CardThings sites with the **Collection data** control. Runtime imports are validated before they replace the active collection, stay in browser-local storage, and can be reset to the bundled example. Referenced images must already exist in the site's `public/` directory. There is no full in-app editor or account system. Favorites stay in the current browser and origin; they do not sync between devices or travel in exported JSON. Shared links carry filters and item IDs, not collection data or saved favorites.
+Content can be edited in files or moved between CardThings sites with the **Collection data** control. Runtime imports are validated before they replace the active collection, including a same-site check for every referenced local image. A failed preflight keeps the current collection unchanged and identifies each unavailable path; later image failures show an accessible fallback. Successful imports stay in browser-local storage and can be reset to the bundled example. There is no full in-app editor or account system. Favorites stay in the current browser and origin; they do not sync between devices or travel in exported JSON. Shared links carry filters and item IDs, not collection data or saved favorites.
 
 ## Build and preview locally
 

@@ -6,15 +6,15 @@ Verified on macOS ARM64 on 2026-10-09 using Node.js 22.14 and Playwright 1.64.0.
 
 | Project | Engine version | Viewport / emulation | Development root | Production subdirectory |
 | --- | --- | --- | --- | --- |
-| Desktop Chromium | 156.0.8078.4 | 1440 × 1000 | 29 passed | 33 passed |
-| Mobile Chromium | 156.0.8078.4 | Pixel 7 preset, 390 × 844 | 29 passed | 33 passed |
-| Desktop Firefox | 157.0 | 1440 × 1000 | 29 passed | 33 passed |
-| Desktop WebKit | 27.2 | 1440 × 1000 | 29 passed | 33 passed |
-| Mobile WebKit | 27.2 | iPhone 13 preset, 390 × 664 | 29 passed | 33 passed |
+| Desktop Chromium | 156.0.8078.4 | 1440 × 1000 | 31 passed | 35 passed |
+| Mobile Chromium | 156.0.8078.4 | Pixel 7 preset, 390 × 844 | 31 passed | 35 passed |
+| Desktop Firefox | 157.0 | 1440 × 1000 | 31 passed | 35 passed |
+| Desktop WebKit | 27.2 | 1440 × 1000 | 31 passed | 35 passed |
+| Mobile WebKit | 27.2 | iPhone 13 preset, 390 × 664 | 31 passed | 35 passed |
 
-The development run also passes 18 content and 16 brand validation cases: 179 total. The production run passes 165 browser cases. Both final runs have zero failures, skips, or retries. Production testing includes fresh brand/content validation, a TypeScript check, and a Vite build.
+The development run also passes 18 content and 16 brand validation cases: 189 total. The production run passes 175 browser cases. Both final runs have zero failures, skips, or retries. Production testing includes fresh brand/content validation, a TypeScript check, and a Vite build.
 
-Every browser project exercises search, combined filters, sorting, favorites and storage failures, validated collection import, exact JSON export, import persistence, confirmed reset, dialogs, pointer and keyboard interactions, responsive overflow, automated axe accessibility checks, console health, network requests, URL normalization, refresh, Back/Forward, share links, and manual clipboard fallback. Narrow-layout cases include a 320px viewport.
+Every browser project exercises search, combined filters, sorting, favorites and storage failures, validated collection import, same-site image preflight, unchanged state after a rejected image, runtime image fallback, exact JSON export, import persistence, confirmed reset, dialogs, pointer and keyboard interactions, responsive overflow, automated axe accessibility checks, console health, network requests, URL normalization, refresh, Back/Forward, share links, and manual clipboard fallback. Narrow-layout cases include a 320px viewport.
 
 ## Brand configuration verification
 
@@ -30,6 +30,7 @@ Separate invalid-configuration probes confirmed that malformed colors stop both 
 - WebKit's default tab behavior skipped modal buttons. The dialog now handles Tab and Shift+Tab across its enabled controls, including wraparound. Tests check repeated opening, close-button and Escape dismissal, focus restoration, and keyboard favorite actions.
 - Cross-engine clipboard tests initially requested Chromium-only permissions. Chromium still tests native clipboard write/read. Firefox and WebKit assert the exact write payload through a test stub, and a separate unmocked case verifies native completion or the selectable manual address. The final runs reported native write completion in all five projects; native clipboard byte readback was verified only in Chromium.
 - An invalid-query test originally navigated to the site root. It now uses a relative URL so the identical behavior runs under either hosting base. This was a test fixture correction, not an application routing defect.
+- React Strict Mode runs effect setup and cleanup twice during development. The collection-data dialog now resets its async cancellation ref during setup so a completed local-image preflight can update the mounted dialog while a genuinely closed dialog remains protected from late activation.
 
 ## Production hosting evidence
 

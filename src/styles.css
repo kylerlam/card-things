@@ -389,6 +389,23 @@ main {
   background-repeat: no-repeat;
   border-radius: 10px;
 }
+.cover-unavailable {
+  display: grid;
+  place-items: center;
+  border: 1px dashed var(--empty-border);
+  background: var(--subtle-surface);
+}
+.cover-fallback {
+  display: inline-flex;
+  align-items: center;
+  gap: 8px;
+  color: var(--muted-text);
+  font-size: 12px;
+}
+.cover-fallback svg {
+  width: 18px;
+  height: 18px;
+}
 .card-copy {
   padding: 15px 5px 0;
 }

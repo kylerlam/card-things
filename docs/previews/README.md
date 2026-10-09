@@ -26,11 +26,23 @@ These images are captured from the running CardThings application and committed 
 
 ![CardThings collection data dialog](collection-data-desktop.png)
 
+## Missing image preflight
+
+1440 × 1000 Chromium viewport after a schema-valid import references a local image that the site cannot load. The active bundled collection remains visible behind the dialog.
+
+![CardThings missing image import feedback](collection-data-image-error-desktop.png)
+
 ## Empty favorites — mobile
 
 390 × 844 Chromium viewport showing the actionable empty state.
 
 ![CardThings empty favorites state at mobile width](favorites-empty-mobile.png)
+
+## Runtime image fallback — mobile
+
+390 × 844 Chromium viewport with the bundled cover request intentionally failed. Cards retain their layout and show an accessible fallback.
+
+![CardThings unavailable image fallback at mobile width](image-fallback-mobile.png)
 
 ## Regenerate
 
@@ -45,4 +57,4 @@ npm run dev -- --port 4173 --strictPort
 npm run capture:previews
 ```
 
-The script targets `http://127.0.0.1:4173/` by default, clears storage in its isolated browser pages, and overwrites these stable files. It captures the current rendered UI; it does not generate or compose mockups. Review all five images before committing them with the corresponding frontend change.
+The script targets `http://127.0.0.1:4173/` by default, clears storage in its isolated browser pages, and overwrites these stable files. It captures the current rendered UI; it does not generate or compose mockups. Review every image before committing it with the corresponding frontend change.

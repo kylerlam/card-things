@@ -21,6 +21,32 @@ try {
 
   await desktop.getByRole('button', { name: 'Manage collection data' }).click();
   await desktop.screenshot({ path: `${output}collection-data-desktop.png` });
+  await desktop.getByLabel('Import collection JSON').setInputFiles({
+    name: 'missing-image.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from(
+      JSON.stringify({
+        title: 'Missing image example',
+        description: 'A local collection with an unavailable cover.',
+        example: false,
+        categories: [{ id: 'notes', label: 'Notes', color: '#234e70' }],
+        items: [
+          {
+            id: 'missing-image',
+            title: 'Missing image',
+            category: 'notes',
+            description: 'This import should remain inactive.',
+            details: 'The image preflight reports this local path before activation.',
+            tags: ['Example'],
+            added: '2026-10-09',
+            image: { src: 'images/missing-import.png', alt: 'An unavailable example cover' },
+          },
+        ],
+      }),
+    ),
+  });
+  await desktop.getByRole('alert').waitFor();
+  await desktop.screenshot({ path: `${output}collection-data-image-error-desktop.png` });
   await desktop.close();
 
   const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
@@ -31,6 +57,13 @@ try {
   await mobile.getByRole('button', { name: /^Favorites 0$/ }).click();
   await mobile.screenshot({ path: `${output}favorites-empty-mobile.png` });
   await mobile.close();
+
+  const fallback = await browser.newPage({ viewport: { width: 390, height: 844 } });
+  await fallback.route('**/images/collection-covers.webp', (route) => route.abort('failed'));
+  await fallback.goto(baseUrl);
+  await fallback.getByText('Image unavailable').first().waitFor();
+  await fallback.screenshot({ path: `${output}image-fallback-mobile.png` });
+  await fallback.close();
 } finally {
   await browser.close();
 }
