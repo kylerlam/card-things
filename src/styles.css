@@ -406,6 +406,41 @@ main {
   width: 18px;
   height: 18px;
 }
+.cover-generated {
+  position: relative;
+  display: grid;
+  place-items: center;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  background: var(--subtle-surface);
+}
+.cover-generated::before {
+  position: absolute;
+  inset: 0;
+  background: var(--cover-color);
+  content: '';
+  opacity: 0.16;
+}
+.generated-cover-copy {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 5px;
+  color: var(--accent);
+}
+.generated-cover-copy strong {
+  font-family: var(--serif);
+  font-size: 44px;
+  font-weight: 400;
+  letter-spacing: -2px;
+  line-height: 1;
+}
+.generated-cover-copy span {
+  font-size: 10px;
+  font-weight: 600;
+  letter-spacing: 1.2px;
+  text-transform: uppercase;
+}
 .card-copy {
   padding: 15px 5px 0;
 }
@@ -753,6 +788,9 @@ main {
 }
 .dialog-hero .cover {
   aspect-ratio: 1.6;
+}
+.dialog-hero .generated-cover-copy strong {
+  font-size: 68px;
 }
 .close-button {
   position: absolute;

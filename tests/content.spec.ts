@@ -35,8 +35,10 @@ test('accepts the current collection, empty collections, and valid optional valu
   const example: Collection = structuredClone(content);
   example.items[0].added = '2024-02-29';
   example.items[0].url = 'https://example.com/resource';
-  example.items[0].image.position = 'center top';
-  example.items[0].image.size = 'cover';
+  example.items[0].image!.position = 'center top';
+  example.items[0].image!.size = 'cover';
+  expect(parseCollection(example)).toEqual(example);
+  delete example.items[0].image;
   expect(parseCollection(example)).toEqual(example);
   expect(validateCollection({ ...example, categories: [], items: [] })).toEqual([]);
 });
@@ -115,28 +117,28 @@ const cases: [string, (data: Collection) => void, string][] = [
   [
     'image traversal',
     (data) => {
-      data.items[0].image.src = '../private.png';
+      data.items[0].image!.src = '../private.png';
     },
     'items[0].image.src:',
   ],
   [
     'remote images',
     (data) => {
-      data.items[0].image.src = 'https://example.com/image.png';
+      data.items[0].image!.src = 'https://example.com/image.png';
     },
     'items[0].image.src:',
   ],
   [
     'invalid image sizes',
     (data) => {
-      data.items[0].image.size = 'url(external)';
+      data.items[0].image!.size = 'url(external)';
     },
     'items[0].image.size:',
   ],
   [
     'empty image descriptions',
     (data) => {
-      data.items[0].image.alt = '';
+      data.items[0].image!.alt = '';
     },
     'items[0].image.alt:',
   ],
@@ -184,7 +186,7 @@ test('validation command rejects missing assets and malformed JSON with a failin
   const fixture = join(directory, 'collection.json');
   try {
     const data = structuredClone(content);
-    data.items[0].image.src = 'images/missing-test-image.png';
+    data.items[0].image!.src = 'images/missing-test-image.png';
     writeFileSync(fixture, JSON.stringify(data));
     let result = spawnSync(
       process.execPath,

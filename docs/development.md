@@ -2,7 +2,7 @@
 
 ## Scope
 
-This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, browser-local favorites, and validated JSON import/export. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
+This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, browser-local favorites, a downloadable starter, and validated JSON import/export. Items may use local images or generated text covers. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
 
 The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites use the versioned `cardthings:favorites:v1` key, and imported collection data uses the separate versioned `cardthings:collection:v1` key. Changes synchronize across other open tabs on the same origin, but not between browsers or devices. If storage is unavailable, favorites and a newly imported collection still work for the current visit with an explanatory status message.
 
@@ -32,7 +32,7 @@ npm test
 npm run test:static
 ```
 
-The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, two-tab collection and favorite synchronization, malformed external values, storage removal and unavailability, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
+The default test runner starts or reuses `http://127.0.0.1:4173`. The content project tests validation rules and CLI failures; five browser projects cover desktop Chromium, mobile Chromium, desktop Firefox, desktop WebKit, and mobile WebKit. Tests exercise search/filter combinations, empty states, sorting, favorite persistence, starter download and zero-asset import, two-tab collection and favorite synchronization, malformed external values, storage removal and unavailability, repeated dialog operations, focus return, keyboard navigation, responsive overflow, network requests, console health, automated axe checks, share links, refresh, history navigation, invalid URL parameters, and clipboard fallback.
 
 `npm run test:static` builds the production files, starts a local static server on port 4175, and reruns all browser cases under `/collections/card-things/`. It also checks mounted assets, query and anchor preservation, direct refreshes, the directory redirect, and explicit `index.html` URLs. This server has no SPA fallback or root-level application assets. Port 4175 must be free before running this command.
 
@@ -54,18 +54,19 @@ If a hand-edited JSON or source file fails the formatting check, run `npm run fo
 
 Open **Collection data** in the page header to move a collection without rebuilding the site:
 
-1. Choose a `.json` file up to 1 MB. The browser runs the same structural validation used by the build, then loads each unique local image from the current site before changing anything. Invalid files or unavailable images leave the active collection and URL state untouched and list the failing fields.
-2. A valid import becomes active immediately and is saved only in this browser. Search and category filters reset; the current sort choice remains. Reloading the same origin restores the imported collection.
-3. Use **Export** to download the exact active collection. Favorites are browser state and are intentionally excluded.
-4. Use **Restore bundled collection**, then confirm, to remove the browser-local import and return to `src/content/collection.json`.
+1. Use **Starter JSON** to download a valid one-card collection. Edit its text in any plain-text editor; it needs no image file.
+2. Choose a `.json` file up to 1 MB. The browser runs the same structural validation used by the build, then loads each referenced local image from the current site before changing anything. Invalid files or unavailable images leave the active collection and URL state untouched and list the failing fields.
+3. A valid import becomes active immediately and is saved only in this browser. Search and category filters reset; the current sort choice remains. Reloading the same origin restores the imported collection.
+4. Use **Export** to download the exact active collection. Favorites are browser state and are intentionally excluded.
+5. Use **Restore bundled collection**, then confirm, to remove the browser-local import and return to `src/content/collection.json`.
 
-Imports can reference only safe local image paths. The JSON file does not contain image bytes, so each `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax, then verifies that every unique path loads as an image from the same site. It never requests a remote URL from imported data. A later loading failure in an active collection replaces the blank cover with an accessible “Image unavailable” fallback. The build-time validation command still checks bundled image files directly. Imported data never leaves the device, and collection URLs do not embed or transfer it.
+The `image` object is optional. Without it, CardThings creates a decorative text cover from the item title and category color, so a JSON file can be useful by itself. When `image` is present, it can reference only a safe local path: the JSON file does not contain image bytes, so `image.src` must already exist under the deployed site's `public/` directory. Runtime import validates the schema and path syntax, then verifies that every referenced path loads as an image from the same site. It never requests a remote image URL from imported data. A later loading failure in an active collection replaces the blank cover with an accessible “Image unavailable” fallback. The build-time validation command still checks referenced bundled image files directly. Imported data never leaves the device, and collection URLs do not embed or transfer it.
 
 An import, reset, favorite change, or storage clear is reflected in other open CardThings tabs on the same origin. The receiving tab shows a plain-language status. Search, sort, and the favorites view remain active; a category or open detail that does not exist in the new collection is removed from the URL so the page remains usable. Invalid JSON or an invalid stored shape from another tab is ignored without replacing the current state. Storage-event handlers update memory only and do not write the received value back, preventing feedback loops.
 
 ## Rendered version previews
 
-The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, rejected missing-image feedback, same-origin tab synchronization, the mobile empty-favorites state, and the runtime image fallback.
+The current screenshots live in [`docs/previews/`](previews/README.md) with stable filenames so each Git commit preserves its matching UI evidence. They cover the main collection at 1440 × 1000 and 390 × 844, the desktop item-detail and collection-data dialogs, the zero-asset starter, rejected missing-image feedback, same-origin tab synchronization, the mobile empty-favorites state, and the runtime image fallback.
 
 Install Chromium once with `npx playwright install chromium`. Then start the exact local capture target in one terminal:
 
@@ -92,13 +93,13 @@ The collection has:
 - `categories`: entries with unique `id`, visible `label`, and CSS `color`.
 - `items`: entries conforming to `CollectionItem` in `src/lib/types.ts`.
 
-Each item needs a unique stable `id`, `title`, a `category` matching a category ID, `description`, `details`, `tags`, an ISO `YYYY-MM-DD` `added` date, and an `image`. Image `src` is relative to `public/`, without a leading slash; give it a meaningful `alt`. Ordinary image files need only `src` and `alt`; optional CSS `position` and `size` support art direction. The starter uses six generated covers in one local WebP sprite, reused across twelve entries. Its editable PNG source stays in `assets/source/`, outside the production build; see [asset notes](assets.md) for local regeneration and measurements.
+Each item needs a unique stable `id`, `title`, a `category` matching a category ID, `description`, `details`, `tags`, and an ISO `YYYY-MM-DD` `added` date. Omit `image` for a generated text cover. To use a local image, set `image.src` relative to `public/`, without a leading slash, and give it a meaningful `alt`. Ordinary image files need only `src` and `alt`; optional CSS `position` and `size` support art direction. The bundled demo uses six generated images in one local WebP sprite, reused across twelve entries. Its editable PNG source stays in `assets/source/`, outside the production build; see [asset notes](assets.md) for local regeneration and measurements.
 
 An optional absolute `http://` or `https://` `url` enables the detail view's “Visit resource” link. Content validation rejects malformed URLs, unsupported protocols, and embedded credentials; the renderer also ignores unsupported URLs defensively. The starter omits resource URLs because its items are illustrative. Keep private deployment content out of the public repository.
 
 ### Start with one card
 
-Replace the entire contents of `src/content/collection.json` with the following valid starting point. It uses the repository's existing `public/favicon.svg` as a temporary cover, so you can verify the edit before adding an image. This tutorial entry remains explicitly labeled as example content.
+Replace the entire contents of `src/content/collection.json` with the following valid starting point. It needs no image asset; CardThings generates a text cover from “My first note” and the Notes category color. This tutorial entry remains explicitly labeled as example content.
 
 ```json
 {
@@ -116,11 +117,7 @@ Replace the entire contents of `src/content/collection.json` with the following 
       "description": "A short introduction to this entry.",
       "details": "Replace this paragraph with your own context or notes.",
       "tags": ["Personal"],
-      "added": "2026-10-08",
-      "image": {
-        "src": "favicon.svg",
-        "alt": "Two overlapping rectangular cards"
-      }
+      "added": "2026-10-08"
     }
   ]
 }
@@ -128,9 +125,9 @@ Replace the entire contents of `src/content/collection.json` with the following 
 
 Run `npm run validate:content`; expect `Collection valid: 1 items, 1 categories.` Then run `npm run dev` and check that the heading, Notes category, one card, and its details appear.
 
-To use your own cover, copy a supported browser image, such as a WebP, PNG, JPEG, or SVG, into `public/images/my-cover.webp` using its actual extension. Change `image.src` to `images/my-cover.webp` and describe that image in `image.alt`. The starting point above already omits sprite-specific `size` and `position`; keep them omitted for ordinary centered covers. Run validation again. File paths are case-sensitive on many hosts, so match the filename exactly.
+To use your own cover, copy a supported browser image, such as a WebP, PNG, JPEG, or SVG, into `public/images/my-cover.webp` using its actual extension. Add `"image": { "src": "images/my-cover.webp", "alt": "Describe the visible cover" }` to the item. Optional `size` and `position` fields are only needed for art direction such as the bundled sprite. Run validation again. File paths are case-sensitive on many hosts, so match the filename exactly.
 
-To add a category, add an object to `categories` with a unique lowercase hyphenated `id`, its visible `label`, and a three- or six-digit hex `color`. Set each card's `category` to that ID. To add a card, copy the complete item object, assign a unique stable `id`, and replace its text, date, tags, and image. An empty tag list `[]` is allowed. IDs appear in shared links and saved favorites, so avoid changing an established ID unnecessarily.
+To add a category, add an object to `categories` with a unique lowercase hyphenated `id`, its visible `label`, and a three- or six-digit hex `color`. Set each card's `category` to that ID. To add a card, copy the complete item object, assign a unique stable `id`, and replace its text, date, and tags; add `image` only when needed. An empty tag list `[]` is allowed. IDs appear in shared links and saved favorites, so avoid changing an established ID unnecessarily.
 
 To link a card to a real resource, add an optional `"url": "https://example.com/"` field to the item, replacing the demonstration address with your own HTTP(S) URL. Omit the field entirely when there is no resource link. After replacing the tutorial text and artwork with your own content, set the top-level `example` to `false` to remove the example badge and detail disclaimer. This flag does not change the app's brand name.
 

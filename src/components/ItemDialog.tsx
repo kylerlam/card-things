@@ -82,7 +82,7 @@ export function ItemDialog({
       }}
     >
       <div className="dialog-hero">
-        <Cover item={item} />
+        <Cover item={item} collection={collection} />
         <button className="icon-button close-button" aria-label="Close details" onClick={onClose}>
           <Icon name="close" />
         </button>

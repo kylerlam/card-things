@@ -22,9 +22,15 @@ These images are captured from the running CardThings application and committed 
 
 ## Collection data
 
-1440 × 1000 Chromium viewport with the local import and export dialog open.
+1440 × 1000 Chromium viewport with the starter, import, and export actions open.
 
 ![CardThings collection data dialog](collection-data-desktop.png)
+
+## Zero-asset starter collection
+
+1440 × 1000 Chromium viewport after importing the downloaded one-card starter. Its generated cover uses the item initials and category color without an image request.
+
+![CardThings zero-asset starter collection](starter-collection-desktop.png)
 
 ## Missing image preflight
 

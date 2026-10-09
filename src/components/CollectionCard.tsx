@@ -1,39 +1,69 @@
-import { useEffect, useState } from 'react';
+import { useEffect, useState, type CSSProperties } from 'react';
 import type { CollectionItem, Collection } from '../lib/types';
 import { canLoadCollectionImage, collectionImageUrl } from '../lib/collectionImages';
 import { Icon } from './Icon';
 
-export function Cover({ item, className = '' }: { item: CollectionItem; className?: string }) {
+export function Cover({
+  item,
+  collection,
+  className = '',
+}: {
+  item: CollectionItem;
+  collection: Collection;
+  className?: string;
+}) {
   const [available, setAvailable] = useState<boolean>();
+  const image = item.image;
+  const imageSrc = image?.src;
+  const category = collection.categories.find((entry) => entry.id === item.category);
+  const generated = !image;
+  const initials = item.title
+    .trim()
+    .split(/\s+/)
+    .slice(0, 2)
+    .map((word) => word[0]?.toLocaleUpperCase())
+    .join('');
 
   useEffect(() => {
+    if (!imageSrc) {
+      setAvailable(undefined);
+      return;
+    }
     let current = true;
     setAvailable(undefined);
-    void canLoadCollectionImage(item.image.src).then((result) => {
+    void canLoadCollectionImage(imageSrc).then((result) => {
       if (current) setAvailable(result);
     });
     return () => {
       current = false;
     };
-  }, [item.image.src]);
+  }, [imageSrc]);
 
-  const unavailable = available === false;
+  const unavailable = Boolean(image) && available === false;
   return (
     <div
-      className={`cover ${unavailable ? 'cover-unavailable' : ''} ${className}`}
-      role="img"
-      aria-label={`${item.image.alt}${unavailable ? '. Image unavailable.' : ''}`}
+      className={`cover ${generated ? 'cover-generated' : ''} ${unavailable ? 'cover-unavailable' : ''} ${className}`}
+      role={generated ? undefined : 'img'}
+      aria-hidden={generated ? true : undefined}
+      aria-label={image ? `${image.alt}${unavailable ? '. Image unavailable.' : ''}` : undefined}
       style={
-        unavailable
-          ? undefined
-          : {
-              backgroundImage: `url(${collectionImageUrl(item.image.src)})`,
-              backgroundPosition: item.image.position || 'center',
-              backgroundSize: item.image.size || 'cover',
-            }
+        generated
+          ? ({ '--cover-color': category?.color || 'var(--accent)' } as CSSProperties)
+          : unavailable
+            ? undefined
+            : {
+                backgroundImage: `url(${collectionImageUrl(image!.src)})`,
+                backgroundPosition: image!.position || 'center',
+                backgroundSize: image!.size || 'cover',
+              }
       }
     >
-      {unavailable ? (
+      {generated ? (
+        <span className="generated-cover-copy">
+          <strong>{initials}</strong>
+          <span>{category?.label || 'Collection'}</span>
+        </span>
+      ) : unavailable ? (
         <span className="cover-fallback">
           <Icon name="image" />
           Image unavailable
@@ -83,7 +113,7 @@ export function CollectionCard({
         }}
         aria-label={`View ${item.title}`}
       >
-        <Cover item={item} />
+        <Cover item={item} collection={collection} />
         <div className="card-copy">
           <CategoryLabel category={item.category} collection={collection} />
           <h2>
