@@ -127,6 +127,23 @@ try {
   await syncWriter.getByRole('button', { name: 'Favorite Orbit Studio' }).click();
   await syncTarget.getByText('Favorites updated from another tab.').waitFor();
   await syncTarget.screenshot({ path: `${output}cross-tab-favorites-desktop.png` });
+  await syncTarget.getByRole('button', { name: 'View Orbit Studio' }).click();
+  await syncTarget
+    .getByRole('dialog', { name: 'Orbit Studio' })
+    .getByRole('button', { name: 'Edit card' })
+    .click();
+  const staleEditor = syncTarget.getByRole('dialog', { name: 'Edit card' });
+  await staleEditor.getByLabel('Title').fill('Draft title kept for review');
+  await syncWriter.getByRole('button', { name: 'View Orbit Studio' }).click();
+  await syncWriter
+    .getByRole('dialog', { name: 'Orbit Studio' })
+    .getByRole('button', { name: 'Edit card' })
+    .click();
+  const currentEditor = syncWriter.getByRole('dialog', { name: 'Edit card' });
+  await currentEditor.getByLabel('Title').fill('Updated in another tab');
+  await currentEditor.getByRole('button', { name: 'Save changes' }).click();
+  await staleEditor.getByText('This collection changed in another tab.').waitFor();
+  await syncTarget.screenshot({ path: `${output}card-editor-conflict-desktop.png` });
   await syncContext.close();
 } finally {
   await browser.close();

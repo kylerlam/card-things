@@ -68,6 +68,12 @@ These images are captured from the running CardThings application and committed 
 
 ![CardThings cross-tab favorites synchronization notice](cross-tab-favorites-desktop.png)
 
+## Card editor conflict protection
+
+1440 × 1000 Chromium viewport after another tab changes the collection while a card draft is open. The draft remains visible, saving is disabled, and the editor explains how to reopen the latest version.
+
+![CardThings stale card editor protection](card-editor-conflict-desktop.png)
+
 ## Empty favorites — mobile
 
 390 × 844 Chromium viewport showing the actionable empty state.

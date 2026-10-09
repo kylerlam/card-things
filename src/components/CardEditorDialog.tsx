@@ -28,12 +28,16 @@ export function CardEditorDialog({
   onCancel: () => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const initialCollection = useRef(collection);
+  const latestCollection = useRef(collection);
   const titleRef = useRef<HTMLInputElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
   const cancelled = useRef(false);
   const [draft, setDraft] = useState(() => createCardDraft(collection, item));
   const [errors, setErrors] = useState<ReturnType<typeof buildCardUpdate>['errors']>({});
   const [checking, setChecking] = useState(false);
+  const collectionChanged = collection !== initialCollection.current;
+  latestCollection.current = collection;
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current!;
@@ -77,7 +81,7 @@ export function CardEditorDialog({
 
   async function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
-    if (checking) return;
+    if (checking || collectionChanged) return;
     const result = buildCardUpdate(collection, draft, item?.id);
     if (!result.collection || !result.item) {
       setErrors(result.errors);
@@ -93,6 +97,7 @@ export function CardEditorDialog({
       });
       if (cancelled.current) return;
       setChecking(false);
+      if (latestCollection.current !== initialCollection.current) return;
       if (imageErrors.length) {
         const nextErrors = {
           imageSrc: 'Image path could not be loaded from this CardThings site.',
@@ -148,6 +153,15 @@ export function CardEditorDialog({
           : 'Add one useful entry to this browser collection. A cover is generated automatically.'}
       </p>
       <form className="card-editor-form" onSubmit={(event) => void submit(event)} noValidate>
+        {collectionChanged ? (
+          <div className="editor-errors" role="alert">
+            <p>This collection changed in another tab.</p>
+            <p>
+              Your draft is still here. Cancel and reopen {item ? 'this card' : 'the editor'} to
+              review the latest version before saving.
+            </p>
+          </div>
+        ) : null}
         {Object.keys(errors).length ? (
           <div className="editor-errors" role="alert">
             <p>Please fix the highlighted fields.</p>
@@ -302,10 +316,10 @@ export function CardEditorDialog({
           </p>
         ) : null}
         <div className="editor-actions">
-          <button type="button" className="secondary-button" onClick={onCancel} disabled={checking}>
+          <button type="button" className="secondary-button" onClick={onCancel}>
             Cancel
           </button>
-          <button type="submit" className="primary-button" disabled={checking}>
+          <button type="submit" className="primary-button" disabled={checking || collectionChanged}>
             {item ? 'Save changes' : 'Add card'}
           </button>
         </div>

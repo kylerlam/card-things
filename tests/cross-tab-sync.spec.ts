@@ -117,6 +117,168 @@ test('synchronizes cards created and edited in the local workspace', async ({ pa
   await expect(peer.locator('.collection-card')).toHaveCount(13);
 });
 
+test('blocks a stale same-card draft and allows a reviewed retry', async ({ page }) => {
+  await page.goto('./?item=orbit-studio');
+  const peer = await page.context().newPage();
+  await peer.goto('./?item=orbit-studio');
+  for (const activePage of [page, peer]) {
+    await activePage
+      .getByRole('dialog', { name: 'Orbit Studio' })
+      .getByRole('button', { name: 'Edit card' })
+      .click();
+  }
+  const staleEditor = page.getByRole('dialog', { name: 'Edit card' });
+  const peerEditor = peer.getByRole('dialog', { name: 'Edit card' });
+  await staleEditor.getByLabel('Title').fill('Stale Draft Title');
+  await peerEditor.getByLabel('Title').fill('Peer Saved Title');
+  await peerEditor
+    .getByLabel('Short description')
+    .fill('The newer peer description must survive a retry.');
+  await peerEditor.getByRole('button', { name: 'Save changes' }).click();
+
+  await expect(staleEditor.getByRole('alert')).toContainText(
+    'This collection changed in another tab.',
+  );
+  await expect(staleEditor.getByLabel('Title')).toHaveValue('Stale Draft Title');
+  await expect(staleEditor.getByRole('button', { name: 'Save changes' })).toBeDisabled();
+  expect(
+    (
+      await new AxeBuilder({ page })
+        .withTags(['wcag2a', 'wcag2aa', 'wcag21aa', 'wcag22aa'])
+        .analyze()
+    ).violations,
+  ).toEqual([]);
+
+  await staleEditor.getByRole('button', { name: 'Cancel', exact: true }).click();
+  let details = page.getByRole('dialog', { name: 'Peer Saved Title' });
+  await expect(details).toContainText('The newer peer description must survive a retry.');
+  await details.getByRole('button', { name: 'Edit card' }).click();
+  const reviewedEditor = page.getByRole('dialog', { name: 'Edit card' });
+  await expect(reviewedEditor.getByRole('alert')).toHaveCount(0);
+  await reviewedEditor.getByLabel('Title').fill('Reviewed Retry Title');
+  await reviewedEditor.getByRole('button', { name: 'Save changes' }).click();
+  details = page.getByRole('dialog', { name: 'Reviewed Retry Title' });
+  await expect(details).toContainText('The newer peer description must survive a retry.');
+});
+
+test('blocks card drafts after category changes and collection reset', async ({ page }) => {
+  await page.goto('./?item=orbit-studio');
+  const peer = await page.context().newPage();
+  await peer.goto('./');
+  await page
+    .getByRole('dialog', { name: 'Orbit Studio' })
+    .getByRole('button', { name: 'Edit card' })
+    .click();
+  let staleEditor = page.getByRole('dialog', { name: 'Edit card' });
+  await staleEditor.getByLabel('Title').fill('Draft before category change');
+
+  await peer.getByRole('button', { name: 'Manage collection data' }).click();
+  await peer.getByRole('button', { name: 'Collection settings' }).click();
+  const settings = peer.getByRole('dialog', { name: 'Collection settings' });
+  await settings.getByLabel('Name', { exact: true }).last().fill('Peer Category');
+  await settings.getByRole('button', { name: 'Add category' }).click();
+  await settings.getByRole('button', { name: 'Save settings' }).click();
+
+  await expect(staleEditor.getByRole('alert')).toContainText(
+    'This collection changed in another tab.',
+  );
+  await expect(staleEditor.getByLabel('Title')).toHaveValue('Draft before category change');
+  await staleEditor.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await page
+    .getByRole('dialog', { name: 'Orbit Studio' })
+    .getByRole('button', { name: 'Edit card' })
+    .click();
+  staleEditor = page.getByRole('dialog', { name: 'Edit card' });
+  await staleEditor.getByLabel('Title').fill('Draft before reset');
+
+  await peer.getByRole('button', { name: 'Manage collection data' }).click();
+  await peer.getByRole('button', { name: 'Restore bundled collection' }).click();
+  await peer.getByRole('button', { name: 'Reset collection' }).click();
+  await expect(staleEditor.getByRole('alert')).toContainText(
+    'This collection changed in another tab.',
+  );
+  await expect(staleEditor.getByLabel('Title')).toHaveValue('Draft before reset');
+  await expect(staleEditor.getByRole('button', { name: 'Save changes' })).toBeDisabled();
+  await staleEditor.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Orbit Studio' })).toContainText(
+    'A calmer space to shape your next idea.',
+  );
+});
+
+test('cancels a pending image save after an external card update and retries cleanly', async ({
+  page,
+}) => {
+  let markImageRequested!: () => void;
+  const imageRequested = new Promise<void>((resolve) => {
+    markImageRequested = resolve;
+  });
+  let releaseImage!: () => void;
+  const imageRelease = new Promise<void>((resolve) => {
+    releaseImage = resolve;
+  });
+  await page.route('**/images/delayed-cover.png', async (route) => {
+    markImageRequested();
+    await imageRelease;
+    await route.fulfill({
+      contentType: 'image/png',
+      body: Buffer.from(
+        'iVBORw0KGgoAAAANSUhEUgAAAAEAAAABCAQAAAC1HAwCAAAAC0lEQVR42mNk+A8AAQUBAScY42YAAAAASUVORK5CYII=',
+        'base64',
+      ),
+    });
+  });
+  await page.goto('./?item=orbit-studio');
+  const peer = await page.context().newPage();
+  await peer.goto('./?item=orbit-studio');
+  for (const activePage of [page, peer]) {
+    await activePage
+      .getByRole('dialog', { name: 'Orbit Studio' })
+      .getByRole('button', { name: 'Edit card' })
+      .click();
+  }
+  const pendingEditor = page.getByRole('dialog', { name: 'Edit card' });
+  await pendingEditor.getByLabel('Image path').fill('images/delayed-cover.png');
+  await pendingEditor.getByLabel('Image description').fill('A delayed local cover');
+  await pendingEditor.getByRole('button', { name: 'Save changes' }).click();
+  await imageRequested;
+  await expect(pendingEditor.getByText('Checking the local cover image')).toBeVisible();
+
+  const peerEditor = peer.getByRole('dialog', { name: 'Edit card' });
+  await peerEditor.getByLabel('Title').fill('Peer Update During Check');
+  await peerEditor.getByRole('button', { name: 'Save changes' }).click();
+  await expect(pendingEditor.getByRole('alert')).toContainText(
+    'This collection changed in another tab.',
+  );
+  await pendingEditor.getByRole('button', { name: 'Cancel', exact: true }).click();
+  await expect(page.getByRole('dialog', { name: 'Peer Update During Check' })).toBeVisible();
+  releaseImage();
+  await page.waitForTimeout(100);
+
+  let stored = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem('cardthings:collection:v1') || '{}').items?.find(
+      (item: { id: string }) => item.id === 'orbit-studio',
+    ),
+  );
+  expect(stored.title).toBe('Peer Update During Check');
+  expect(stored.image.src).toBe('images/collection-covers.webp');
+
+  await page
+    .getByRole('dialog', { name: 'Peer Update During Check' })
+    .getByRole('button', { name: 'Edit card' })
+    .click();
+  const retryEditor = page.getByRole('dialog', { name: 'Edit card' });
+  await retryEditor.getByLabel('Image path').fill('images/delayed-cover.png');
+  await retryEditor.getByLabel('Image description').fill('A delayed local cover');
+  await retryEditor.getByRole('button', { name: 'Save changes' }).click();
+  await expect(page.getByRole('dialog', { name: 'Peer Update During Check' })).toBeVisible();
+  stored = await page.evaluate(() =>
+    JSON.parse(localStorage.getItem('cardthings:collection:v1') || '{}').items?.find(
+      (item: { id: string }) => item.id === 'orbit-studio',
+    ),
+  );
+  expect(stored.image.src).toBe('images/delayed-cover.png');
+});
+
 test('clears an obsolete local save notice after an external collection replacement', async ({
   page,
 }) => {
