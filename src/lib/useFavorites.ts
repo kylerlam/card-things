@@ -3,35 +3,58 @@ import type { CollectionItem } from './types';
 
 const key = 'cardthings:favorites:v1';
 
-function readFavorites(items: CollectionItem[]): string[] {
+interface FavoritesState {
+  favorites: string[];
+  savedLocally: boolean;
+  loadMessage: string;
+}
+
+function readFavorites(items: CollectionItem[]): FavoritesState {
+  let stored: string | null;
   try {
-    const stored: unknown = JSON.parse(localStorage.getItem(key) || '[]');
-    return Array.isArray(stored)
-      ? [
-          ...new Set(
-            stored.filter(
-              (id): id is string => typeof id === 'string' && items.some((item) => item.id === id),
-            ),
-          ),
-        ]
-      : [];
+    stored = localStorage.getItem(key);
   } catch {
-    return [];
+    return {
+      favorites: [],
+      savedLocally: false,
+      loadMessage: 'Browser favorites could not be read. No favorites are shown for this visit.',
+    };
+  }
+  if (!stored) return { favorites: [], savedLocally: true, loadMessage: '' };
+  try {
+    const value: unknown = JSON.parse(stored);
+    if (!Array.isArray(value)) throw new Error('Invalid favorites');
+    return {
+      favorites: [
+        ...new Set(
+          value.filter(
+            (id): id is string => typeof id === 'string' && items.some((item) => item.id === id),
+          ),
+        ),
+      ],
+      savedLocally: true,
+      loadMessage: '',
+    };
+  } catch {
+    return {
+      favorites: [],
+      savedLocally: true,
+      loadMessage:
+        'Saved favorites could not be read and were left unchanged. No favorites are shown.',
+    };
   }
 }
 
 export function useFavorites(items: CollectionItem[]) {
-  const [favorites, setFavorites] = useState(() => readFavorites(items));
-  const [savedLocally, setSavedLocally] = useState(true);
+  const [state, setState] = useState(() => readFavorites(items));
   const [syncMessage, setSyncMessage] = useState('');
-  const validFavorites = favorites.filter((id) => items.some((item) => item.id === id));
+  const validFavorites = state.favorites.filter((id) => items.some((item) => item.id === id));
 
   useEffect(() => {
     function syncFavorites(event: StorageEvent) {
       if (event.key !== key && event.key !== null) return;
       if (event.newValue === null) {
-        setFavorites([]);
-        setSavedLocally(true);
+        setState({ favorites: [], savedLocally: true, loadMessage: '' });
         setSyncMessage('Favorites cleared from another tab.');
         return;
       }
@@ -45,8 +68,7 @@ export function useFavorites(items: CollectionItem[]) {
             ),
           ),
         ];
-        setFavorites(next);
-        setSavedLocally(true);
+        setState({ favorites: next, savedLocally: true, loadMessage: '' });
         setSyncMessage(
           next.length
             ? 'Favorites updated from another tab.'
@@ -67,15 +89,20 @@ export function useFavorites(items: CollectionItem[]) {
     const next = validFavorites.includes(id)
       ? validFavorites.filter((value) => value !== id)
       : [...validFavorites, id];
-    setFavorites(next);
     setSyncMessage('');
     try {
       localStorage.setItem(key, JSON.stringify(next));
-      setSavedLocally(true);
+      setState({ favorites: next, savedLocally: true, loadMessage: '' });
     } catch {
-      setSavedLocally(false);
+      setState({ favorites: next, savedLocally: false, loadMessage: '' });
     }
   }
 
-  return { favorites: validFavorites, toggleFavorite, savedLocally, syncMessage };
+  return {
+    favorites: validFavorites,
+    toggleFavorite,
+    savedLocally: state.savedLocally,
+    syncMessage,
+    loadMessage: state.loadMessage,
+  };
 }

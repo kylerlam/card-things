@@ -22,6 +22,7 @@ export default function App() {
     importCollection,
     resetCollection,
     syncMessage: collectionSyncMessage,
+    loadMessage: collectionLoadMessage,
   } = useCollectionData();
   const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail } =
     useCollectionUrl(collection);
@@ -32,6 +33,7 @@ export default function App() {
     toggleFavorite,
     savedLocally,
     syncMessage: favoritesSyncMessage,
+    loadMessage: favoritesLoadMessage,
   } = useFavorites(collection.items);
   const [dataOpen, setDataOpen] = useState(false);
   const [settingsOpen, setSettingsOpen] = useState(false);
@@ -40,7 +42,15 @@ export default function App() {
   const searchRef = useRef<HTMLInputElement>(null);
   const addCardRef = useRef<HTMLButtonElement>(null);
   const dataButtonRef = useRef<HTMLButtonElement>(null);
-  const items = filterItems(collection.items, query, category, favorites, favoritesOnly, sort);
+  const items = filterItems(
+    collection.items,
+    collection.categories,
+    query,
+    category,
+    favorites,
+    favoritesOnly,
+    sort,
+  );
   const currentLabel = favoritesOnly
     ? 'Favorites'
     : collection.categories.find((entry) => entry.id === category)?.label || 'All items';
@@ -63,6 +73,10 @@ export default function App() {
     window.addEventListener('keydown', onKeyDown);
     return () => window.removeEventListener('keydown', onKeyDown);
   }, []);
+
+  useEffect(() => {
+    if (collectionSyncMessage) setWorkspaceMessage('');
+  }, [collectionSyncMessage]);
 
   function navigate(nextCategory: string, nextFavorites: boolean) {
     updateView({ category: nextCategory, favoritesOnly: nextFavorites, query: '', itemId: '' });
@@ -122,11 +136,17 @@ export default function App() {
             <CopyLinkButton url={shareUrl} label="Copy collection link" />
           </div>
         </header>
-        {workspaceMessage || collectionSyncMessage || favoritesSyncMessage ? (
+        {workspaceMessage ||
+        collectionSyncMessage ||
+        favoritesSyncMessage ||
+        collectionLoadMessage ||
+        favoritesLoadMessage ? (
           <div className="sync-notices" role="status" aria-live="polite">
             {workspaceMessage ? <p>{workspaceMessage}</p> : null}
             {collectionSyncMessage ? <p>{collectionSyncMessage}</p> : null}
             {favoritesSyncMessage ? <p>{favoritesSyncMessage}</p> : null}
+            {collectionLoadMessage ? <p>{collectionLoadMessage}</p> : null}
+            {favoritesLoadMessage ? <p>{favoritesLoadMessage}</p> : null}
           </div>
         ) : null}
         <section className="intro" aria-labelledby="page-title">
@@ -292,10 +312,12 @@ export default function App() {
           collection={collection}
           source={source}
           onImport={(next) => {
+            setWorkspaceMessage('');
             updateView({ category: 'all', favoritesOnly: false, query: '', itemId: '' });
             return importCollection(next);
           }}
           onReset={() => {
+            setWorkspaceMessage('');
             updateView({ category: 'all', favoritesOnly: false, query: '', itemId: '' });
             return resetCollection();
           }}

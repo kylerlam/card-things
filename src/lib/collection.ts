@@ -5,6 +5,7 @@ export const bundledCollection: Collection = content;
 
 export function filterItems(
   items: CollectionItem[],
+  categories: Collection['categories'],
   query: string,
   category: string,
   favorites: string[],
@@ -14,7 +15,15 @@ export function filterItems(
   const terms = query.trim().toLocaleLowerCase().split(/\s+/).filter(Boolean);
   return items
     .filter((item) => {
-      const searchable = [item.title, item.description, item.details, item.category, ...item.tags]
+      const categoryLabel = categories.find((entry) => entry.id === item.category)?.label || '';
+      const searchable = [
+        item.title,
+        item.description,
+        item.details,
+        item.category,
+        categoryLabel,
+        ...item.tags,
+      ]
         .join(' ')
         .toLocaleLowerCase();
       return (

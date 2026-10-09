@@ -46,6 +46,40 @@ test('validates imports before replacing the active collection', async ({ page }
   await expect(page.locator('.collection-card')).toHaveCount(12);
 });
 
+test('does not activate a zero-image import after its dialog closes', async ({ page }) => {
+  await page.goto('./');
+  await page.evaluate((collection) => {
+    const json = JSON.stringify({
+      ...collection,
+      items: collection.items.map(({ image: _image, ...item }) => item),
+    });
+    const scope = window as typeof window & {
+      collectionReadStarted?: boolean;
+      finishCollectionRead?: () => void;
+    };
+    File.prototype.text = () =>
+      new Promise<string>((resolve) => {
+        scope.collectionReadStarted = true;
+        scope.finishCollectionRead = () => resolve(json);
+      });
+  }, importedCollection);
+  await openData(page);
+  await page.getByLabel('Import collection JSON').setInputFiles({
+    name: 'delayed.json',
+    mimeType: 'application/json',
+    buffer: Buffer.from('{}'),
+  });
+  await expect
+    .poll(() => page.evaluate(() => Boolean((window as any).collectionReadStarted)))
+    .toBe(true);
+  await page.getByRole('button', { name: 'Close collection data' }).click();
+  await page.evaluate(() => (window as any).finishCollectionRead());
+  await page.waitForTimeout(100);
+
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Good things, kept together.');
+  expect(await page.evaluate(() => localStorage.getItem('cardthings:collection:v1'))).toBeNull();
+});
+
 test('keeps the active view when an imported local image cannot load', async ({ page }) => {
   const missingImage = structuredClone(importedCollection);
   missingImage.items[0].image.src = 'images/missing-import.png';
@@ -131,6 +165,23 @@ test('exports the exact active collection and resets with confirmation', async (
   await expect(page.getByRole('heading', { level: 1 })).toHaveText('Good things, kept together.');
   await page.reload();
   await expect(page.locator('.collection-card')).toHaveCount(12);
+});
+
+test('clears an obsolete workspace save notice when the collection resets', async ({ page }) => {
+  await page.goto('./');
+  await openData(page);
+  await page.getByRole('button', { name: 'Collection settings' }).click();
+  const settings = page.getByRole('dialog', { name: 'Collection settings' });
+  await settings.getByLabel('Title').fill('Temporary Shelf');
+  await settings.getByRole('button', { name: 'Save settings' }).click();
+  await expect(page.getByText('Collection settings saved in this browser.')).toBeVisible();
+
+  await openData(page);
+  await page.getByRole('button', { name: 'Restore bundled collection' }).click();
+  await page.getByRole('button', { name: 'Reset collection' }).click();
+  await page.getByRole('button', { name: 'Close collection data' }).click();
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('Good things, kept together.');
+  await expect(page.getByText('Collection settings saved in this browser.')).toHaveCount(0);
 });
 
 test('keeps a valid import available for the visit when storage is unavailable', async ({

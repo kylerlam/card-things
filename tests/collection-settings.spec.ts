@@ -43,6 +43,10 @@ test('saves collection copy and category appearance without changing stable refe
     'background-color',
     'rgb(18, 52, 86)',
   );
+  await page.getByRole('searchbox', { name: 'Search collection' }).fill('Utilities');
+  await expect(page.locator('.collection-card')).toHaveCount(3);
+  await expect(page.getByRole('button', { name: 'View Orbit Studio', exact: true })).toBeVisible();
+  await page.getByRole('button', { name: 'Clear search' }).click();
   const saved = await page.evaluate(() =>
     JSON.parse(localStorage.getItem('cardthings:collection:v1') || '{}'),
   );
@@ -184,4 +188,28 @@ test('synchronizes settings across tabs while preserving valid URLs and favorite
       .getByRole('group', { name: 'Filter by category' })
       .getByRole('button', { name: 'Utilities', exact: true }),
   ).toHaveAttribute('aria-pressed', 'true');
+});
+
+test('blocks a stale settings draft after another tab changes the collection', async ({ page }) => {
+  await page.goto('./');
+  const peer = await page.context().newPage();
+  await peer.goto('./');
+  const staleDialog = await openSettings(page);
+  await staleDialog.getByLabel('Title').fill('Older Draft');
+
+  const currentDialog = await openSettings(peer);
+  await currentDialog.getByLabel('Name', { exact: true }).last().fill('Shared Category');
+  await currentDialog.getByRole('button', { name: 'Add category' }).click();
+  await currentDialog.getByRole('button', { name: 'Save settings' }).click();
+
+  await expect(staleDialog.getByRole('alert')).toContainText(
+    'This collection changed in another tab.',
+  );
+  await expect(staleDialog.getByRole('button', { name: 'Save settings' })).toBeDisabled();
+  await staleDialog.getByRole('button', { name: 'Cancel', exact: true }).click();
+  const reopened = await openSettings(page);
+  await expect(reopened.getByRole('group', { name: 'Category 5' }).getByLabel('Name')).toHaveValue(
+    'Shared Category',
+  );
+  await expect(reopened.getByLabel('Title')).toHaveValue('Good things, kept together.');
 });

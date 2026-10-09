@@ -23,6 +23,7 @@ export function CollectionSettingsDialog({
   onCancel: () => void;
 }) {
   const dialogRef = useRef<HTMLDialogElement>(null);
+  const initialCollection = useRef(collection);
   const titleRef = useRef<HTMLInputElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
   const [draft, setDraft] = useState(() => createCollectionSettingsDraft(collection));
@@ -30,6 +31,7 @@ export function CollectionSettingsDialog({
   const [newCategory, setNewCategory] = useState('');
   const [newCategoryColor, setNewCategoryColor] = useState(defaultCategoryColor);
   const [newCategoryError, setNewCategoryError] = useState('');
+  const collectionChanged = collection !== initialCollection.current;
 
   useLayoutEffect(() => {
     const dialog = dialogRef.current!;
@@ -107,6 +109,7 @@ export function CollectionSettingsDialog({
 
   function submit(event: React.FormEvent<HTMLFormElement>) {
     event.preventDefault();
+    if (collectionChanged) return;
     const result = buildCollectionSettingsUpdate(collection, draft);
     if (!result.collection) {
       setErrors(result.errors);
@@ -168,6 +171,12 @@ export function CollectionSettingsDialog({
         connected when visible names change.
       </p>
       <form className="collection-settings-form" onSubmit={submit} noValidate>
+        {collectionChanged ? (
+          <div className="editor-errors" role="alert">
+            <p>This collection changed in another tab.</p>
+            <p>Cancel and reopen settings to review the latest version before saving.</p>
+          </div>
+        ) : null}
         {errorCount ? (
           <div className="editor-errors" role="alert">
             <p>Please fix the highlighted fields.</p>
@@ -320,7 +329,7 @@ export function CollectionSettingsDialog({
           <button type="button" className="secondary-button" onClick={onCancel}>
             Cancel
           </button>
-          <button type="submit" className="primary-button">
+          <button type="submit" className="primary-button" disabled={collectionChanged}>
             Save settings
           </button>
         </div>

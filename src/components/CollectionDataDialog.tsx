@@ -69,7 +69,9 @@ export function CollectionDataDialog({
       return;
     }
     try {
-      const value: unknown = JSON.parse(await file.text());
+      const text = await file.text();
+      if (cancelled.current) return;
+      const value: unknown = JSON.parse(text);
       const validationErrors = validateCollection(value);
       if (validationErrors.length) {
         setErrors(validationErrors);
@@ -93,6 +95,7 @@ export function CollectionDataDialog({
           return;
         }
       }
+      if (cancelled.current) return;
       const saved = onImport(next);
       setStatus(
         saved
