@@ -28,6 +28,12 @@ export function SiteHeader() {
           >
             工具分類
           </Link>
+          <Link
+            href="/demo"
+            className={cn(buttonVariants({ variant: "ghost" }), "hidden md:inline-flex")}
+          >
+            完整 Demo
+          </Link>
           <DemoAccountNav />
           <Link
             href="/admin/login"

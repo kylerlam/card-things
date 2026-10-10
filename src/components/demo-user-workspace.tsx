@@ -89,7 +89,7 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
             className="w-full justify-start"
             onClick={() => {
               signOutDemoUser();
-              router.push("/auth?logout=1");
+              router.push(user.entry === "demo" ? "/demo" : "/auth?logout=1");
             }}
           >
             退出體驗模式

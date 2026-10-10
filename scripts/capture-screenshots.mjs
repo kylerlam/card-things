@@ -19,6 +19,14 @@ await capture(desktop, "catalogue-desktop.png", "/");
 await capture(desktop, "tool-detail-desktop.png", "/tools/framesnap");
 await capture(desktop, "auth-demo-desktop.png", "/auth?register=1");
 await capture(desktop, "admin-login-desktop.png", "/admin/login");
+await capture(desktop, "demo-personas-desktop.png", "/demo");
+await desktop.getByRole("button", { name: "以管理員 Demo 進入" }).click();
+await desktop.waitForURL(`${baseURL}/demo/admin`);
+await desktop.getByRole("heading", { name: "管理總覽" }).waitFor();
+await desktop.screenshot({ path: resolve(outputDirectory, "demo-admin-desktop.png"), fullPage: true });
+await desktop.getByRole("button", { name: "工具管理" }).click();
+await desktop.getByRole("heading", { name: "工具管理" }).waitFor();
+await desktop.screenshot({ path: resolve(outputDirectory, "demo-admin-tools-desktop.png"), fullPage: true });
 
 await desktop.goto(baseURL, { waitUntil: "networkidle" });
 await desktop.evaluate(() => {
@@ -68,5 +76,10 @@ await mobile.evaluate(() => {
   );
 });
 await capture(mobile, "user-workspace-mobile.png", "/user?view=profile");
+await capture(mobile, "demo-personas-mobile.png", "/demo");
+await mobile.getByRole("button", { name: "以管理員 Demo 進入" }).click();
+await mobile.waitForURL(`${baseURL}/demo/admin`);
+await mobile.getByRole("heading", { name: "管理總覽" }).waitFor();
+await mobile.screenshot({ path: resolve(outputDirectory, "demo-admin-mobile.png"), fullPage: true });
 
 await browser.close();

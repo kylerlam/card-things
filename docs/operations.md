@@ -69,3 +69,19 @@ Production does not require sample data. An administrator can create categories,
 - The first administrator is created only with explicit `ADMIN_EMAIL` and `ADMIN_PASSWORD` environment variables.
 - `admin:create` refuses to replace an existing account and never prints the password.
 - Remove sensitive shell variables after the management command finishes.
+
+## Isolated Demo preview
+
+The optional Demo gateway is a review boundary, not production authentication. It binds to `127.0.0.1:3311`, forwards only GET and HEAD requests for the public catalogue, tool details, visitor Demo, isolated administrator Demo, and Next.js assets, and rejects `/admin`, `/api`, unknown paths, encoded traversal, and every write method. It removes request credentials and upstream `Set-Cookie` headers and adds no-index response headers.
+
+Start it against an already running local app:
+
+```bash
+DEMO_GATEWAY_TARGET=http://127.0.0.1:3000 \
+DEMO_GATEWAY_TTL_MS=7200000 \
+npm run demo:gateway
+```
+
+The process closes after the TTL or immediately on `Ctrl-C`. A temporary HTTPS tunnel, if separately approved, must target only `127.0.0.1:3311`. Never tunnel the application port, mount a host directory or Docker socket into a tunnel container, or put real credentials, private URLs, or non-fictional data in the Demo.
+
+Each visitor's ordinary-user and administrator Demo changes live only in that tab's `sessionStorage`. Closing the tab clears them. The isolated administrator persona cannot call management APIs, read SQLite, create sessions, or enter the real `/admin` workspace.

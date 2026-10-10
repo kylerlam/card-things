@@ -30,9 +30,17 @@ Start the app, then use these routes:
 - `/tools/framesnap` — dedicated tool detail and external source labels
 - `/auth?register=1` — safe registration Demo with visible example verification code
 - `/user` — Demo overview, favourites, private custom tools, and profile editing
+- `/demo` — explicit ordinary-user and isolated administrator Demo personas
+- `/demo/admin` — browser-local administrator CRUD sandbox with no server permissions
 - `/admin/login` — real administrator authentication; there is no default password
 
 Clicking a card's heart while signed out opens the Demo login flow. Completing it returns to the original catalogue or detail page and applies the pending favourite. The administrator route is separate and cannot be entered through the visitor Demo.
+
+For a complete review without real credentials, start at `/demo`. The administrator persona uses a separate versioned `sessionStorage` sandbox. Tool, category, tag, profile, reset, and logout actions never call the authentication API or write the SQLite database.
+
+![Isolated Demo persona selector](docs/screenshots/demo-personas-desktop.png)
+
+![Isolated administrator Demo](docs/screenshots/demo-admin-desktop.png)
 
 ![Safe visitor registration Demo](docs/screenshots/auth-demo-desktop.png)
 
@@ -41,6 +49,8 @@ Clicking a card's heart while signed out opens the Demo login flow. Completing i
 The same workspace collapses into a touch-friendly mobile layout:
 
 ![Visitor workspace on mobile](docs/screenshots/user-workspace-mobile.png)
+
+![Isolated administrator Demo on mobile](docs/screenshots/demo-admin-mobile.png)
 
 ## Stack
 
@@ -132,6 +142,14 @@ Documentation screenshots are captured from a running local build with fictional
 ```bash
 SCREENSHOT_BASE_URL=http://127.0.0.1:3000 npm run screenshots
 ```
+
+For a time-boxed external design review, place the included read-only Demo gateway in front of a local app process instead of exposing the application port directly. The gateway listens only on loopback, allows public and Demo GET/HEAD routes, rejects `/admin`, `/api`, all writes, and expires after two hours by default:
+
+```bash
+DEMO_GATEWAY_TARGET=http://127.0.0.1:3000 npm run demo:gateway
+```
+
+Only connect a temporary HTTPS tunnel to the gateway's `127.0.0.1:3311` endpoint after reviewing the tunnel provider and audience. See [Operations](docs/operations.md#isolated-demo-preview) for the exact boundary and shutdown procedure.
 
 ## Data safety
 

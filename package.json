@@ -18,6 +18,7 @@
     "test": "vitest run",
     "test:e2e": "playwright test",
     "screenshots": "node scripts/capture-screenshots.mjs",
+    "demo:gateway": "node scripts/demo-preview-gateway.mjs",
     "check": "npm run lint && npm run typecheck && npm run test && npm run build"
   },
   "dependencies": {

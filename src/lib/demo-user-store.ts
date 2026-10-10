@@ -17,6 +17,7 @@ export type DemoCustomTool = {
 export type DemoUserState = {
   version: 1;
   signedIn: boolean;
+  entry: "auth" | "demo";
   id: string;
   name: string;
   email: string;
@@ -31,6 +32,7 @@ const listeners = new Set<() => void>();
 const initialState: DemoUserState = {
   version: 1,
   signedIn: false,
+  entry: "auth",
   id: "CT-DEMO-0001",
   name: "示例用戶",
   email: "demo@example.test",
@@ -89,11 +91,17 @@ export function useDemoUser() {
   return useSyncExternalStore(subscribe, getSnapshot, getServerSnapshot);
 }
 
-export function signInDemoUser(profile?: { name?: string; email?: string; id?: string }) {
+export function signInDemoUser(profile?: {
+  name?: string;
+  email?: string;
+  id?: string;
+  entry?: "auth" | "demo";
+}) {
   loadState();
   save({
     ...state,
     signedIn: true,
+    entry: profile?.entry ?? "auth",
     id: profile?.id ?? state.id,
     name: profile?.name?.trim() || state.name,
     email: profile?.email?.trim() || state.email,
@@ -103,6 +111,10 @@ export function signInDemoUser(profile?: { name?: string; email?: string; id?: s
 export function signOutDemoUser() {
   loadState();
   save({ ...state, signedIn: false });
+}
+
+export function resetDemoUser() {
+  save({ ...initialState });
 }
 
 export function toggleDemoFavorite(favorite: DemoFavorite) {
