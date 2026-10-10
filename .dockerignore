@@ -1,0 +1,16 @@
+.git
+.github
+.next
+node_modules
+data
+uploads
+backups
+planning
+coverage
+test-results
+playwright-report
+.env
+.env.*
+!.env.example
+npm-debug.log*
+.DS_Store

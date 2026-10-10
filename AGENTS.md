@@ -14,19 +14,28 @@ AI agents are expected to perform most coding and GitHub work. Parallel agents s
 
 ## Git workflow
 
-- Use a new short-lived task branch from current `main` for every file change, including source code, tests, dependencies, deployment configuration, agent behavior rules, documentation, links, and design references. Keep one coherent task per branch.
+- Use a new short-lived task branch from current `dev` for every file change, including source code, tests, dependencies, deployment configuration, agent behavior rules, documentation, links, and design references. Keep one coherent task per branch.
 - Use descriptive branch names, such as `feat/card-search`, `fix/mobile-layout`, or `docs/project-guidelines`. Branch names are distinct from Conventional Commit messages.
-- Commit and push the task branch, then open a draft PR and run relevant available checks. Do not push file changes directly to `main`.
-- Keep `main` reviewed, checked, and releasable. The initial repository commit predates this workflow.
+- Commit and push the task branch, then open a draft PR targeting `dev` and run relevant available checks. Do not push file changes directly to `dev` or `main`.
+- Keep `main` reviewed, checked, and releasable. Promote accepted work from `dev` to `main` only with the repository owner's explicit approval.
 - Briefly document meaningful implementation steps, approaches considered, check results, and known limitations in the PR. Provide a useful review record without private reasoning or raw command dumps.
-- Wait for the repository owner's explicit approval of the PR before squash merging into `main`. Then clean up merged task branches as appropriate.
-- There is no persistent `dev` branch. A bug found after a merge gets a fresh fix branch from latest `main`; do not resurrect the old feature branch.
+- Wait for the repository owner's explicit approval before merging. Then clean up merged task branches as appropriate.
 - Being on `main` does not prove deployment. Tags or releases may identify published versions.
 
 ## Validation and lessons
 
-The current bootstrap is documentation only. Find actual project checks when they exist; do not invent a framework, commands, CI, features, or design approval requirements. Report checks run, failed, or unavailable, and never claim unrun tests passed.
+Find actual project checks when they exist; do not invent commands, CI, features, or design approval requirements. Report checks run, failed, or unavailable, and never claim unrun tests passed.
 
 Consult relevant entries in `docs/lesson-learned.md` during planning and before repeating affected work. Record confirmed, meaningful corrections rather than every disagreement or temporary preference. Promote only durable, confirmed project decisions into this file.
 
 Creating a Markdown file does not automatically load it or provide permanent model learning. Do not create skills until a concrete recurring workflow warrants a separately scoped decision. Preserve existing skills; do not migrate them now.
+
+<!-- BEGIN:nextjs-agent-rules -->
+
+## This is NOT the Next.js you know
+
+This version has breaking changes — APIs, conventions, and file structure may all differ from your training data. Read the relevant guide in `node_modules/next/dist/docs/` (resolved from this file's directory; in monorepos the `next` package may not be visible from the repo root) before writing any code. Heed deprecation notices.
+
+This block is written and re-added by `next dev` — verify at `node_modules/next/dist/server/lib/generate-agent-files.js`. Removing it from a diff only re-creates the uncommitted change; committing it with your work keeps the tree clean.
+
+<!-- END:nextjs-agent-rules -->

@@ -1,26 +1,29 @@
 # Design references
 
-Duplicate the entry below for each UI or animation reference. Fill in the details you know; leave optional fields blank. Keep the exact demo URL so the intended effect is easy to find. Use paths relative to this document for any screenshots or recordings you add.
+The selected direction is a deliberately low-fidelity, monochrome workflow UI. Private planning files are not copied into this repository; this document records only the implementation characteristics required to review the public result.
 
-References are inspiration, not permission to copy code or licensed assets. Adding a reference does not select a library or authorize installing it. Keep the status as **Inspiration** until the user chooses **Selected** or **Rejected**.
+## Selected direction
 
-## Reference entry
+- **Target:** public catalogue, tool detail, visitor Demo, and protected administrator workspace
+- **Layout:** 1180px maximum content width, thin dark borders, small radii, system type, and generous whitespace
+- **Catalogue:** purpose categories on the left; search and multi-select platform filters beside them; three-column cards at wide widths
+- **Cards:** compact identity block, purpose and platform metadata, a dedicated detail action, and a separate favourite control
+- **Visitor workspace:** independent overview, favourites, private custom tools, and profile views
+- **Administrator workspace:** independent user, tool, purpose-category, and tag pages rather than a generic CMS surface
+- **Responsive behavior:** side navigation becomes a horizontal scrollable control row and content stacks into one column
+- **Motion:** no decorative animation dependency; native focus, hover, and navigation feedback only
+- **Status:** Selected and implemented
 
-- **Title:**
-- **Exact demo URL:**
-- **Library or project (optional):**
-- **Target page or component:**
-- **What I like:**
-- **Desired behavior and trigger:**
-- **Mobile behavior (optional):**
-- **Screenshot or recording relative path (optional):**
-- **Status:** Inspiration
-- **Notes:**
+## Rendered evidence
 
-### Implementation review (agent)
-
-Complete this section when assessing a reference for implementation; the user does not need to research these details.
-
-- **License and asset reuse permissions:**
-- **Framework compatibility and dependency needs:**
-- **Accessibility, keyboard/touch behavior, and reduced motion:**
+- [Public catalogue](screenshots/catalogue-desktop.png)
+- [Tool detail](screenshots/tool-detail-desktop.png)
+- [Safe visitor registration Demo](screenshots/auth-demo-desktop.png)
+- [Isolated Demo persona selector](screenshots/demo-personas-desktop.png)
+- [Isolated Demo persona selector on mobile](screenshots/demo-personas-mobile.png)
+- [Isolated administrator overview](screenshots/demo-admin-desktop.png)
+- [Isolated administrator tools](screenshots/demo-admin-tools-desktop.png)
+- [Isolated administrator overview on mobile](screenshots/demo-admin-mobile.png)
+- [Visitor workspace](screenshots/user-workspace-desktop.png)
+- [Visitor workspace on mobile](screenshots/user-workspace-mobile.png)
+- [Administrator login](screenshots/admin-login-desktop.png)
