@@ -15,10 +15,32 @@ CardThings stores descriptions and links, not installer binaries. Official and m
 - Draft and published tool states
 - Deterministic fictional seed data that inserts missing rows without replacing edits
 - SQLite migrations, persistent Docker volumes, and documented backup/restore procedures
+- A browser-session Demo flow for visitor registration, login, favourites, private custom tools, and profile editing
+- Protected administrator overview, user listing, tool, category, tag, and profile pages
 
-Accounts for ordinary visitors, registration, favourites, uploads, and binary hosting are deliberately outside this milestone.
+The visitor account experience is intentionally a review prototype. It stores fictional state in the current browser session, never stores passwords, and never sends email or CAPTCHA requests. Real visitor accounts, server-backed favourites and profiles, uploads, and binary hosting remain outside this milestone.
 
 ![Custom CardThings admin login](docs/screenshots/admin-login-desktop.png)
+
+## Review the complete flow
+
+Start the app, then use these routes:
+
+- `/` — public catalogue, filtering, favourites, and tool cards
+- `/tools/framesnap` — dedicated tool detail and external source labels
+- `/auth?register=1` — safe registration Demo with visible example verification code
+- `/user` — Demo overview, favourites, private custom tools, and profile editing
+- `/admin/login` — real administrator authentication; there is no default password
+
+Clicking a card's heart while signed out opens the Demo login flow. Completing it returns to the original catalogue or detail page and applies the pending favourite. The administrator route is separate and cannot be entered through the visitor Demo.
+
+![Safe visitor registration Demo](docs/screenshots/auth-demo-desktop.png)
+
+![Visitor workspace Demo](docs/screenshots/user-workspace-desktop.png)
+
+The same workspace collapses into a touch-friendly mobile layout:
+
+![Visitor workspace on mobile](docs/screenshots/user-workspace-mobile.png)
 
 ## Stack
 
@@ -103,7 +125,13 @@ npm run test:e2e
 npm run build
 ```
 
-The end-to-end suite creates and removes only `data/e2e.sqlite*`, starts a local test server, verifies anonymous admin protection and authenticated persistence, and exercises the public catalogue on desktop and mobile Chrome.
+The end-to-end suite creates and removes only `data/e2e.sqlite*`, starts a local test server, verifies anonymous admin protection and authenticated persistence, and exercises the public catalogue and favourite return flow on desktop and mobile Chrome. It also covers registration, private custom tools, profile updates, and logout in Demo mode.
+
+Documentation screenshots are captured from a running local build with fictional data:
+
+```bash
+SCREENSHOT_BASE_URL=http://127.0.0.1:3000 npm run screenshots
+```
 
 ## Data safety
 

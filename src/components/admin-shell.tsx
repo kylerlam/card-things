@@ -4,16 +4,16 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+import { AdminNavigation } from "./admin-navigation";
 import { SignOutButton } from "./sign-out-button";
 
-const navigation = [
-  { href: "/admin", label: "總覽" },
-  { href: "/admin/tools", label: "工具管理" },
-  { href: "/admin/categories", label: "用途分類管理" },
-  { href: "/admin/tags", label: "Tag 管理" },
-];
-
-export function AdminShell({ children }: { children: ReactNode }) {
+export function AdminShell({
+  children,
+  administrator,
+}: {
+  children: ReactNode;
+  administrator: { id: string; name: string; email: string };
+}) {
   return (
     <>
       <header className="border-b-2 border-border bg-card">
@@ -33,7 +33,7 @@ export function AdminShell({ children }: { children: ReactNode }) {
         </div>
       </header>
       <main className="page-shell py-10">
-        <p className="eyebrow">管理工作區</p>
+        <p className="eyebrow">03 · 管理工作區 · 已驗證管理員</p>
         <h1 className="mt-2 text-4xl font-extrabold tracking-tight">管理員後台</h1>
         <p className="mt-3 text-muted-foreground">
           管理工具、用途分類、Tag、發布狀態與外部下載來源。
@@ -41,17 +41,10 @@ export function AdminShell({ children }: { children: ReactNode }) {
         <div className="mt-8 grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
           <aside className="wire-panel self-start bg-muted p-4">
             <h2 className="mb-3 text-xl font-bold">管理工作區</h2>
-            <nav className="flex flex-col gap-2" aria-label="管理員導覽">
-              {navigation.map((item) => (
-                <Link
-                  key={item.href}
-                  href={item.href}
-                  className={cn(buttonVariants({ variant: "outline" }), "justify-start")}
-                >
-                  {item.label}
-                </Link>
-              ))}
-            </nav>
+            <AdminNavigation />
+            <p className="mt-4 hidden border-t border-border pt-3 text-xs text-muted-foreground lg:block">
+              {administrator.name}<br />{administrator.email}
+            </p>
           </aside>
           <div className="min-w-0">{children}</div>
         </div>

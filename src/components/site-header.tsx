@@ -3,6 +3,8 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
+import { DemoAccountNav } from "./demo-account-nav";
+
 export function SiteHeader() {
   return (
     <header className="border-b-2 border-border bg-card">
@@ -26,14 +28,15 @@ export function SiteHeader() {
           >
             工具分類
           </Link>
+          <DemoAccountNav />
           <Link
             href="/admin/login"
             className={cn(
               buttonVariants({ variant: "outline" }),
-              "hidden sm:inline-flex",
+              "hidden lg:inline-flex",
             )}
           >
-            管理登入
+            管理入口
           </Link>
         </nav>
       </div>

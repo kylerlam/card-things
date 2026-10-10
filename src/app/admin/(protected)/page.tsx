@@ -32,6 +32,7 @@ export default function AdminOverview() {
       </section>
       <div className="grid gap-4 md:grid-cols-3">
         {[
+          ["用戶管理", "搜尋伺服器帳戶並核對角色與驗證狀態。", "/admin/users"],
           ["工具管理", "編輯說明、平台、發布狀態和下載來源。", "/admin/tools"],
           ["用途分類", "控制首頁左側的主要分類。", "/admin/categories"],
           ["Tag 管理", "維護工具的輔助標籤。", "/admin/tags"],
