@@ -32,7 +32,7 @@ export default async function TagsPage({
         ) : null}
       </div>
 
-      <form action={saveTag} className="mt-5 border border-border bg-card p-4">
+      <form action={saveTag} className="soft-surface mt-5 p-4">
         <input type="hidden" name="id" value={editing?.id ?? ""} />
         <FieldGroup>
           <div className="grid gap-4 md:grid-cols-2">
@@ -59,7 +59,7 @@ export default async function TagsPage({
         {allTags.map((tag) => (
           <div
             key={tag.id}
-            className="flex flex-wrap items-center justify-between gap-3 border border-border bg-card p-3"
+            className="soft-surface flex flex-wrap items-center justify-between gap-3 p-3"
           >
             <div>
               <strong className="block">{tag.name}</strong>

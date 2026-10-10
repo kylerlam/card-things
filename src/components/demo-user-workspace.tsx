@@ -66,7 +66,7 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
 
   return (
     <div className="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)]">
-      <aside className="wire-panel self-start bg-muted p-4">
+      <aside className="wire-panel self-start bg-card p-5">
         <h2 className="mb-3 text-xl font-bold">我的空間</h2>
         <nav className="flex gap-2 overflow-x-auto pb-1 lg:flex-col" aria-label="普通用戶導覽">
           {views.map((item) => (
@@ -133,7 +133,7 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
             </div>
             <div className="mt-5 flex flex-col gap-2">
               {user.favorites.length ? user.favorites.map((favorite) => (
-                <div key={favorite.slug} className="grid gap-3 border border-border bg-card p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+                <div key={favorite.slug} className="soft-surface grid gap-3 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
                   <div>
                     <Link href={`/tools/${favorite.slug}`} className="font-bold underline-offset-4 hover:underline">{favorite.name}</Link>
                     <p className="mt-1 text-sm text-muted-foreground">{favorite.summary}</p>
@@ -141,7 +141,7 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
                   <Button type="button" variant="outline" onClick={() => toggleDemoFavorite(favorite)}>移除收藏</Button>
                 </div>
               )) : (
-                <div className="border border-dashed border-border p-10 text-center text-muted-foreground">尚未收藏；可從首頁工具卡片的 ♡ 開始。</div>
+                <div className="rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">尚未收藏；可從首頁工具卡片的 ♡ 開始。</div>
               )}
             </div>
           </section>
@@ -160,7 +160,7 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
             </div>
             {showCustomForm ? (
               <form
-                className="mt-5 border border-border bg-muted p-4"
+                className="mt-5 rounded-lg border border-border bg-muted p-4"
                 onSubmit={(event) => {
                   event.preventDefault();
                   const form = new FormData(event.currentTarget);
@@ -182,12 +182,12 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
             ) : null}
             <div className="mt-5 flex flex-col gap-2">
               {user.customTools.length ? user.customTools.map((tool) => (
-                <div key={tool.id} className="flex flex-wrap items-center justify-between gap-3 border border-border bg-card p-4">
+                <div key={tool.id} className="soft-surface flex flex-wrap items-center justify-between gap-3 p-4">
                   <div><strong className="block">{tool.name}</strong><span className="text-sm text-muted-foreground">{tool.note || "沒有備註"}</span></div>
                   <Button type="button" variant="outline" onClick={() => removeDemoCustomTool(tool.id)}>移除</Button>
                 </div>
               )) : (
-                <div className="border border-dashed border-border p-10 text-center text-muted-foreground">尚無自訂條目</div>
+                <div className="rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">尚無自訂條目</div>
               )}
             </div>
           </section>
@@ -201,7 +201,7 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
               <div>
                 <button
                   type="button"
-                  className="grid aspect-square w-full place-items-center overflow-hidden border border-dashed border-border bg-muted p-4 text-center"
+                  className="grid aspect-square w-full place-items-center overflow-hidden rounded-xl border border-dashed border-border bg-muted p-4 text-center"
                   onClick={() => fileInput.current?.click()}
                 >
                   {user.avatar ? (
@@ -253,7 +253,7 @@ export function DemoUserWorkspace({ initialView }: { initialView: View }) {
           </section>
         ) : null}
 
-        <div className="mt-4 border border-border bg-muted p-3 text-sm" role="status" aria-live="polite">{status}</div>
+        <div className="mt-4 rounded-lg border border-border bg-muted p-3 text-sm" role="status" aria-live="polite">{status}</div>
       </div>
     </div>
   );

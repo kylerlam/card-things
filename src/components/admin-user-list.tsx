@@ -35,7 +35,7 @@ export function AdminUserList({ users }: { users: AdminUser[] }) {
       <p className="mt-2 text-sm text-muted-foreground" role="status">顯示 {filtered.length} / {users.length} 個伺服器帳戶</p>
       <div className="mt-4 flex flex-col gap-2">
         {filtered.length ? filtered.map((user) => (
-          <div key={user.id} className="grid gap-3 border border-border bg-card p-4 sm:grid-cols-[1fr_auto] sm:items-center">
+          <div key={user.id} className="soft-surface grid gap-3 p-4 sm:grid-cols-[1fr_auto] sm:items-center">
             <div>
               <div className="flex flex-wrap items-center gap-2">
                 <strong>{user.name}</strong>
@@ -47,7 +47,7 @@ export function AdminUserList({ users }: { users: AdminUser[] }) {
             <span className="text-xs text-muted-foreground">建立於 {user.createdAt}</span>
           </div>
         )) : (
-          <div className="border border-dashed border-border p-10 text-center text-muted-foreground">沒有符合條件的伺服器帳戶。</div>
+          <div className="rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">沒有符合條件的伺服器帳戶。</div>
         )}
       </div>
     </>
