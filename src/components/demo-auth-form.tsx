@@ -216,7 +216,7 @@ export function DemoAuthForm({
           </FieldGroup>
         </form>
 
-        <div className="mt-5 border border-border bg-muted p-3 text-sm" role="status" aria-live="polite">
+        <div className="mt-5 rounded-lg border border-border bg-muted p-3 text-sm" role="status" aria-live="polite">
           {status}
         </div>
       </section>
@@ -224,7 +224,7 @@ export function DemoAuthForm({
       <aside className="wire-panel flex flex-col p-5 sm:p-7">
         <h2 className="text-2xl font-bold">登入後可做什麼</h2>
         <p className="mt-3 leading-7">收藏常用工具、管理僅自己可見的自訂條目，並體驗個人資料頁。</p>
-        <div className="my-6 grid min-h-48 place-items-center border border-border bg-muted p-6 text-center text-muted-foreground">
+        <div className="my-6 grid min-h-48 place-items-center rounded-lg border border-border bg-muted p-6 text-center text-muted-foreground">
           個人後台預覽區
         </div>
         <Link href="/user" className={cn(buttonVariants({ variant: "outline" }), "w-full")}>查看普通用戶後台</Link>

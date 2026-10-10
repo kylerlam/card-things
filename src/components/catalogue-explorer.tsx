@@ -102,8 +102,8 @@ export function CatalogueExplorer({
   }
 
   return (
-    <div id="catalogue" className="grid gap-5 lg:grid-cols-[230px_minmax(0,1fr)]">
-      <aside className="wire-panel self-start bg-muted p-4" aria-labelledby="category-title">
+    <div id="catalogue" className="grid gap-6 lg:grid-cols-[230px_minmax(0,1fr)]">
+      <aside className="wire-panel self-start bg-card p-5" aria-labelledby="category-title">
         <h2 id="category-title" className="mb-3 text-xl font-bold">
           按用途分類
         </h2>
@@ -131,7 +131,7 @@ export function CatalogueExplorer({
       </aside>
 
       <div className="min-w-0">
-        <section className="wire-panel mb-5 p-4" aria-labelledby="search-title">
+        <section className="wire-panel mb-6 p-5 sm:p-6" aria-labelledby="search-title">
           <h2 id="search-title" className="mb-2 text-lg font-bold">
             搜尋工具或用途
           </h2>
@@ -176,12 +176,12 @@ export function CatalogueExplorer({
         </div>
 
         {filtered.length ? (
-          <div className="grid gap-3 md:grid-cols-2 xl:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
             {filtered.map((tool) => (
               <Card key={tool.id} className="h-full">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <div className="grid size-12 shrink-0 place-items-center border border-dashed border-border text-sm font-bold">
+                    <div className="grid size-12 shrink-0 place-items-center rounded-lg border border-primary/10 bg-secondary text-sm font-bold text-secondary-foreground">
                       {tool.name.slice(0, 2).toUpperCase()}
                     </div>
                     <div>

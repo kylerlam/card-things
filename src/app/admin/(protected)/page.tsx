@@ -23,7 +23,7 @@ export default function AdminOverview() {
             [categories.length, "用途分類"],
             [tags.length, "Tags"],
           ].map(([value, label]) => (
-            <div key={label} className="border border-border bg-card p-4">
+            <div key={label} className="soft-surface p-4">
               <strong className="block text-3xl">{value}</strong>
               <span className="text-sm text-muted-foreground">{label}</span>
             </div>

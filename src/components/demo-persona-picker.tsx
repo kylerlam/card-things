@@ -15,7 +15,9 @@ export function DemoPersonaPicker() {
   return (
     <div className="grid gap-5 lg:grid-cols-2">
       <section className="wire-panel flex flex-col p-6 sm:p-8">
-        <UserRoundIcon className="size-8" />
+        <span className="grid size-12 place-items-center rounded-xl bg-secondary text-secondary-foreground">
+          <UserRoundIcon className="size-6" />
+        </span>
         <p className="eyebrow mt-6">示例身份 01</p>
         <h2 className="mt-2 text-2xl font-bold">普通用戶 Demo</h2>
         <dl className="mt-5 grid gap-2 text-sm">
@@ -41,7 +43,9 @@ export function DemoPersonaPicker() {
       </section>
 
       <section className="wire-panel flex flex-col p-6 sm:p-8">
-        <ShieldCheckIcon className="size-8" />
+        <span className="grid size-12 place-items-center rounded-xl bg-secondary text-secondary-foreground">
+          <ShieldCheckIcon className="size-6" />
+        </span>
         <p className="eyebrow mt-6">示例身份 02</p>
         <h2 className="mt-2 text-2xl font-bold">管理員 Demo</h2>
         <dl className="mt-5 grid gap-2 text-sm">

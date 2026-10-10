@@ -33,7 +33,7 @@ export default async function CategoriesPage({
         ) : null}
       </div>
 
-      <form action={saveCategory} className="mt-5 border border-border bg-card p-4">
+      <form action={saveCategory} className="soft-surface mt-5 p-4">
         <input type="hidden" name="id" value={editing?.id ?? ""} />
         <FieldGroup>
           <div className="grid gap-4 md:grid-cols-[1fr_1fr_120px]">
@@ -80,7 +80,7 @@ export default async function CategoriesPage({
         {allCategories.map((category) => (
           <div
             key={category.id}
-            className="flex flex-wrap items-center justify-between gap-3 border border-border bg-card p-3"
+            className="soft-surface flex flex-wrap items-center justify-between gap-3 p-3"
           >
             <div>
               <strong className="block">{category.name}</strong>

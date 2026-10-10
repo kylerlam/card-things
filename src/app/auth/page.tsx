@@ -40,7 +40,7 @@ export default async function DemoAuthPage({
           </div>
           <Link href="/" className={cn(buttonVariants({ variant: "outline" }))}>取消並返回首頁</Link>
         </div>
-        <div className="mb-5 border border-dashed border-border bg-card p-3 text-sm">
+        <div className="mb-5 rounded-lg border border-dashed border-border bg-card p-3 text-sm shadow-xs">
           體驗模式：所有資料只保存在目前瀏覽器工作階段；不會發送郵件或保存密碼。
         </div>
         <DemoAuthForm

@@ -59,6 +59,9 @@ await desktop.evaluate(() => {
 await capture(desktop, "user-workspace-desktop.png", "/user");
 
 const mobile = await browser.newPage({ viewport: { width: 390, height: 844 } });
+await capture(mobile, "catalogue-mobile.png", "/");
+await capture(mobile, "tool-detail-mobile.png", "/tools/framesnap");
+await capture(mobile, "admin-login-mobile.png", "/admin/login");
 await mobile.goto(baseURL, { waitUntil: "networkidle" });
 await mobile.evaluate(() => {
   sessionStorage.setItem(

@@ -138,7 +138,7 @@ export function ToolForm({
           <FieldLegend>Tags</FieldLegend>
           <div className="flex flex-wrap gap-3">
             {tags.map((tag) => (
-              <label key={tag.id} className="flex items-center gap-2 border border-border bg-card px-3 py-2 text-sm">
+              <label key={tag.id} className="soft-surface flex items-center gap-2 px-3 py-2 text-sm">
                 <input
                   type="checkbox"
                   name="tagId"
@@ -197,7 +197,7 @@ export function ToolForm({
           <FieldDescription>最多三個來源；每列需同時填寫名稱、提供者與 URL。</FieldDescription>
           <div className="flex flex-col gap-3">
             {sourceRows.map((source, index) => (
-              <div key={index} className="grid gap-3 border border-border bg-card p-3 lg:grid-cols-5">
+              <div key={index} className="soft-surface grid gap-3 p-3 lg:grid-cols-5">
                 <Input name="sourceLabel" defaultValue={source?.label ?? ""} placeholder="來源名稱" />
                 <Input
                   name="sourceProvider"

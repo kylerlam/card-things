@@ -127,7 +127,7 @@ export default async function ToolDetail({
               <CardContent className="flex flex-col gap-3">
                 {tool.downloadLinks.length ? (
                   tool.downloadLinks.map((source) => (
-                    <div key={source.id} className="border border-border p-3">
+                    <div key={source.id} className="soft-surface p-4">
                       <div className="flex items-start justify-between gap-3">
                         <div>
                           <strong className="block">{source.label}</strong>

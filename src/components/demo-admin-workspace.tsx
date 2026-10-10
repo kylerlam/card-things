@@ -82,7 +82,7 @@ export function DemoAdminWorkspace() {
 
   return (
     <div className="grid min-w-0 gap-5 lg:grid-cols-[230px_minmax(0,1fr)]">
-      <aside className="wire-panel min-w-0 max-w-full self-start overflow-hidden bg-muted p-4">
+      <aside className="wire-panel min-w-0 max-w-full self-start overflow-hidden bg-card p-5">
         <h2 className="mb-1 text-xl font-bold">管理工作區</h2>
         <p className="mb-3 text-xs text-muted-foreground">隔離 Demo · {admin.profile.name}</p>
         <nav className="flex w-full min-w-0 max-w-full gap-2 overflow-x-auto pb-1 lg:flex-col" aria-label="Demo 管理員導覽">
@@ -165,7 +165,7 @@ export function DemoAdminWorkspace() {
           />
         ) : null}
 
-        <div className="mt-4 flex flex-col gap-3 border border-border bg-muted p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
+        <div className="mt-4 flex flex-col gap-3 rounded-lg border border-border bg-muted p-3 text-sm sm:flex-row sm:items-center sm:justify-between">
           <span role="status" aria-live="polite">{status}</span>
           {confirmReset ? (
             <span className="flex flex-wrap gap-2">
@@ -212,18 +212,18 @@ function Overview({
       <p className="mt-2 text-muted-foreground">這是每位訪客獨立的浏览器沙盒，不连接真实数据库。</p>
       <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
         {[[toolCount, "全部工具"], [publishedCount, "已發布"], [categoryCount, "用途分類"], [tagCount, "Tags"]].map(([value, label]) => (
-          <div key={label} className="border border-border bg-card p-4">
+          <div key={label} className="soft-surface p-4">
             <strong className="block text-3xl">{value}</strong><span className="text-sm text-muted-foreground">{label}</span>
           </div>
         ))}
       </div>
       <div className="mt-5 grid gap-3 md:grid-cols-2">
-        <div className="border border-border bg-card p-5">
+        <div className="soft-surface p-5">
           <h3 className="text-xl font-bold">用戶管理</h3>
           <p className="mt-2 text-sm text-muted-foreground">查看固定 Demo ID、用戶名与邮箱。</p>
           <Button type="button" variant="outline" className="mt-5" onClick={() => onSelect("users")}>查看用戶</Button>
         </div>
-        <div className="border border-border bg-card p-5">
+        <div className="soft-surface p-5">
           <h3 className="text-xl font-bold">工具、分類與 Tag</h3>
           <p className="mt-2 text-sm text-muted-foreground">各有独立入口和可操作的沙盒状态。</p>
           <div className="mt-5 flex flex-wrap gap-2">
@@ -252,7 +252,7 @@ function UsersView() {
       <Input id="demo-user-search" type="search" value={query} onChange={(event) => setQuery(event.target.value)} placeholder="輸入 ID、用戶名或郵箱" />
       <div className="mt-4 flex flex-col gap-2">
         {users.length ? users.map((user) => (
-          <div key={user.id} className="flex flex-wrap items-center justify-between gap-3 border border-border bg-card p-4">
+          <div key={user.id} className="soft-surface flex flex-wrap items-center justify-between gap-3 p-4">
             <div><strong className="block">{user.name}</strong><span className="text-sm text-muted-foreground">{user.id} · {user.email}</span></div>
             <Badge variant={user.role === "管理員 Demo" ? "default" : "secondary"}>{user.role}</Badge>
           </div>
@@ -273,7 +273,7 @@ function ToolsView({ tools, categories, onStatus }: { tools: DemoAdminTool[]; ca
       <p className="mt-2 text-sm text-muted-foreground">新增、编辑、发布或移除只改变本浏览器 Demo 沙盒。</p>
       <form
         key={editing?.id ?? "new-tool"}
-        className="mt-5 border border-border bg-card p-4"
+        className="soft-surface mt-5 p-4"
         onSubmit={(event) => {
           event.preventDefault();
           const form = new FormData(event.currentTarget);
@@ -309,7 +309,7 @@ function ToolsView({ tools, categories, onStatus }: { tools: DemoAdminTool[]; ca
       </form>
       <div className="mt-5 flex flex-col gap-2">
         {tools.length ? tools.map((tool) => (
-          <div key={tool.id} data-testid={`demo-tool-row-${tool.slug}`} className="grid gap-3 border border-border bg-card p-4 md:grid-cols-[1fr_auto] md:items-center">
+          <div key={tool.id} data-testid={`demo-tool-row-${tool.slug}`} className="soft-surface grid gap-3 p-4 md:grid-cols-[1fr_auto] md:items-center">
             <div><div className="flex flex-wrap items-center gap-2"><strong>{tool.name}</strong><Badge variant={tool.status === "published" ? "default" : "secondary"}>{tool.status === "published" ? "已發布" : "草稿"}</Badge><Badge variant="outline">{categoryNames.get(tool.categoryId) ?? "未分类"}</Badge></div><p className="mt-1 text-sm text-muted-foreground">{tool.summary}</p></div>
             <div className="flex gap-2"><Button type="button" variant="outline" onClick={() => setEditingId(tool.id)}>編輯</Button><Button type="button" variant="destructive" onClick={() => { deleteDemoAdminTool(tool.id); if (editingId === tool.id) setEditingId(null); onStatus("工具已从 Demo 沙盒移除。"); }}>移除</Button></div>
           </div>
@@ -335,11 +335,11 @@ function ManagedList<T extends DemoAdminCategory | DemoAdminTag>({ title, noun, 
   return (
     <section className="wire-panel p-5 sm:p-6">
       <h2 className="text-2xl font-bold">{title}</h2><p className="mt-2 text-sm text-muted-foreground">新增、编辑或移除只改变本浏览器 Demo 沙盒。</p>
-      <form key={editing?.id ?? `new-${noun}`} className="mt-5 border border-border bg-card p-4" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); onSave({ id: editing?.id ?? freshId(noun === "Tag" ? "tag" : "cat"), name: String(form.get("name") ?? "").trim(), slug: String(form.get("slug") ?? "").trim() } as T); event.currentTarget.reset(); }}>
+      <form key={editing?.id ?? `new-${noun}`} className="soft-surface mt-5 p-4" onSubmit={(event) => { event.preventDefault(); const form = new FormData(event.currentTarget); onSave({ id: editing?.id ?? freshId(noun === "Tag" ? "tag" : "cat"), name: String(form.get("name") ?? "").trim(), slug: String(form.get("slug") ?? "").trim() } as T); event.currentTarget.reset(); }}>
         <div className="grid gap-4 sm:grid-cols-2"><Field label={`${noun}名稱`} id={`demo-${noun}-name`}><Input id={`demo-${noun}-name`} name="name" defaultValue={editing?.name} required /></Field><Field label="Slug" id={`demo-${noun}-slug`}><Input id={`demo-${noun}-slug`} name="slug" defaultValue={editing?.slug} pattern="[a-z0-9]+(?:-[a-z0-9]+)*" required /></Field></div>
         <div className="mt-4 flex gap-2"><Button type="submit">{editing ? `儲存${noun}` : `新增${noun}`}</Button>{editing ? <Button type="button" variant="outline" onClick={() => onEdit(null)}>取消編輯</Button> : null}</div>
       </form>
-      <div className="mt-5 flex flex-col gap-2">{items.length ? items.map((item) => <div key={item.id} className="flex flex-wrap items-center justify-between gap-3 border border-border bg-card p-4"><div><strong className="block">{item.name}</strong><span className="text-sm text-muted-foreground">{item.slug}</span></div><div className="flex gap-2"><Button type="button" variant="outline" onClick={() => onEdit(item.id)}>編輯</Button><Button type="button" variant="destructive" onClick={() => onDelete(item.id)}>移除</Button></div></div>) : <div className="border border-dashed border-border p-10 text-center text-muted-foreground">列表为空。</div>}</div>
+      <div className="mt-5 flex flex-col gap-2">{items.length ? items.map((item) => <div key={item.id} className="soft-surface flex flex-wrap items-center justify-between gap-3 p-4"><div><strong className="block">{item.name}</strong><span className="text-sm text-muted-foreground">{item.slug}</span></div><div className="flex gap-2"><Button type="button" variant="outline" onClick={() => onEdit(item.id)}>編輯</Button><Button type="button" variant="destructive" onClick={() => onDelete(item.id)}>移除</Button></div></div>) : <div className="rounded-lg border border-dashed border-border p-10 text-center text-muted-foreground">列表为空。</div>}</div>
     </section>
   );
 }

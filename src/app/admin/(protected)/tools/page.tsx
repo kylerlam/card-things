@@ -29,7 +29,7 @@ export default function ToolsPage() {
         {tools.map((tool) => (
           <div
             key={tool.id}
-            className="grid gap-3 border border-border bg-card p-4 md:grid-cols-[1fr_auto] md:items-center"
+            className="soft-surface grid gap-3 p-4 md:grid-cols-[1fr_auto] md:items-center"
           >
             <div>
               <div className="flex flex-wrap items-center gap-2">
