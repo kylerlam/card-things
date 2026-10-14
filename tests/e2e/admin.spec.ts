@@ -12,6 +12,7 @@ test("admin authorization and catalogue CRUD use the real database", async (
   await page.getByLabel("密碼").fill("E2e-Only-Password-2026!");
   await page.getByRole("button", { name: "登入" }).click();
   await expect(page).toHaveURL(/\/admin$/);
+  await expect(page.getByRole("link", { name: "分類管理" })).toBeVisible();
 
   await page.goto("/admin/categories");
   await expect(page.getByRole("heading", { name: "用途分類", exact: true })).toBeVisible();
@@ -58,7 +59,7 @@ test("admin authorization and catalogue CRUD use the real database", async (
   await expect(page.getByText("E2E Card", { exact: true })).toBeVisible();
 
   await page.goto("/");
-  await page.getByRole("searchbox", { name: "搜尋卡片或用途" }).fill("端對端");
+  await page.getByRole("searchbox", { name: "搜尋卡片或分類" }).fill("端對端");
   await expect(page.getByText("E2E Card", { exact: true })).toBeVisible();
   await page.getByRole("link", { name: /查看用途與取得方式/ }).click();
   await expect(page).toHaveURL(/\/tools\/e2e-tool$/);

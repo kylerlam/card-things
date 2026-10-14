@@ -53,11 +53,6 @@ export default async function ToolDetail({
                 </Badge>
               ))}
             </div>
-            <section className="mt-9 border-t border-border pt-7">
-              <h2 className="text-2xl font-bold">這張卡片介紹什麼</h2>
-              <p className="mt-3 whitespace-pre-line leading-7">{tool.description}</p>
-            </section>
-
             {tool.installation ? (
               <section className="mt-9 border-t border-border pt-7">
                 <h2 className="text-2xl font-bold">安裝提示</h2>

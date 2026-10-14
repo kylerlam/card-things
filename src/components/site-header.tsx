@@ -22,22 +22,7 @@ export function SiteHeader() {
           >
             首頁
           </Link>
-          <Link
-            href="/#catalogue"
-            className={cn(buttonVariants({ variant: "ghost" }), "px-2 sm:px-4")}
-          >
-            卡片分類
-          </Link>
           <AccountNav />
-          <Link
-            href="/admin/login"
-            className={cn(
-              buttonVariants({ variant: "outline" }),
-              "hidden lg:inline-flex",
-            )}
-          >
-            管理入口
-          </Link>
         </nav>
       </div>
     </header>

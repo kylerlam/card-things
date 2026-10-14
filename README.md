@@ -4,7 +4,7 @@ CardThings is a self-hosted catalogue for curated, link-based collections. Visit
 
 CardThings stores descriptions and links, not installer binaries. Official and mirror files remain with their external providers.
 
-![CardThings public catalogue](docs/screenshots/catalogue-desktop.png)
+![CardThings public catalogue](docs/previews/catalogue-desktop.png)
 
 ## Features
 

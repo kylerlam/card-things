@@ -93,7 +93,7 @@ export function CatalogueExplorer({
       <div className="min-w-0">
         <section className="wire-panel mb-6 p-5 sm:p-6" aria-labelledby="search-title">
           <h2 id="search-title" className="mb-2 text-lg font-bold">
-            搜尋卡片或用途
+            搜尋卡片或分類
           </h2>
           <div className="flex flex-col gap-2 sm:flex-row">
             <div className="relative flex-1">
@@ -103,7 +103,7 @@ export function CatalogueExplorer({
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
                 placeholder="例如：擷取 / 傳檔 / 開源"
-                aria-label="搜尋卡片或用途"
+                aria-label="搜尋卡片或分類"
                 className="h-10 pl-9"
               />
             </div>

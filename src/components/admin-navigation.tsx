@@ -10,7 +10,7 @@ const navigation = [
   { href: "/admin", label: "總覽", exact: true },
   { href: "/admin/users", label: "用戶管理" },
   { href: "/admin/tools", label: "卡片管理" },
-  { href: "/admin/categories", label: "用途分類" },
+  { href: "/admin/categories", label: "分類管理" },
   { href: "/admin/tags", label: "Tag 管理" },
 ];
 

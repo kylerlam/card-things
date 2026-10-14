@@ -18,9 +18,10 @@ The selected direction is an owner-approved visual refresh expressed as explicit
 
 ## Rendered evidence
 
-- [Public catalogue](screenshots/catalogue-desktop.png)
-- [Public catalogue on mobile](screenshots/catalogue-mobile.png)
-- [Tool detail](screenshots/tool-detail-desktop.png)
-- [Tool detail on mobile](screenshots/tool-detail-mobile.png)
-- [Administrator login](screenshots/admin-login-desktop.png)
-- [Administrator login on mobile](screenshots/admin-login-mobile.png)
+- [Public catalogue](previews/catalogue-desktop.png)
+- [Public catalogue on mobile](previews/catalogue-mobile.png)
+- [Card detail](previews/card-detail-desktop.png)
+- [Card detail on mobile](previews/card-detail-mobile.png)
+- [Authenticated account](previews/user-account-desktop.png)
+- [Administrator overview](previews/admin-overview-desktop.png)
+- [Complete preview index](previews/README.md)
