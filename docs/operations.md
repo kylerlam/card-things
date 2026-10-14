@@ -60,7 +60,7 @@ Set `CARDTHINGS_DATA_VOLUME=cardthings-data-restored-20261009` in the uncommitte
 
 Production and development have no seed command. The Playwright server recreates only `data/e2e.sqlite*` and runs `scripts/seed-test.ts` with an explicit test-only guard. The script rejects every other database path.
 
-Create production categories, optional tags, tools, and external sources through `/admin`.
+Create production categories, optional tags, cards, and external sources through `/admin`.
 
 ## Secrets and administrators
 

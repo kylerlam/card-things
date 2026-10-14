@@ -37,19 +37,12 @@ export function CatalogueExplorer({
 }) {
   const [category, setCategory] = useState(allCategory);
   const [query, setQuery] = useState("");
-  const [platforms, setPlatforms] = useState<string[]>([]);
   const deferredQuery = useDeferredValue(query.trim().toLocaleLowerCase());
-  const platformOptions = useMemo(
-    () => [...new Set(tools.flatMap((tool) => tool.platforms))].sort(),
-    [tools],
-  );
 
   const filtered = useMemo(
     () =>
       tools.filter((tool) => {
         const inCategory = category === allCategory || tool.categorySlug === category;
-        const onPlatform =
-          !platforms.length || platforms.some((platform) => tool.platforms.includes(platform));
         const haystack = [
           tool.name,
           tool.summary,
@@ -58,22 +51,13 @@ export function CatalogueExplorer({
         ]
           .join(" ")
           .toLocaleLowerCase();
-        return inCategory && onPlatform && (!deferredQuery || haystack.includes(deferredQuery));
+        return inCategory && (!deferredQuery || haystack.includes(deferredQuery));
       }),
-    [category, deferredQuery, platforms, tools],
+    [category, deferredQuery, tools],
   );
-
-  function togglePlatform(platform: string) {
-    setPlatforms((current) =>
-      current.includes(platform)
-        ? current.filter((item) => item !== platform)
-        : [...current, platform],
-    );
-  }
 
   function clearFilters() {
     setCategory(allCategory);
-    setPlatforms([]);
     setQuery("");
   }
 
@@ -90,7 +74,7 @@ export function CatalogueExplorer({
             aria-pressed={category === allCategory}
             onClick={() => setCategory(allCategory)}
           >
-            全部工具
+            全部卡片
           </Button>
           {categories.map((item) => (
             <Button
@@ -109,7 +93,7 @@ export function CatalogueExplorer({
       <div className="min-w-0">
         <section className="wire-panel mb-6 p-5 sm:p-6" aria-labelledby="search-title">
           <h2 id="search-title" className="mb-2 text-lg font-bold">
-            搜尋工具或用途
+            搜尋卡片或用途
           </h2>
           <div className="flex flex-col gap-2 sm:flex-row">
             <div className="relative flex-1">
@@ -118,8 +102,8 @@ export function CatalogueExplorer({
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="例如：擷取 / 傳檔 / Windows"
-                aria-label="搜尋工具或用途"
+                placeholder="例如：擷取 / 傳檔 / 開源"
+                aria-label="搜尋卡片或用途"
                 className="h-10 pl-9"
               />
             </div>
@@ -127,27 +111,12 @@ export function CatalogueExplorer({
               清除條件
             </Button>
           </div>
-          <div className="mt-3 flex flex-wrap items-center gap-2" aria-label="平台篩選">
-            <strong className="mr-1 text-sm">平台篩選</strong>
-            {platformOptions.map((platform) => (
-              <Button
-                key={platform}
-                type="button"
-                size="sm"
-                variant={platforms.includes(platform) ? "default" : "outline"}
-                aria-pressed={platforms.includes(platform)}
-                onClick={() => togglePlatform(platform)}
-              >
-                {platform}
-              </Button>
-            ))}
-          </div>
         </section>
 
         <div className="mb-3 flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold">工具列表</h2>
+          <h2 className="text-2xl font-bold">卡片列表</h2>
           <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-            顯示 {filtered.length} / {tools.length} 個工具
+            顯示 {filtered.length} / {tools.length} 張卡片
           </p>
         </div>
 
@@ -170,11 +139,6 @@ export function CatalogueExplorer({
                 <CardContent className="flex flex-1 flex-col gap-3">
                   <p className="leading-6">{tool.summary}</p>
                   <div className="flex flex-wrap gap-1.5">
-                    {tool.platforms.map((platform) => (
-                      <Badge key={platform} variant="outline">
-                        {platform}
-                      </Badge>
-                    ))}
                     {tool.tags.map((tag) => (
                       <Badge key={tag.id} variant="secondary">
                         {tag.name}
@@ -199,7 +163,7 @@ export function CatalogueExplorer({
           </div>
         ) : (
           <div className="wire-panel p-10 text-center text-muted-foreground">
-            沒有符合目前條件的工具。請調整搜尋或篩選。
+            沒有符合目前條件的卡片。請調整搜尋或分類。
           </div>
         )}
       </div>

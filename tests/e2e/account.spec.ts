@@ -18,6 +18,7 @@ test("registration, profile updates, login, and logout use server accounts", asy
   await expect(page).toHaveURL(/\/user$/);
   await expect(page.getByRole("heading", { name: "歡迎回來，正式用戶" })).toBeVisible();
   await page.getByRole("button", { name: "個人資料管理" }).first().click();
+  await expect(page.getByText(/^ct[a-z0-9]{12}$/)).toBeVisible();
   await page.getByLabel("用戶名").fill("已更新用戶");
   await page.getByRole("button", { name: "儲存用戶名" }).click();
   await expect(page.getByRole("status")).toHaveText("用戶名已更新。");

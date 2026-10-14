@@ -12,7 +12,7 @@ export function SiteHeader() {
         <Link href="/" className="flex items-baseline gap-2 no-underline">
           <strong className="text-2xl font-extrabold tracking-tight text-primary">CardThings</strong>
           <span className="hidden text-sm text-muted-foreground sm:inline">
-            實用工具分享 · 導航探索
+            卡片內容分享 · 導航探索
           </span>
         </Link>
         <nav className="flex items-center gap-2" aria-label="主要導覽">
@@ -26,7 +26,7 @@ export function SiteHeader() {
             href="/#catalogue"
             className={cn(buttonVariants({ variant: "ghost" }), "px-2 sm:px-4")}
           >
-            工具分類
+            卡片分類
           </Link>
           <AccountNav />
           <Link

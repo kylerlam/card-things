@@ -15,10 +15,10 @@ export default function AdminOverview() {
     <div className="flex flex-col gap-4">
       <section className="wire-panel p-5">
         <h2 className="text-2xl font-bold">管理總覽</h2>
-        <p className="mt-2 text-muted-foreground">內容與部署資料保持分開；只有已發布工具出現在首頁。</p>
+        <p className="mt-2 text-muted-foreground">內容與部署資料保持分開；只有已發布卡片出現在首頁。</p>
         <div className="mt-5 grid gap-3 sm:grid-cols-2 xl:grid-cols-4">
           {[
-            [tools.length, "全部工具"],
+            [tools.length, "全部卡片"],
             [published, "已發布"],
             [categories.length, "用途分類"],
             [tags.length, "Tags"],
@@ -33,9 +33,9 @@ export default function AdminOverview() {
       <div className="grid gap-4 md:grid-cols-3">
         {[
           ["用戶管理", "搜尋伺服器帳戶並核對角色與驗證狀態。", "/admin/users"],
-          ["工具管理", "編輯說明、平台、發布狀態和下載來源。", "/admin/tools"],
+          ["卡片管理", "編輯說明、Tag、發布狀態和下載來源。", "/admin/tools"],
           ["用途分類", "控制首頁左側的主要分類。", "/admin/categories"],
-          ["Tag 管理", "維護工具的輔助標籤。", "/admin/tags"],
+          ["Tag 管理", "維護卡片的輔助標籤。", "/admin/tags"],
         ].map(([title, description, href]) => (
           <Card key={href}>
             <CardHeader>

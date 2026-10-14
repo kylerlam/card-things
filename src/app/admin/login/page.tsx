@@ -38,9 +38,9 @@ export default async function AdminLogin({
         <aside className="wire-panel self-start p-6">
           <h2 className="text-2xl font-bold">登入後可管理</h2>
           <ul className="mt-4 flex list-disc flex-col gap-2 pl-5 text-muted-foreground">
-            <li>公開與草稿工具</li>
+            <li>公開與草稿卡片</li>
             <li>用途分類與 Tag</li>
-            <li>平台、版本與安裝說明</li>
+            <li>版本與安裝說明</li>
             <li>官方來源與外部鏡像連結</li>
           </ul>
         </aside>

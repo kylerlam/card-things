@@ -12,7 +12,7 @@ export function AdminShell({
   administrator,
 }: {
   children: ReactNode;
-  administrator: { id: string; name: string; email: string };
+  administrator: { name: string; email: string };
 }) {
   return (
     <>
@@ -36,7 +36,7 @@ export function AdminShell({
         <p className="eyebrow">03 · 管理工作區 · 已驗證管理員</p>
         <h1 className="mt-2 text-4xl font-extrabold tracking-tight">管理員後台</h1>
         <p className="mt-3 text-muted-foreground">
-          管理工具、用途分類、Tag、發布狀態與外部下載來源。
+          管理卡片、用途分類、Tag、發布狀態與外部下載來源。
         </p>
         <div className="mt-8 grid gap-5 lg:grid-cols-[220px_minmax(0,1fr)]">
           <aside className="wire-panel self-start bg-card p-5">

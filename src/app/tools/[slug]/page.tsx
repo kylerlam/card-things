@@ -33,7 +33,7 @@ export default async function ToolDetail({
       <main className="page-shell py-10 sm:py-14">
         <Link href="/" className={cn(buttonVariants({ variant: "ghost" }), "mb-6")}>
           <ArrowLeftIcon data-icon="inline-start" />
-          返回工具列表
+          返回卡片列表
         </Link>
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
@@ -47,11 +47,6 @@ export default async function ToolDetail({
             </div>
             <p className="mt-4 text-xl leading-8">{tool.summary}</p>
             <div className="mt-4 flex flex-wrap gap-2">
-              {tool.platforms.map((platform) => (
-                <Badge key={platform} variant="outline">
-                  {platform}
-                </Badge>
-              ))}
               {tool.tags.map((tag) => (
                 <Badge key={tag.id} variant="secondary">
                   {tag.name}
@@ -59,7 +54,7 @@ export default async function ToolDetail({
               ))}
             </div>
             <section className="mt-9 border-t border-border pt-7">
-              <h2 className="text-2xl font-bold">這個工具做什麼</h2>
+              <h2 className="text-2xl font-bold">這張卡片介紹什麼</h2>
               <p className="mt-3 whitespace-pre-line leading-7">{tool.description}</p>
             </section>
 
@@ -94,7 +89,7 @@ export default async function ToolDetail({
               <Card>
                 <CardHeader>
                   <CardTitle>影片介紹</CardTitle>
-                  <CardDescription>先看介紹，再依平台選擇來源。</CardDescription>
+                  <CardDescription>先看介紹，再選擇合適的來源。</CardDescription>
                 </CardHeader>
                 <CardFooter>
                   <a
@@ -104,7 +99,7 @@ export default async function ToolDetail({
                     className={cn(buttonVariants(), "w-full")}
                   >
                     <BookOpenIcon data-icon="inline-start" />
-                    開啟工具介紹
+                    開啟卡片介紹
                   </a>
                 </CardFooter>
               </Card>

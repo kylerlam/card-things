@@ -3,6 +3,7 @@ import { drizzleAdapter } from "better-auth/adapters/drizzle";
 
 import { db } from "@/db";
 import { schema } from "@/db/schema";
+import { createPublicId } from "@/lib/public-id";
 
 function createAuth() {
   return betterAuth({
@@ -20,6 +21,13 @@ function createAuth() {
     },
     user: {
       additionalFields: {
+        publicId: {
+          type: "string",
+          required: true,
+          input: false,
+          unique: true,
+          defaultValue: createPublicId,
+        },
         role: {
           type: ["user", "admin"],
           required: false,

@@ -17,6 +17,7 @@ export const user = sqliteTable(
   "user",
   {
     id: text("id").primaryKey(),
+    publicId: text("public_id").notNull(),
     name: text("name").notNull(),
     email: text("email").notNull(),
     emailVerified: integer("email_verified", { mode: "boolean" })
@@ -29,7 +30,10 @@ export const user = sqliteTable(
     createdAt: timestamp("created_at"),
     updatedAt: timestamp("updated_at"),
   },
-  (table) => [uniqueIndex("user_email_unique").on(table.email)],
+  (table) => [
+    uniqueIndex("user_public_id_unique").on(table.publicId),
+    uniqueIndex("user_email_unique").on(table.email),
+  ],
 );
 
 export const session = sqliteTable(

@@ -15,7 +15,7 @@ export default function AdminUsersPage() {
       </p>
       <AdminUserList
         users={users.map((item) => ({
-          id: item.id,
+          publicId: item.publicId,
           name: item.name,
           email: item.email,
           role: item.role,

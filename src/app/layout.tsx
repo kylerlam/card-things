@@ -8,7 +8,7 @@ export const metadata: Metadata = {
     default: "CardThings",
     template: "%s | CardThings",
   },
-  description: "A reusable card-based catalogue for practical tools and collections.",
+  description: "A reusable card-based catalogue for curated content collections.",
 };
 
 export default function RootLayout({ children }: { children: ReactNode }) {

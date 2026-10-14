@@ -1,6 +1,6 @@
 # CardThings
 
-CardThings is a self-hosted catalogue for curated software and other link-based collections. Visitors browse public cards and dedicated detail pages; authenticated users manage their account; administrators manage tools, categories, tags, publication state, and external download sources.
+CardThings is a self-hosted catalogue for curated, link-based collections. Visitors browse public cards and dedicated detail pages; authenticated users manage their account; administrators manage cards, categories, tags, publication state, and external download sources.
 
 CardThings stores descriptions and links, not installer binaries. Official and mirror files remain with their external providers.
 
@@ -8,7 +8,7 @@ CardThings stores descriptions and links, not installer binaries. Official and m
 
 ## Features
 
-- Public catalogue with text, category, and platform filters
+- Public catalogue with text, category, and Tag discovery
 - Published-only detail routes with version, installation, source, licence, episode, and download metadata
 - Explicit official or mirror source labels; every download opens the external provider
 - Real email/password registration, login, session, profile-name, and password management
@@ -22,7 +22,7 @@ Favourites are intentionally deferred and are not shown in the current interface
 ## Routes
 
 - `/` — public catalogue, search, category filters, and tool cards
-- `/tools/:slug` — published tool details and external download sources
+- `/tools/:slug` — published card details and external download sources
 - `/auth` — real user login and registration
 - `/user` — authenticated account overview and profile security
 - `/admin/login` — real administrator authentication; there is no default password
@@ -70,7 +70,7 @@ Passwords must be at least 12 characters. No default administrator exists. Start
 npm run dev
 ```
 
-Production and development databases start without catalogue samples. Create categories, optional tags, tools, and external download links through `/admin`.
+Production and development databases start without catalogue samples. Create categories, optional tags, cards, and external download links through `/admin`.
 
 ## Docker Compose
 

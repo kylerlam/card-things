@@ -23,7 +23,7 @@ export default async function TagsPage({
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
           <h2 className="text-2xl font-bold">Tag 管理</h2>
-          <p className="mt-2 text-sm text-muted-foreground">工具的輔助標籤；被工具使用的 Tag 不可刪除。</p>
+          <p className="mt-2 text-sm text-muted-foreground">卡片的輔助標籤；被卡片使用的 Tag 不可刪除。</p>
         </div>
         {editing ? (
           <Link href="/admin/tags" className={cn(buttonVariants({ variant: "outline" }))}>

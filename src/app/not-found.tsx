@@ -9,10 +9,10 @@ export default function NotFound() {
     <>
       <SiteHeader />
       <main className="page-shell py-24 text-center">
-        <h1 className="text-4xl font-extrabold">找不到這個工具</h1>
+        <h1 className="text-4xl font-extrabold">找不到這張卡片</h1>
         <p className="mt-3 text-muted-foreground">它可能仍是草稿，或已被移除。</p>
         <Link href="/" className={cn(buttonVariants(), "mt-6")}>
-          返回工具列表
+          返回卡片列表
         </Link>
       </main>
     </>

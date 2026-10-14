@@ -18,7 +18,7 @@ export function UserAccount({
   user,
 }: {
   initialView: View;
-  user: { id: string; name: string; email: string; role?: string | null };
+  user: { publicId: string; name: string; email: string; role?: string | null };
 }) {
   const router = useRouter();
   const [view, setView] = useState<View>(initialView);
@@ -76,10 +76,10 @@ export function UserAccount({
           <section className="wire-panel p-5 sm:p-6">
             <h2 className="text-2xl font-bold">歡迎回來，{name}</h2>
             <p className="mt-2 text-muted-foreground">
-              這是你的真實 CardThings 帳戶。收藏功能目前暫緩，公開工具可從首頁瀏覽。
+              這是你的真實 CardThings 帳戶。收藏功能目前暫緩，公開卡片可從首頁瀏覽。
             </p>
             <div className="mt-6 grid gap-3 sm:grid-cols-2">
-              <Link href="/#catalogue" className={cn(buttonVariants(), "h-auto justify-start p-5")}>瀏覽公開工具</Link>
+              <Link href="/#catalogue" className={cn(buttonVariants(), "h-auto justify-start p-5")}>瀏覽公開卡片</Link>
               <button
                 type="button"
                 className="wire-panel p-5 text-left"
@@ -99,8 +99,8 @@ export function UserAccount({
             <p className="mt-2 text-muted-foreground">帳戶資料與密碼會安全地寫入伺服器資料庫。</p>
             <dl className="mt-6 grid gap-3 sm:grid-cols-2">
               <div className="soft-surface p-4">
-                <dt className="text-sm text-muted-foreground">用戶唯一 ID</dt>
-                <dd className="mt-2 break-all font-semibold">{user.id}</dd>
+                <dt className="text-sm text-muted-foreground">用戶 ID</dt>
+                <dd className="mt-2 font-semibold">{user.publicId}</dd>
               </div>
               <div className="soft-surface p-4">
                 <dt className="text-sm text-muted-foreground">電子郵件</dt>

@@ -10,7 +10,6 @@ export default async function ProtectedAdminLayout({ children }: { children: Rea
   return (
     <AdminShell
       administrator={{
-        id: session.user.id,
         name: session.user.name,
         email: session.user.email,
       }}

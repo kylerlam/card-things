@@ -16,12 +16,12 @@ export default function ToolsPage() {
     <section className="wire-panel p-5">
       <div className="flex flex-wrap items-start justify-between gap-4">
         <div>
-          <h2 className="text-2xl font-bold">工具管理</h2>
+          <h2 className="text-2xl font-bold">卡片管理</h2>
           <p className="mt-2 text-sm text-muted-foreground">草稿保留在後台；發布後才會出現在公開列表。</p>
         </div>
         <Link href="/admin/tools/new" className={cn(buttonVariants())}>
           <PlusIcon data-icon="inline-start" />
-          新增工具
+          新增卡片
         </Link>
       </div>
 

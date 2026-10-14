@@ -24,7 +24,7 @@ export default async function UserPage({
         <UserAccount
           initialView={initialView}
           user={{
-            id: session.user.id,
+            publicId: session.user.publicId,
             name: session.user.name,
             email: session.user.email,
             role: session.user.role,

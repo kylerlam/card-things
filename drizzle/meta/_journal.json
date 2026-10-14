@@ -8,6 +8,13 @@
       "when": 1791576338953,
       "tag": "0000_skinny_fantastic_four",
       "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1791973967363,
+      "tag": "0001_add-public-id",
+      "breakpoints": true
     }
   ]
 }

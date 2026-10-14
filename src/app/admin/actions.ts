@@ -2,7 +2,7 @@
 
 import { randomUUID } from "node:crypto";
 
-import { eq } from "drizzle-orm";
+import { eq, max } from "drizzle-orm";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
@@ -55,7 +55,6 @@ const toolSchema = z.object({
   description: z.string().trim().min(20).max(4_000),
   categoryId: z.string().min(1),
   status: z.enum(["draft", "published"]),
-  platforms: z.string().trim().max(300),
   version: z.string().trim().max(80).optional(),
   installation: z.string().trim().max(2_000).optional(),
   sourceLicense: z.string().trim().max(200).optional(),
@@ -65,6 +64,41 @@ const toolSchema = z.object({
 
 function requiredString(formData: FormData, name: string) {
   return String(formData.get(name) ?? "");
+}
+
+function categorySlug(name: string) {
+  const base = name
+    .normalize("NFKD")
+    .toLowerCase()
+    .replace(/[\u0300-\u036f]/g, "")
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-+|-+$/g, "")
+    .slice(0, 48) || "category";
+
+  return `${base}-${randomUUID().slice(0, 8)}`;
+}
+
+export async function createQuickCategory(name: string) {
+  await requireAdmin();
+  const parsed = categorySchema.shape.name.safeParse(name);
+  if (!parsed.success) {
+    return { error: "分類名稱需為 2–80 個字元。" };
+  }
+
+  const id = randomUUID();
+  const lastOrder = db.select({ value: max(categories.sortOrder) }).from(categories).get();
+  const category = {
+    id,
+    name: parsed.data,
+    slug: categorySlug(parsed.data),
+    description: null,
+    sortOrder: (lastOrder?.value ?? 0) + 10,
+    updatedAt: new Date(),
+  };
+  db.insert(categories).values(category).run();
+  revalidatePath("/");
+  revalidatePath("/admin/categories");
+  return { category: { id: category.id, name: category.name } };
 }
 
 export async function saveCategory(formData: FormData) {
@@ -177,7 +211,6 @@ export async function saveTool(formData: FormData) {
     description: requiredString(formData, "description"),
     categoryId: requiredString(formData, "categoryId"),
     status: requiredString(formData, "status"),
-    platforms: requiredString(formData, "platforms"),
     version: requiredString(formData, "version") || undefined,
     installation: requiredString(formData, "installation") || undefined,
     sourceLicense: requiredString(formData, "sourceLicense") || undefined,
@@ -187,14 +220,6 @@ export async function saveTool(formData: FormData) {
   const id = parsed.id ?? randomUUID();
   const selectedTagIds = formData.getAll("tagId").map(String);
   const links = parseLinks(formData);
-  const platforms = [
-    ...new Set(
-      parsed.platforms
-        .split(",")
-        .map((platform) => platform.trim())
-        .filter(Boolean),
-    ),
-  ];
   const values = {
     name: parsed.name,
     slug: parsed.slug,
@@ -202,7 +227,6 @@ export async function saveTool(formData: FormData) {
     description: parsed.description,
     categoryId: parsed.categoryId,
     status: parsed.status,
-    platforms: JSON.stringify(platforms),
     version: parsed.version ?? null,
     installation: parsed.installation ?? null,
     sourceLicense: parsed.sourceLicense ?? null,

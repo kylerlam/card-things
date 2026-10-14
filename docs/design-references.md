@@ -7,8 +7,8 @@ The selected direction is an owner-approved visual refresh expressed as explicit
 - **Target:** public catalogue, tool detail, authenticated user account, and protected administrator workspace
 - **Palette:** `#F7F8FA` background, `#FFFFFF` cards, `#20242C` primary text, `#667085` secondary text, `#E3E6EC` borders, and `#4F46E5` primary actions
 - **Layout:** 1180px maximum content width, comfortable whitespace, thin borders, moderate radii, subtle surface shadows, and system type
-- **Catalogue:** purpose categories on the left; search and multi-select platform filters beside them; three-column cards at wide widths
-- **Cards:** compact identity block, purpose and platform metadata, and a dedicated detail action
+- **Catalogue:** purpose categories on the left; text and Tag discovery beside them; three-column cards at wide widths
+- **Cards:** compact identity block, purpose and Tag metadata, and a dedicated detail action
 - **Visitor workspace:** authenticated account overview and profile security; favourites are deferred
 - **Administrator workspace:** independent user, tool, purpose-category, and tag pages rather than a generic CMS surface
 - **Responsive behavior:** side navigation becomes a horizontal scrollable control row and content stacks into one column
