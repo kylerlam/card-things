@@ -3,7 +3,7 @@ import Link from "next/link";
 import { buttonVariants } from "@/components/ui/button";
 import { cn } from "@/lib/utils";
 
-import { DemoAccountNav } from "./demo-account-nav";
+import { AccountNav } from "./account-nav";
 
 export function SiteHeader() {
   return (
@@ -28,13 +28,7 @@ export function SiteHeader() {
           >
             工具分類
           </Link>
-          <Link
-            href="/demo"
-            className={cn(buttonVariants({ variant: "ghost" }), "hidden md:inline-flex")}
-          >
-            完整 Demo
-          </Link>
-          <DemoAccountNav />
+          <AccountNav />
           <Link
             href="/admin/login"
             className={cn(

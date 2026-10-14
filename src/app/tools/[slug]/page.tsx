@@ -3,7 +3,6 @@ import { ArrowLeftIcon, ArrowUpRightIcon, BookOpenIcon, DownloadIcon } from "luc
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
-import { DemoFavoriteButton } from "@/components/demo-favorite-button";
 import { buttonVariants } from "@/components/ui/button";
 import {
   Card,
@@ -59,12 +58,6 @@ export default async function ToolDetail({
                 </Badge>
               ))}
             </div>
-            <div className="mt-5">
-              <DemoFavoriteButton
-                favorite={{ slug: tool.slug, name: tool.name, summary: tool.summary }}
-              />
-            </div>
-
             <section className="mt-9 border-t border-border pt-7">
               <h2 className="text-2xl font-bold">這個工具做什麼</h2>
               <p className="mt-3 whitespace-pre-line leading-7">{tool.description}</p>

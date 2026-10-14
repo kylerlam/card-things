@@ -20,7 +20,7 @@ function runNode(args) {
 }
 
 runNode(["scripts/migrate.mjs"]);
-runNode([tsxCli, "scripts/seed.ts"]);
+runNode([tsxCli, "scripts/seed-test.ts"]);
 runNode([tsxCli, "scripts/create-admin.ts"]);
 
 const server = spawn(

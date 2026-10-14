@@ -11,7 +11,7 @@ export default function AdminUsersPage() {
     <section className="wire-panel p-5">
       <h2 className="text-2xl font-bold">用戶管理</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        這裡只顯示真實伺服器帳戶；普通用戶 Demo 資料保留在訪客瀏覽器，不會出現在此。
+        搜尋真實伺服器帳戶，並核對角色與驗證狀態。
       </p>
       <AdminUserList
         users={users.map((item) => ({

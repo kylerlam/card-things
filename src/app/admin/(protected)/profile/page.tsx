@@ -7,7 +7,7 @@ export default async function AdminProfilePage() {
     <section className="wire-panel p-5 sm:p-6">
       <h2 className="text-2xl font-bold">個人資料管理</h2>
       <p className="mt-2 text-muted-foreground">
-        目前里程碑只讀顯示已驗證的管理員身份。敏感帳戶修改不會透過普通用戶 Demo 流程處理。
+        只讀顯示目前已驗證的管理員身份。
       </p>
       <dl className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">用戶唯一 ID</dt><dd className="mt-2 break-all font-semibold">{session.user.id}</dd></div>
