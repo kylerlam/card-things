@@ -56,11 +56,11 @@ docker run --rm \
 
 Set `CARDTHINGS_DATA_VOLUME=cardthings-data-restored-20261009` in the uncommitted deployment `.env`, start the app, and verify login, catalogue pages, and a representative admin edit. Keep the previous volume until acceptance. Restore uploads into a separate new volume with the same pattern.
 
-## Seed behavior
+## Test fixtures
 
-`npm run db:seed` uses stable identifiers plus conflict-ignore inserts. It adds missing fictional samples and does not update existing content. In `NODE_ENV=production`, the command refuses to run unless `ALLOW_PRODUCTION_SEED=true` is explicitly supplied.
+Production and development have no seed command. The Playwright server recreates only `data/e2e.sqlite*` and runs `scripts/seed-test.ts` with an explicit test-only guard. The script rejects every other database path.
 
-Production does not require sample data. An administrator can create categories, tags, tools, and external sources through `/admin` instead.
+Create production categories, optional tags, tools, and external sources through `/admin`.
 
 ## Secrets and administrators
 
@@ -69,19 +69,3 @@ Production does not require sample data. An administrator can create categories,
 - The first administrator is created only with explicit `ADMIN_EMAIL` and `ADMIN_PASSWORD` environment variables.
 - `admin:create` refuses to replace an existing account and never prints the password.
 - Remove sensitive shell variables after the management command finishes.
-
-## Isolated Demo preview
-
-The optional Demo gateway is a review boundary, not production authentication. It binds to `127.0.0.1:3311`, forwards only GET and HEAD requests for the public catalogue, tool details, visitor Demo, isolated administrator Demo, and Next.js assets, and rejects `/admin`, `/api`, unknown paths, encoded traversal, and every write method. It removes request credentials and upstream `Set-Cookie` headers and adds no-index response headers.
-
-Start it against an already running local app:
-
-```bash
-DEMO_GATEWAY_TARGET=http://127.0.0.1:3000 \
-DEMO_GATEWAY_TTL_MS=7200000 \
-npm run demo:gateway
-```
-
-The process closes after the TTL or immediately on `Ctrl-C`. A temporary HTTPS tunnel, if separately approved, must target only `127.0.0.1:3311`. Never tunnel the application port, mount a host directory or Docker socket into a tunnel container, or put real credentials, private URLs, or non-fictional data in the Demo.
-
-Each visitor's ordinary-user and administrator Demo changes live only in that tab's `sessionStorage`. Closing the tab clears them. The isolated administrator persona cannot call management APIs, read SQLite, create sessions, or enter the real `/admin` workspace.

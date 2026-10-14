@@ -2,8 +2,7 @@
 
 import { useDeferredValue, useMemo, useState } from "react";
 import Link from "next/link";
-import { useRouter } from "next/navigation";
-import { ArrowUpRightIcon, HeartIcon, SearchIcon } from "lucide-react";
+import { ArrowUpRightIcon, SearchIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants, Button } from "@/components/ui/button";
@@ -18,10 +17,6 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import type { CatalogueTool } from "@/lib/catalog";
-import {
-  toggleDemoFavorite,
-  useDemoUser,
-} from "@/lib/demo-user-store";
 import { cn } from "@/lib/utils";
 
 type Category = {
@@ -40,8 +35,6 @@ export function CatalogueExplorer({
   categories: Category[];
   tools: CatalogueTool[];
 }) {
-  const router = useRouter();
-  const demoUser = useDemoUser();
   const [category, setCategory] = useState(allCategory);
   const [query, setQuery] = useState("");
   const [platforms, setPlatforms] = useState<string[]>([]);
@@ -82,23 +75,6 @@ export function CatalogueExplorer({
     setCategory(allCategory);
     setPlatforms([]);
     setQuery("");
-  }
-
-  function toggleFavorite(tool: CatalogueTool) {
-    if (!demoUser.signedIn) {
-      const params = new URLSearchParams({
-        favorite: tool.slug,
-        next: "/#catalogue",
-      });
-      router.push(`/auth?${params.toString()}`);
-      return;
-    }
-
-    toggleDemoFavorite({
-      slug: tool.slug,
-      name: tool.name,
-      summary: tool.summary,
-    });
   }
 
   return (
@@ -206,39 +182,17 @@ export function CatalogueExplorer({
                     ))}
                   </div>
                 </CardContent>
-                <CardFooter className="gap-2">
+                <CardFooter>
                   <Link
                     href={`/tools/${tool.slug}`}
                     className={cn(
                       buttonVariants({ variant: "outline" }),
-                      "min-w-0 flex-1",
+                      "w-full",
                     )}
                   >
                     查看用途與取得方式
                     <ArrowUpRightIcon data-icon="inline-end" />
                   </Link>
-                  <Button
-                    type="button"
-                    size="icon"
-                    variant="outline"
-                    className="shrink-0"
-                    aria-label={
-                      demoUser.favorites.some((item) => item.slug === tool.slug)
-                        ? `取消收藏 ${tool.name}`
-                        : `收藏 ${tool.name}`
-                    }
-                    aria-pressed={demoUser.favorites.some(
-                      (item) => item.slug === tool.slug,
-                    )}
-                    onClick={() => toggleFavorite(tool)}
-                  >
-                    <HeartIcon
-                      className={cn(
-                        demoUser.favorites.some((item) => item.slug === tool.slug) &&
-                          "fill-current",
-                      )}
-                    />
-                  </Button>
                 </CardFooter>
               </Card>
             ))}

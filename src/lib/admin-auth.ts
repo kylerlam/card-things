@@ -17,3 +17,9 @@ export async function requireAdmin() {
   if (!session || !hasAdminRole(session)) redirect("/admin/login");
   return session;
 }
+
+export async function requireUser(callbackUrl = "/user") {
+  const session = await getSession();
+  if (!session) redirect(`/auth?next=${encodeURIComponent(callbackUrl)}`);
+  return session;
+}
