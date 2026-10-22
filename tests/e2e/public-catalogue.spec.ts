@@ -3,7 +3,7 @@ import { expect, test } from "@playwright/test";
 test("public catalogue filters and opens a dedicated detail route", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/CardThings/);
-  await expect(page.getByRole("heading", { name: "先按用途逛，再看卡片" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "發現實用好工具" })).toBeVisible();
   await expect(page.getByText("LabNote")).toHaveCount(0);
   await expect(page.getByRole("link", { name: /Demo/i })).toHaveCount(0);
   await expect(page.getByRole("button", { name: /收藏/ })).toHaveCount(0);

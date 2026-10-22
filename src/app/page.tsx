@@ -16,12 +16,12 @@ export default function Home() {
       <SiteHeader />
       <main id="top" className="page-shell py-10 sm:py-14">
         <div className="mb-8">
-          <p className="eyebrow">卡片導航 · 公開內容</p>
+          <p className="eyebrow">工具探索</p>
           <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl">
-            先按用途逛，再看卡片
+            發現實用好工具
           </h1>
           <p className="mt-3 max-w-2xl text-lg leading-8">
-            選擇感興趣的用途，再透過搜尋和 Tag 找到合適的卡片。
+            精選軟體與工具，匯集功能介紹與下載來源。
           </p>
         </div>
         <CatalogueExplorer categories={categories} tools={tools} />
