@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("catalogue uses its card placeholder when official icons are missing or broken", async ({ page }) => {
+test("catalogue keeps official and fallback icons inside larger circular frames", async ({ page }) => {
   let brokenImageRequested = false;
   await page.route("**/api/tool-icon?**", async (route) => {
     const officialUrl = new URL(route.request().url()).searchParams.get("url") ?? "";
@@ -28,4 +28,40 @@ test("catalogue uses its card placeholder when official icons are missing or bro
   await official.scrollIntoViewIfNeeded();
   await expect.poll(() => official.evaluate((image) => (image as HTMLImageElement).naturalWidth)).toBeGreaterThan(0);
   await expect(page.getByRole("img", { name: "BootForge 預設圖示", exact: true })).toHaveCount(0);
+
+  for (const icon of [
+    page.getByRole("img", { name: "FrameSnap 預設圖示", exact: true }),
+    page.getByRole("img", { name: "RelayDrop 預設圖示", exact: true }),
+    official,
+  ]) {
+    const frame = await icon.evaluate((element) => {
+      const circle = element.parentElement!;
+      const square = circle.parentElement!;
+      const circleStyle = getComputedStyle(circle);
+      const squareStyle = getComputedStyle(square);
+      const outer = square.getBoundingClientRect();
+      const inner = circle.getBoundingClientRect();
+      const image = element.getBoundingClientRect();
+      return {
+        rem: parseFloat(getComputedStyle(document.documentElement).fontSize),
+        width: outer.width, height: outer.height,
+        padding: parseFloat(squareStyle.paddingLeft),
+        gap: inner.left - outer.left - parseFloat(squareStyle.borderLeftWidth),
+        circleWidth: inner.width, circleHeight: inner.height,
+        radius: parseFloat(circleStyle.borderRadius), overflow: circleStyle.overflow,
+        background: circleStyle.backgroundColor,
+        contained: image.left >= inner.left && image.top >= inner.top && image.right <= inner.right + 0.1 && image.bottom <= inner.bottom + 0.1,
+      };
+    });
+    expect(frame.width).toBeCloseTo(3 * frame.rem * 1.2, 1);
+    expect(frame.height).toBeCloseTo(frame.width, 1);
+    expect(frame.padding).toBeCloseTo(0.375 * frame.rem / 2, 1);
+    expect(frame.gap).toBeCloseTo(frame.padding, 1);
+    expect(frame.circleWidth).toBeCloseTo(frame.circleHeight, 1);
+    expect(frame.radius).toBeGreaterThanOrEqual(frame.circleWidth / 2);
+    expect(frame.overflow).toBe("hidden");
+    expect(frame.background).not.toBe("rgba(0, 0, 0, 0)");
+    expect(frame.contained).toBe(true);
+  }
+  await expect(official).toHaveCSS("object-fit", "contain");
 });
