@@ -16,6 +16,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
+import { ToolIcon } from "@/components/tool-icon";
 import type { CatalogueTool } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
@@ -126,9 +127,7 @@ export function CatalogueExplorer({
               <Card key={tool.id} className="h-full">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <div className="grid size-12 shrink-0 place-items-center rounded-lg border border-primary/10 bg-secondary text-sm font-bold text-secondary-foreground">
-                      {tool.name.slice(0, 2).toUpperCase()}
-                    </div>
+                    <ToolIcon key={tool.officialUrl} name={tool.name} officialUrl={tool.officialUrl} />
                     <div>
                       <CardTitle>{tool.name}</CardTitle>
                       <CardDescription>{tool.categoryName}</CardDescription>
