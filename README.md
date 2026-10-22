@@ -21,6 +21,8 @@ CardThings stores descriptions and links, not installer binaries. Official and m
 
 Favourites are intentionally deferred and are not shown in the current interface.
 
+Purpose categories stay broad; see [Catalogue taxonomy](docs/catalogue-taxonomy.md) for the current grouping. Narrower capabilities belong in tags.
+
 ## Routes
 
 - `/` — public catalogue, search, category filters, and tool cards
