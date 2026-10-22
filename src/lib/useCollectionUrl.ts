@@ -4,20 +4,27 @@ import { collection } from './collection';
 interface ViewState {
   query: string;
   category: string;
+  tag: string;
   favoritesOnly: boolean;
-  sort: 'recent' | 'title';
+  sort: 'recent' | 'oldest' | 'title' | 'title-desc';
   itemId: string;
+  layout: 'grid' | 'list';
 }
 
 function readView(): ViewState {
   const params = new URLSearchParams(window.location.search);
   const category = params.get('category') || 'all';
+  const sort = params.get('sort');
   const itemId = params.get('item') || '';
   return {
     query: (params.get('q') || '').slice(0, 200),
     category: collection.categories.some((entry) => entry.id === category) ? category : 'all',
+    tag: collection.items.some((item) => item.tags.includes(params.get('tag') || ''))
+      ? params.get('tag')!
+      : '',
     favoritesOnly: params.get('view') === 'favorites',
-    sort: params.get('sort') === 'title' ? 'title' : 'recent',
+    sort: sort === 'title' || sort === 'title-desc' || sort === 'oldest' ? sort : 'recent',
+    layout: params.get('layout') === 'list' ? 'list' : 'grid',
     itemId: collection.items.some((item) => item.id === itemId) ? itemId : '',
   };
 }
@@ -27,8 +34,10 @@ function viewUrl(view: ViewState) {
   url.search = '';
   if (view.query) url.searchParams.set('q', view.query);
   if (view.category !== 'all') url.searchParams.set('category', view.category);
+  if (view.tag) url.searchParams.set('tag', view.tag);
   if (view.favoritesOnly) url.searchParams.set('view', 'favorites');
   if (view.sort !== 'recent') url.searchParams.set('sort', view.sort);
+  if (view.layout === 'list') url.searchParams.set('layout', 'list');
   if (view.itemId) url.searchParams.set('item', view.itemId);
   return url.href;
 }
@@ -80,6 +89,25 @@ export function useCollectionUrl() {
     }
   }
 
+  function navigateDetail(itemId: string) {
+    if (closingDetail.current) return;
+    const current = readView();
+    if (!current.itemId || !collection.items.some((item) => item.id === itemId)) return;
+    const next = { ...current, itemId };
+    const detail = window.history.state?.cardthingsDetail;
+    const validBackground =
+      detail?.item === current.itemId && detail.background === viewUrl({ ...current, itemId: '' });
+    window.history.replaceState(
+      {
+        ...window.history.state,
+        cardthingsDetail: validBackground ? { ...detail, item: itemId } : null,
+      },
+      '',
+      viewUrl(next),
+    );
+    setView(next);
+  }
+
   function closeDetail() {
     if (closingDetail.current) return;
     const current = readView();
@@ -106,5 +134,6 @@ export function useCollectionUrl() {
       editingSearch.current = false;
     },
     closeDetail,
+    navigateDetail,
   };
 }
