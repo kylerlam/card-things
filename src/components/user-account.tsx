@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserRoundIcon } from "lucide-react";
 
+import { AccountEmailEditor } from "@/components/account-email-editor";
 import { AvatarEditor } from "@/components/avatar-editor";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
@@ -88,7 +89,7 @@ export function UserAccount({
               >
                 <UserRoundIcon className="mb-4 size-5" />
                 <strong className="block">管理個人資料</strong>
-                <span className="text-sm text-muted-foreground">更新頭像、名稱或密碼</span>
+                <span className="text-sm text-muted-foreground">更新頭像、名稱、電子郵件或密碼</span>
               </button>
             </div>
           </section>
@@ -103,10 +104,7 @@ export function UserAccount({
                 <dt className="text-sm text-muted-foreground">用戶 ID</dt>
                 <dd className="mt-2 select-none font-semibold">{user.publicId}</dd>
               </div>
-              <div className="soft-surface p-4">
-                <dt className="text-sm text-muted-foreground">電子郵件</dt>
-                <dd className="mt-2 break-all font-semibold">{user.email}</dd>
-              </div>
+              <AccountEmailEditor email={user.email} />
             </dl>
 
             <div className="mt-6"><AvatarEditor image={user.image} name={name} /></div>

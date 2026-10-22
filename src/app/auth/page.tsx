@@ -31,6 +31,11 @@ export default async function AuthPage({
           </div>
           <Link href="/" className={cn(buttonVariants({ variant: "outline" }))}>返回首頁</Link>
         </div>
+        {params.emailUpdated === "1" ? (
+          <p className="mb-5 rounded-lg border border-border bg-card p-4" role="status">
+            電子郵件已更新，請使用新電子郵件重新登入。
+          </p>
+        ) : null}
         <AccountAuthForm
           initialMode={params.register !== undefined ? "register" : "login"}
         />
