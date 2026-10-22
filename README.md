@@ -12,6 +12,7 @@ CardThings stores descriptions and links, not installer binaries. Official and m
 - Published-only detail routes with version, installation, source, licence, episode, and download metadata
 - Explicit official or mirror source labels; every download opens the external provider
 - Real email/password registration, login, session, profile-name, and password management
+- One shared login page with server-verified routing to the user or administrator workspace
 - Server-authorized administrator access and tool, category, and tag CRUD
 - Draft and published tool states
 - SQLite migrations, persistent Docker volumes, and documented backup/restore procedures
@@ -23,9 +24,9 @@ Favourites are intentionally deferred and are not shown in the current interface
 
 - `/` — public catalogue, search, category filters, and tool cards
 - `/tools/:slug` — published card details and external download sources
-- `/auth` — real user login and registration
+- `/auth` — shared login and registration; the server sends administrators to `/admin` and ordinary users to `/user`
 - `/user` — authenticated account overview and profile security
-- `/admin/login` — real administrator authentication; there is no default password
+- `/admin/login` — compatibility redirect to the shared `/auth` entry
 - `/admin` — role-protected administration workspace
 
 ## Stack
@@ -74,6 +75,29 @@ npm run dev
 
 Production and development databases start without catalogue samples. Create categories, optional tags, cards, and external download links through `/admin`.
 
+## Local demo accounts
+
+The local preview uses the same [login page](http://127.0.0.1:3310/auth) for both roles:
+
+| Login | Password | Role | Destination |
+| --- | --- | --- | --- |
+| `cardthings` | `password` | Ordinary user | `/user` |
+| `cardthings_admin` | `password` | Administrator | `/admin` |
+
+These are deliberately public local demo credentials. They are not created at startup. To create them in an existing local database:
+
+```bash
+npm run demo:create
+```
+
+The command requires `BETTER_AUTH_URL` to use a loopback address, stores hashed passwords, creates both accounts atomically, and refuses to change existing accounts. The aliases correspond to `cardthings@example.test` and `cardthings_admin@example.test`; either the alias or email works at login. Public registration and password changes still require at least 12 characters. Remove the demo accounts before exposing an installation publicly.
+
+For a local Docker installation, use its existing data and uploads volumes:
+
+```bash
+docker compose --profile tools run --build --rm manager npm run demo:create
+```
+
 ## Docker Compose
 
 Copy `.env.example` to `.env`, replace `BETTER_AUTH_SECRET`, and set `BETTER_AUTH_URL` to the public origin before production use.
@@ -116,6 +140,6 @@ The end-to-end suite recreates only `data/e2e.sqlite*`. Its catalogue records an
 
 - `data/`, `uploads/`, environment files, backups, and SQLite sidecar files are ignored by Git and Docker build context.
 - Development, test, and production files use independent paths.
-- No production seed command or default credential exists.
+- No catalogue seed command or automatic default account exists; demo accounts require the explicit local-only command above.
 - Every administrator mutation checks the server session and administrator role before writing.
 - Migrations are generated as reviewable SQL and are never generated automatically at application startup.

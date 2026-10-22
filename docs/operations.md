@@ -82,7 +82,7 @@ Create production categories, optional tags, cards, and external sources through
 ## Secrets and administrators
 
 - Generate `BETTER_AUTH_SECRET` independently for every environment.
-- Never commit `.env`, administrator passwords, real mirror URLs, or private catalogue content.
-- The first administrator is created only with explicit `ADMIN_EMAIL` and `ADMIN_PASSWORD` environment variables.
+- Never commit `.env`, real administrator passwords, real mirror URLs, or private catalogue content. The public local demo credentials documented in the README are intentionally non-secret.
+- Create production administrators with explicit `ADMIN_EMAIL` and `ADMIN_PASSWORD` environment variables. The separate `demo:create` command creates only the two documented local demo accounts and requires a loopback `BETTER_AUTH_URL`.
 - `admin:create` refuses to replace an existing account and never prints the password.
 - Remove sensitive shell variables after the management command finishes.

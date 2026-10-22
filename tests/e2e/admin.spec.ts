@@ -7,10 +7,10 @@ test("admin authorization and catalogue CRUD use the real database", async (
   test.skip(testInfo.project.name !== "desktop-chrome", "Covered once on desktop.");
 
   await page.goto("/admin/tools");
-  await expect(page).toHaveURL(/\/admin\/login/);
-  await page.getByLabel("電子郵件").fill("admin@example.test");
+  await expect(page).toHaveURL(/\/auth$/);
+  await page.getByLabel("電子郵件或 Demo 帳號").fill("admin@example.test");
   await page.getByLabel("密碼").fill("E2e-Only-Password-2026!");
-  await page.getByRole("button", { name: "登入" }).click();
+  await page.getByRole("button", { name: "登入", exact: true }).click();
   await expect(page).toHaveURL(/\/admin$/);
   await expect(page.getByRole("link", { name: "分類管理" })).toBeVisible();
 

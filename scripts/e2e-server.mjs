@@ -36,6 +36,7 @@ function runNode(args) {
 runNode(["scripts/migrate.mjs", "--initialize"]);
 runNode([tsxCli, "scripts/seed-test.ts"]);
 runNode([tsxCli, "scripts/create-admin.ts"]);
+runNode([tsxCli, "scripts/create-demo-accounts.ts"]);
 
 const server = spawn(
   process.execPath,

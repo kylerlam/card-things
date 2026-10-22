@@ -7,7 +7,7 @@ test("registration, profile updates, login, and logout use server accounts", asy
   test.skip(testInfo.project.name !== "desktop-chrome", "Covered once on desktop.");
 
   await page.goto("/user");
-  await expect(page).toHaveURL(/\/auth\?next=%2Fuser$/);
+  await expect(page).toHaveURL(/\/auth$/);
   await page.getByRole("tab", { name: "註冊" }).click();
   await page.getByLabel("用戶名").fill("正式用戶");
   await page.getByLabel("電子郵件").fill("account@example.test");
@@ -29,12 +29,12 @@ test("registration, profile updates, login, and logout use server accounts", asy
   await page.getByRole("button", { name: "登出" }).click();
   await expect(page).toHaveURL(/\/$/);
   await page.goto("/user");
-  await expect(page).toHaveURL(/\/auth\?next=%2Fuser$/);
-  await page.getByLabel("電子郵件").fill("account@example.test");
+  await expect(page).toHaveURL(/\/auth$/);
+  await page.getByLabel("電子郵件或 Demo 帳號").fill("account@example.test");
   await page.getByLabel("密碼", { exact: true }).fill("Account-Password-2026!");
   await page.getByRole("button", { name: "登入", exact: true }).click();
   await expect(page.getByRole("heading", { name: "歡迎回來，已更新用戶" })).toBeVisible();
 
   await page.goto("/admin");
-  await expect(page).toHaveURL(/\/admin\/login$/);
+  await expect(page).toHaveURL(/\/user$/);
 });

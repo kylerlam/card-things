@@ -27,7 +27,7 @@ export function AccountNav() {
   if (session?.user) {
     return (
       <Link
-        href="/user"
+        href="/auth"
         aria-label={`我的帳戶：${session.user.name}`}
         title={session.user.name}
         className={cn(

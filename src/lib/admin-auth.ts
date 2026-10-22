@@ -14,12 +14,14 @@ export async function getSession() {
 
 export async function requireAdmin() {
   const session = await getSession();
-  if (!session || !hasAdminRole(session)) redirect("/admin/login");
+  if (!session) redirect("/auth");
+  if (!hasAdminRole(session)) redirect("/user");
   return session;
 }
 
-export async function requireUser(callbackUrl = "/user") {
+export async function requireUser() {
   const session = await getSession();
-  if (!session) redirect(`/auth?next=${encodeURIComponent(callbackUrl)}`);
+  if (!session) redirect("/auth");
+  if (hasAdminRole(session)) redirect("/admin");
   return session;
 }

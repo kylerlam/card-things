@@ -174,7 +174,7 @@ export function UserAccount({
                 <FieldGroup>
                   <Field>
                     <FieldLabel htmlFor="current-password">目前密碼</FieldLabel>
-                    <Input id="current-password" name="currentPassword" type="password" autoComplete="current-password" minLength={12} required />
+                    <Input id="current-password" name="currentPassword" type="password" autoComplete="current-password" required />
                   </Field>
                   <Field>
                     <FieldLabel htmlFor="new-password">新密碼</FieldLabel>

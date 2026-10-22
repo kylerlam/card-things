@@ -14,7 +14,7 @@ export function SignOutButton() {
       variant="outline"
       onClick={async () => {
         await authClient.signOut();
-        router.push("/admin/login");
+        router.push("/auth");
         router.refresh();
       }}
     >

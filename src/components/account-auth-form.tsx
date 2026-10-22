@@ -7,15 +7,14 @@ import { Button } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
 import { authClient } from "@/lib/auth-client";
+import { resolveLoginEmail } from "@/lib/demo-accounts";
 
 type Mode = "login" | "register";
 
 export function AccountAuthForm({
   initialMode,
-  nextPath,
 }: {
   initialMode: Mode;
-  nextPath: string;
 }) {
   const router = useRouter();
   const [mode, setMode] = useState<Mode>(initialMode);
@@ -57,7 +56,7 @@ export function AccountAuthForm({
           setError("");
 
           const form = new FormData(event.currentTarget);
-          const email = String(form.get("email") ?? "").trim().toLowerCase();
+          const identifier = String(form.get("email") ?? "").trim().toLowerCase();
           const password = String(form.get("password") ?? "");
 
           if (mode === "register") {
@@ -70,7 +69,7 @@ export function AccountAuthForm({
 
             const result = await authClient.signUp.email({
               name: String(form.get("name") ?? "").trim(),
-              email,
+              email: identifier,
               password,
             });
             if (result.error) {
@@ -80,18 +79,18 @@ export function AccountAuthForm({
             }
           } else {
             const result = await authClient.signIn.email({
-              email,
+              email: resolveLoginEmail(identifier),
               password,
               rememberMe: true,
             });
             if (result.error) {
               setPending(false);
-              setError("登入失敗，請檢查電子郵件與密碼。");
+              setError("登入失敗，請檢查帳號與密碼。");
               return;
             }
           }
 
-          router.push(nextPath);
+          router.replace("/auth");
           router.refresh();
         }}
       >
@@ -110,12 +109,15 @@ export function AccountAuthForm({
             </Field>
           ) : null}
           <Field>
-            <FieldLabel htmlFor="account-email">電子郵件</FieldLabel>
+            <FieldLabel htmlFor="account-email">
+              {mode === "login" ? "電子郵件或 Demo 帳號" : "電子郵件"}
+            </FieldLabel>
             <Input
               id="account-email"
               name="email"
-              type="email"
-              autoComplete="email"
+              type={mode === "login" ? "text" : "email"}
+              autoComplete={mode === "login" ? "username" : "email"}
+              autoCapitalize="none"
               required
             />
           </Field>
@@ -126,11 +128,13 @@ export function AccountAuthForm({
               name="password"
               type="password"
               autoComplete={mode === "login" ? "current-password" : "new-password"}
-              minLength={12}
+              minLength={mode === "register" ? 12 : 1}
               maxLength={128}
               required
             />
-            <FieldDescription>密碼至少 12 個字元。</FieldDescription>
+            {mode === "register" ? (
+              <FieldDescription>密碼至少 12 個字元。</FieldDescription>
+            ) : null}
           </Field>
           {mode === "register" ? (
             <Field>
