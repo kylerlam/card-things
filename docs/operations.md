@@ -27,6 +27,17 @@ Normal runtime connections and migrations require an existing database file. If 
 
 ## Migrations
 
+Username uniqueness is enforced by a unique index on `lower(trim(name))`. Surrounding spaces and ASCII letter case do not distinguish usernames; SQLite's native `lower()` leaves other Unicode characters unchanged. Registration and profile updates also validate names on the server. Before upgrading an existing installation, check for conflicting names:
+
+```sql
+SELECT lower(trim(name)) AS username, count(*) AS count
+FROM user
+GROUP BY lower(trim(name))
+HAVING count(*) > 1;
+```
+
+Resolve any conflicts deliberately before applying the migration. It refuses conflicting data and never renames or deletes existing users automatically.
+
 Schema changes are deliberate:
 
 1. Change `src/db/schema.ts` on a task branch.

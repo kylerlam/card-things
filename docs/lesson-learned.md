@@ -22,3 +22,10 @@ Record confirmed, meaningful corrections that can prevent repeated mistakes. Kee
 - **Mistaken assumption:** Waiting for permission to push also meant postponing local commits.
 - **Confirmed decision:** Create a local commit for each completed, coherent change; wait for the owner's request or approval before pushing.
 - **Prevention:** Separate local commits from remote publication, stage only the intended files, and record public deployment content separately from runtime databases, secrets, and reusable framework code.
+
+## Keep account guidance focused on user actions
+
+- **Context:** Refining the shared login and registration page from annotated screenshots.
+- **Mistaken assumption:** Server, cookie, and role implementation details were useful registration guidance.
+- **Confirmed decision:** Remove the technical side panel and redundant login navigation on the login page; keep actionable field guidance such as password length and username uniqueness beside the inputs.
+- **Prevention:** Explain what users can do and how to complete the form, and do not advertise account capabilities that have not been implemented.

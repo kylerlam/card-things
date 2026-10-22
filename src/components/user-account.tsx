@@ -120,7 +120,9 @@ export function UserAccount({
                   const result = await authClient.updateUser({ name: nextName });
                   setPending(false);
                   if (result.error) {
-                    setStatus("無法更新用戶名，請稍後再試。");
+                    setStatus(result.error.code === "USERNAME_TAKEN"
+                      ? "這個用戶名已被使用，請換一個。"
+                      : "無法更新用戶名，請稍後再試。");
                     return;
                   }
                   setName(nextName);

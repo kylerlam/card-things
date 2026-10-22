@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { UserRoundIcon } from "lucide-react";
 
 import { buttonVariants } from "@/components/ui/button";
@@ -8,7 +9,10 @@ import { authClient } from "@/lib/auth-client";
 import { cn } from "@/lib/utils";
 
 export function AccountNav() {
+  const pathname = usePathname();
   const { data: session, isPending } = authClient.useSession();
+
+  if (pathname === "/auth") return null;
 
   if (isPending) {
     return (
@@ -45,7 +49,7 @@ export function AccountNav() {
       href="/auth"
       className={cn(buttonVariants({ variant: "outline" }), "px-2 sm:px-4")}
     >
-      登入 / 註冊
+      登入
     </Link>
   );
 }

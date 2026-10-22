@@ -1,5 +1,45 @@
 import { expect, test } from "@playwright/test";
 
+test("the homepage opens one focused login and registration entry", async ({ page }) => {
+  await page.goto("/");
+  const navigation = page.getByRole("navigation", { name: "主要導覽" });
+  await navigation.getByRole("link", { name: "登入", exact: true }).click();
+  await expect(page).toHaveURL(/\/auth$/);
+  await expect(page.getByRole("heading", { name: "登入與註冊", exact: true })).toBeVisible();
+  await expect(navigation.getByRole("link", { name: "登入", exact: true })).toHaveCount(0);
+  await expect(navigation.getByRole("link", { name: "登入 / 註冊", exact: true })).toHaveCount(0);
+  await expect(page.getByRole("heading", { name: "帳戶安全", exact: true })).toHaveCount(0);
+
+  await page.getByRole("tab", { name: "註冊" }).click();
+  await expect(page.getByText("密碼至少 12 個字元。", { exact: true })).toBeVisible();
+  await expect(page.getByLabel("密碼", { exact: true })).toHaveAttribute("minlength", "12");
+});
+
+test("registration rejects duplicate usernames with helpful feedback", async ({ page }, testInfo) => {
+  await page.goto("/auth");
+  await page.getByRole("tab", { name: "註冊" }).click();
+  await page.getByLabel("用戶名").fill("cardthings");
+  await page.getByLabel("電子郵件", { exact: true }).fill(`duplicate-name-${testInfo.project.name}@example.test`);
+  await page.getByLabel("密碼", { exact: true }).fill("Duplicate-Name-Password-2026!");
+  await page.getByLabel("再次輸入密碼").fill("Duplicate-Name-Password-2026!");
+  await page.getByRole("button", { name: "建立帳戶", exact: true }).click();
+  await expect(page.getByRole("alert").filter({
+    hasText: "這個用戶名已被使用，請換一個。",
+  })).toBeVisible();
+  await expect(page).toHaveURL(/\/auth$/);
+
+  const normalizedDuplicate = await page.request.post("/api/auth/sign-up/email", {
+    headers: { origin: "http://127.0.0.1:3200" },
+    data: {
+      name: "  CARDTHINGS_ADMIN  ",
+      email: `normalized-name-${testInfo.project.name}@example.test`,
+      password: "Duplicate-Name-Password-2026!",
+    },
+  });
+  expect(normalizedDuplicate.ok()).toBe(false);
+  expect((await normalizedDuplicate.json()).code).toBe("USERNAME_TAKEN");
+});
+
 for (const account of [
   { login: "cardthings", destination: "/user", otherBackend: "/admin" },
   { login: "cardthings_admin", destination: "/admin", otherBackend: "/user" },

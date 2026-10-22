@@ -33,6 +33,7 @@ export const user = sqliteTable(
   (table) => [
     uniqueIndex("user_public_id_unique").on(table.publicId),
     uniqueIndex("user_email_unique").on(table.email),
+    uniqueIndex("user_name_unique").on(sql`lower(trim(${table.name}))`),
   ],
 );
 

@@ -74,7 +74,9 @@ export function AccountAuthForm({
             });
             if (result.error) {
               setPending(false);
-              setError("註冊失敗。請確認資料，或改用既有帳戶登入。");
+              setError(result.error.code === "USERNAME_TAKEN"
+                ? "這個用戶名已被使用，請換一個。"
+                : "註冊失敗。請確認資料，或改用既有帳戶登入。");
               return;
             }
           } else {
@@ -106,6 +108,7 @@ export function AccountAuthForm({
                 maxLength={60}
                 required
               />
+              <FieldDescription>2–60 個字元，不可與其他帳戶重複。</FieldDescription>
             </Field>
           ) : null}
           <Field>

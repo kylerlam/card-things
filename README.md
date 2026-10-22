@@ -13,6 +13,7 @@ CardThings stores descriptions and links, not installer binaries. Official and m
 - Explicit official or mirror source labels; every download opens the external provider
 - Real email/password registration, login, session, profile-name, and password management
 - One shared login page with server-verified routing to the user or administrator workspace
+- Unique usernames enforced by the database and checked during registration and profile updates
 - Server-authorized administrator access and tool, category, and tag CRUD
 - Draft and published tool states
 - SQLite migrations, persistent Docker volumes, and documented backup/restore procedures

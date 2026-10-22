@@ -15,6 +15,13 @@
       "when": 1791973967363,
       "tag": "0001_add-public-id",
       "breakpoints": true
+    },
+    {
+      "idx": 2,
+      "version": "6",
+      "when": 1792658655287,
+      "tag": "0002_unique-usernames",
+      "breakpoints": true
     }
   ]
 }

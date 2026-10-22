@@ -22,6 +22,12 @@ test("registration, profile updates, login, and logout use server accounts", asy
   await page.goto("/user");
   await page.getByRole("button", { name: "個人資料管理" }).first().click();
   await expect(page.getByText(/^ct[a-z0-9]{12}$/)).toBeVisible();
+  await page.getByLabel("用戶名").fill("cardthings_admin");
+  await page.getByRole("button", { name: "儲存用戶名" }).click();
+  await expect(page.getByRole("status")).toHaveText("這個用戶名已被使用，請換一個。");
+  await page.getByLabel("用戶名").fill("正式用戶");
+  await page.getByRole("button", { name: "儲存用戶名" }).click();
+  await expect(page.getByRole("status")).toHaveText("用戶名已更新。");
   await page.getByLabel("用戶名").fill("已更新用戶");
   await page.getByRole("button", { name: "儲存用戶名" }).click();
   await expect(page.getByRole("status")).toHaveText("用戶名已更新。");
