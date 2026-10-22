@@ -16,7 +16,8 @@ AI agents are expected to perform most coding and GitHub work. Parallel agents s
 
 - Use a new short-lived task branch from current `dev` for every file change, including source code, tests, dependencies, deployment configuration, agent behavior rules, documentation, links, and design references. Keep one coherent task per branch.
 - Use descriptive branch names, such as `feat/card-search`, `fix/mobile-layout`, or `docs/project-guidelines`. Branch names are distinct from Conventional Commit messages.
-- Commit and push the task branch, then open a draft PR targeting `dev` and run relevant available checks. Do not push file changes directly to `dev` or `main`.
+- Commit each completed, coherent change locally before handing it off for review. Waiting for approval to push does not mean leaving completed work uncommitted.
+- Push only when the repository owner requests or approves it. When authorized, push the task branch, open a draft PR targeting `dev`, and run relevant available checks. Do not push file changes directly to `dev` or `main` unless the owner explicitly directs otherwise.
 - Keep `main` reviewed, checked, and releasable. Promote accepted work from `dev` to `main` only with the repository owner's explicit approval.
 - Briefly document meaningful implementation steps, approaches considered, check results, and known limitations in the PR. Provide a useful review record without private reasoning or raw command dumps.
 - Wait for the repository owner's explicit approval before merging. Then clean up merged task branches as appropriate.

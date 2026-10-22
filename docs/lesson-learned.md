@@ -15,3 +15,10 @@ Record confirmed, meaningful corrections that can prevent repeated mistakes. Kee
 - **Mistaken assumption:** One deployment's platform and operational context belonged in reusable requirements; framework reuse also implied a broader commercial platform.
 - **Confirmed decision:** Keep reusable guidance platform-neutral and separate deployment-specific content and configuration. Prioritize confirmed practical requirements without mandating a collection subject, business model, or coordinator identity.
 - **Prevention:** Check whether each proposed rule is a durable project requirement or deployment context. Keep only confirmed reusable decisions in project guidance, and require an explicit scope decision before expanding into a general or commercial platform.
+
+## Commit completed work before review handoff
+
+- **Context:** Reviewing completed authentication changes and adding catalogue cards while remote publication still required owner approval.
+- **Mistaken assumption:** Waiting for permission to push also meant postponing local commits.
+- **Confirmed decision:** Create a local commit for each completed, coherent change; wait for the owner's request or approval before pushing.
+- **Prevention:** Separate local commits from remote publication, stage only the intended files, and record public deployment content separately from runtime databases, secrets, and reusable framework code.
