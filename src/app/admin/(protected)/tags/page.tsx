@@ -41,7 +41,7 @@ export default async function TagsPage({
               <Input id="tag-name" name="name" defaultValue={editing?.name} required />
             </Field>
             <Field>
-              <FieldLabel htmlFor="tag-slug">Slug</FieldLabel>
+              <FieldLabel htmlFor="tag-slug">網址代稱</FieldLabel>
               <Input
                 id="tag-slug"
                 name="slug"

@@ -17,7 +17,7 @@ test("admin authorization and catalogue CRUD use the real database", async (
   await page.goto("/admin/categories");
   await expect(page.getByRole("heading", { name: "用途分類", exact: true })).toBeVisible();
   await page.getByLabel("分類名稱").fill("E2E 分類");
-  await page.getByLabel("Slug").fill("e2e-category");
+  await page.getByLabel("網址代稱").fill("e2e-category");
   await page.getByLabel("排序").fill("90");
   await page.getByLabel("說明").fill("只存在隔離端對端資料庫的分類。");
   await page.getByRole("button", { name: "新增分類" }).click();
@@ -25,7 +25,7 @@ test("admin authorization and catalogue CRUD use the real database", async (
 
   await page.goto("/admin/tags");
   await page.getByLabel("Tag 名稱").fill("E2E 標籤");
-  await page.getByLabel("Slug").fill("e2e-tag");
+  await page.getByLabel("網址代稱").fill("e2e-tag");
   await page.getByRole("button", { name: "新增 Tag" }).click();
   await expect(page.getByText("E2E 標籤", { exact: true })).toBeVisible();
 
@@ -40,7 +40,7 @@ test("admin authorization and catalogue CRUD use the real database", async (
   await expect(page.getByLabel("用途分類", { exact: true })).toHaveValue(/.+/);
 
   await page.getByLabel("卡片名稱").fill("E2E Card");
-  await page.getByLabel("Slug").fill("e2e-tool");
+  await page.getByLabel("網址代稱").fill("e2e-tool");
   await page.getByLabel("卡片摘要").fill("可搜尋的端對端正式卡片資料。");
   await page.getByLabel("完整介紹").fill("這張卡片由管理員表單寫入真實隔離資料庫，並透過公開詳情頁讀取。");
   await page.getByLabel("發布狀態").selectOption("published");

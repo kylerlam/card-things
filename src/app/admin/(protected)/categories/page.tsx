@@ -42,7 +42,7 @@ export default async function CategoriesPage({
               <Input id="category-name" name="name" defaultValue={editing?.name} required />
             </Field>
             <Field>
-              <FieldLabel htmlFor="category-slug">Slug</FieldLabel>
+              <FieldLabel htmlFor="category-slug">網址代稱</FieldLabel>
               <Input
                 id="category-slug"
                 name="slug"

@@ -84,7 +84,7 @@ export function ToolForm({
               <Input id="tool-name" name="name" defaultValue={tool?.name} required />
             </Field>
             <Field>
-              <FieldLabel htmlFor="tool-slug">Slug</FieldLabel>
+              <FieldLabel htmlFor="tool-slug">網址代稱</FieldLabel>
               <Input
                 id="tool-slug"
                 name="slug"
@@ -359,7 +359,7 @@ export function ToolForm({
           <div className="flex items-start justify-between gap-4">
             <div>
               <h2 id="quick-category-title" className="text-xl font-bold">新增用途分類</h2>
-              <p className="mt-1 text-sm text-muted-foreground">只需輸入名稱，系統會產生安全且唯一的 Slug。</p>
+              <p className="mt-1 text-sm text-muted-foreground">只需輸入名稱，系統會產生安全且唯一的網址代稱。</p>
             </div>
             <Button type="button" size="icon-sm" variant="ghost" aria-label="關閉" onClick={() => dialogRef.current?.close()}>
               <XIcon />
