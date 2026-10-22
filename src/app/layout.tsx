@@ -5,7 +5,7 @@ import "./globals.css";
 
 export const metadata: Metadata = {
   title: {
-    default: "CardThings",
+    default: "CardThings · 卡片內容分享 · 導航探索",
     template: "%s | CardThings",
   },
   description: "A reusable card-based catalogue for curated content collections.",

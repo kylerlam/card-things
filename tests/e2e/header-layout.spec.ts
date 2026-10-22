@@ -18,6 +18,10 @@ test("site header centers Home and keeps the enlarged account avatar at the righ
   for (const width of [311, 390, 768, 1440]) {
     await page.setViewportSize({ width, height: 900 });
     await page.goto("/");
+    await expect(page).toHaveTitle("CardThings · 卡片內容分享 · 導航探索");
+    await expect(navigation.getByText("卡片內容分享 · 導航探索")).toHaveCount(0);
+    expect(await page.locator("body").evaluate((element) => getComputedStyle(element).fontSize)).toBe("17px");
+    expect(await home.evaluate((element) => getComputedStyle(element).fontSize)).toBe("14.875px");
     await expect(navigation.getByRole("link", { name: "登入", exact: true })).toBeVisible();
     await expectCenteredHome();
   }
