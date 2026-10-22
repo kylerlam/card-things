@@ -20,7 +20,7 @@ export function AccountNav() {
       <span
         className={cn(
           buttonVariants({ variant: "outline", size: "icon" }),
-          "rounded-full",
+          "size-[46.8px] rounded-full",
         )}
         aria-label="正在載入帳戶"
       >
@@ -37,10 +37,10 @@ export function AccountNav() {
         title={session.user.name}
         className={cn(
           buttonVariants({ variant: "outline", size: "icon" }),
-          "overflow-hidden rounded-full p-0 text-sm font-bold",
+          "size-[46.8px] overflow-hidden rounded-full p-0 text-sm font-bold",
         )}
       >
-        {session.user.image ? <Image src={session.user.image} alt={`${session.user.name} 的頭像`} width={36} height={36} unoptimized className="size-full object-cover" /> : session.user.name.trim().slice(0, 1).toUpperCase() || <UserRoundIcon />}
+        {session.user.image ? <Image src={session.user.image} alt={`${session.user.name} 的頭像`} width={48} height={48} unoptimized className="size-full object-cover" /> : session.user.name.trim().slice(0, 1).toUpperCase() || <UserRoundIcon />}
       </Link>
     );
   }

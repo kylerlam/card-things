@@ -8,23 +8,23 @@ import { AccountNav } from "./account-nav";
 export function SiteHeader() {
   return (
     <header className="border-b border-border bg-card shadow-xs">
-      <div className="page-shell flex min-h-18 items-center justify-between gap-5 py-3">
-        <Link href="/" className="flex items-baseline gap-2 no-underline">
-          <strong className="text-2xl font-extrabold tracking-tight text-primary">CardThings</strong>
-          <span className="hidden text-sm text-muted-foreground sm:inline">
+      <nav className="page-shell grid min-h-18 grid-cols-[minmax(0,1fr)_auto_minmax(0,1fr)] items-center gap-2 py-3" aria-label="主要導覽">
+        <Link href="/" className="flex min-w-0 items-baseline gap-2 justify-self-start no-underline">
+          <strong className="text-xl font-extrabold tracking-tight text-primary sm:text-2xl">CardThings</strong>
+          <span className="hidden text-sm text-muted-foreground lg:inline">
             卡片內容分享 · 導航探索
           </span>
         </Link>
-        <nav className="flex items-center gap-2" aria-label="主要導覽">
-          <Link
-            href="/"
-            className={cn(buttonVariants({ variant: "ghost" }), "hidden sm:inline-flex")}
-          >
-            首頁
-          </Link>
+        <Link
+          href="/"
+          className={cn(buttonVariants({ variant: "ghost" }), "px-2 sm:px-3.5")}
+        >
+          首頁
+        </Link>
+        <div className="flex items-center justify-self-end">
           <AccountNav />
-        </nav>
-      </div>
+        </div>
+      </nav>
     </header>
   );
 }
