@@ -1,5 +1,4 @@
-import Link from "next/link";
-import { ArrowLeftIcon, ArrowUpRightIcon, BookOpenIcon, DownloadIcon } from "lucide-react";
+import { ArrowUpRightIcon, BookOpenIcon, DownloadIcon } from "lucide-react";
 import { notFound } from "next/navigation";
 
 import { Badge } from "@/components/ui/badge";
@@ -13,6 +12,7 @@ import {
   CardTitle,
 } from "@/components/ui/card";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
+import { CatalogueReturnLink } from "@/components/catalogue-return-link";
 import { getPublishedToolBySlug } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 
@@ -31,10 +31,7 @@ export default async function ToolDetail({
     <>
       <SiteHeader />
       <main className="page-shell py-10 sm:py-14">
-        <Link href="/" className={cn(buttonVariants({ variant: "ghost" }), "mb-6")}>
-          <ArrowLeftIcon data-icon="inline-start" />
-          返回卡片列表
-        </Link>
+        <CatalogueReturnLink />
 
         <div className="grid gap-6 lg:grid-cols-[minmax(0,1fr)_360px]">
           <article className="wire-panel p-6 sm:p-8">

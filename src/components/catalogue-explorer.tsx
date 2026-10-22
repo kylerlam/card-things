@@ -1,6 +1,6 @@
 "use client";
 
-import { useDeferredValue, useMemo, useState } from "react";
+import { useDeferredValue, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
 import { ArrowUpRightIcon, SearchIcon } from "lucide-react";
 
@@ -18,6 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ToolIcon } from "@/components/tool-icon";
 import type { CatalogueTool } from "@/lib/catalog";
+import { readCatalogueView, rememberCatalogueView } from "@/lib/catalogue-navigation";
 import { cn } from "@/lib/utils";
 
 type Category = {
@@ -28,6 +29,8 @@ type Category = {
 };
 
 const allCategory = "all";
+const subscribeToView = () => () => {};
+const serverView = () => null;
 
 export function CatalogueExplorer({
   categories,
@@ -36,9 +39,22 @@ export function CatalogueExplorer({
   categories: Category[];
   tools: CatalogueTool[];
 }) {
-  const [category, setCategory] = useState(allCategory);
-  const [query, setQuery] = useState("");
+  const savedView = useSyncExternalStore(subscribeToView, readCatalogueView, serverView);
+  const [selectedCategory, setCategory] = useState<string | null>(null);
+  const [searchQuery, setQuery] = useState<string | null>(null);
+  const category = selectedCategory ?? savedView?.category ?? allCategory;
+  const query = searchQuery ?? savedView?.query ?? "";
   const deferredQuery = useDeferredValue(query.trim().toLocaleLowerCase());
+  const restoredView = useRef(false);
+
+  useEffect(() => {
+    if (!savedView || restoredView.current || deferredQuery !== query.trim().toLocaleLowerCase()) return;
+    const frame = requestAnimationFrame(() => {
+      window.scrollTo({ left: savedView.x, top: savedView.y, behavior: "instant" });
+      restoredView.current = true;
+    });
+    return () => cancelAnimationFrame(frame);
+  }, [deferredQuery, query, savedView]);
 
   const filtered = useMemo(
     () =>
@@ -148,6 +164,7 @@ export function CatalogueExplorer({
                 <CardFooter>
                   <Link
                     href={`/tools/${tool.slug}`}
+                    onNavigate={() => rememberCatalogueView({ category, query, x: window.scrollX, y: window.scrollY }, `/tools/${tool.slug}`)}
                     className={cn(
                       buttonVariants({ variant: "outline" }),
                       "w-full",
