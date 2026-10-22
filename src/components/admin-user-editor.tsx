@@ -21,7 +21,7 @@ export function AdminUserEditor({ user, onClose }: {
       <div className="mb-4 flex flex-wrap items-start justify-between gap-3">
         <div>
           <h3 className="font-bold">編輯用戶資料</h3>
-          <p className="mt-1 break-all text-sm text-muted-foreground">用戶 ID：{user.publicId}（不可修改）</p>
+          <p className="mt-1 break-all text-sm text-muted-foreground">用戶 ID：<span className="select-none">{user.publicId}</span>（不可修改）</p>
           <p className="mt-1 text-sm text-muted-foreground">角色維持一般用戶。更換郵箱或重設密碼後，該用戶需重新登入。</p>
         </div>
         <Button type="button" variant="ghost" onClick={onClose}>關閉編輯</Button>

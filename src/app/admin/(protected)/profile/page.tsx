@@ -12,7 +12,7 @@ export default async function AdminProfilePage() {
       </p>
       <div className="mt-6"><AvatarEditor image={session.user.image ?? null} name={session.user.name} /></div>
       <dl className="mt-6 grid gap-4 sm:grid-cols-2">
-        <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">用戶 ID</dt><dd className="mt-2 font-semibold">{session.user.publicId}</dd></div>
+        <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">用戶 ID</dt><dd className="mt-2 select-none font-semibold">{session.user.publicId}</dd></div>
         <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">角色</dt><dd className="mt-2 font-semibold">管理員</dd></div>
         <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">用戶名</dt><dd className="mt-2 font-semibold">{session.user.name}</dd></div>
         <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">電子郵件</dt><dd className="mt-2 break-all font-semibold">{session.user.email}</dd></div>

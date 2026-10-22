@@ -47,7 +47,7 @@ export function AdminUserList({ users }: { users: AdminUser[] }) {
                   <Badge variant={user.role === "admin" ? "default" : "secondary"}>{user.role === "admin" ? "管理員" : "一般用戶"}</Badge>
                   <Badge variant="outline">{user.emailVerified ? "郵箱已驗證" : "郵箱未驗證"}</Badge>
                 </div>
-                <p className="mt-1 break-all text-sm text-muted-foreground">{user.publicId} · {user.email}</p>
+                <p className="mt-1 break-all text-sm text-muted-foreground"><span className="select-none">{user.publicId}</span> · {user.email}</p>
               </div>
               <div className="flex flex-wrap items-center gap-3 sm:justify-end">
                 <span className="text-xs text-muted-foreground">建立於 {user.createdAt}</span>

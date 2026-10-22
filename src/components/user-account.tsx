@@ -101,7 +101,7 @@ export function UserAccount({
             <dl className="mt-6 grid gap-3 sm:grid-cols-2">
               <div className="soft-surface p-4">
                 <dt className="text-sm text-muted-foreground">用戶 ID</dt>
-                <dd className="mt-2 font-semibold">{user.publicId}</dd>
+                <dd className="mt-2 select-none font-semibold">{user.publicId}</dd>
               </div>
               <div className="soft-surface p-4">
                 <dt className="text-sm text-muted-foreground">電子郵件</dt>
