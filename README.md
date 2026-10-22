@@ -50,8 +50,10 @@ openssl rand -base64 32
 Put the generated value in `BETTER_AUTH_SECRET` inside `.env.local`, then initialize the local development database:
 
 ```bash
-npm run db:migrate
+npm run db:migrate -- --initialize
 ```
+
+Use `--initialize` only for an intentional new database. Normal app startup and `npm run db:migrate` require an existing database and fail if its file or mount is missing. Check the configured path and recover the existing data before restarting an established installation.
 
 Create the first administrator without saving a password in the repository or shell history:
 
@@ -77,8 +79,11 @@ Production and development databases start without catalogue samples. Create cat
 Copy `.env.example` to `.env`, replace `BETTER_AUTH_SECRET`, and set `BETTER_AUTH_URL` to the public origin before production use.
 
 ```bash
+docker compose --profile tools run --rm manager npm run db:migrate -- --initialize
 docker compose up --build -d app
 ```
+
+The first command deliberately creates a new installation's database. For an existing installation, verify its configured volumes and database first, then start `app` without `--initialize`.
 
 Create an administrator through the short-lived management container:
 

@@ -2,6 +2,7 @@ import fs from "node:fs";
 import os from "node:os";
 import path from "node:path";
 
+import Database from "better-sqlite3";
 import { eq, sql } from "drizzle-orm";
 import { migrate } from "drizzle-orm/better-sqlite3/migrator";
 import { afterAll, describe, expect, it } from "vitest";
@@ -20,6 +21,7 @@ afterAll(() => {
 
 describe("safe deterministic seed", () => {
   it("is insert-only and persists existing edits across reopen and reseed", () => {
+    new Database(databasePath).close();
     const first = createDatabase(databasePath);
     migrate(first.db, { migrationsFolder });
     seedTestDatabase(first.db);

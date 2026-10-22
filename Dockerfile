@@ -8,7 +8,7 @@ RUN npm ci
 
 FROM dependencies AS builder
 COPY . .
-RUN npm run build
+RUN DATABASE_URL=:memory: npm run build
 
 FROM dependencies AS manager
 ENV NODE_ENV=production

@@ -8,6 +8,23 @@ Local development defaults to `data/dev.sqlite`. Playwright uses `data/e2e.sqlit
 
 Never point development or test commands at a production database. Keep each production deployment on its own volume names by setting `CARDTHINGS_DATA_VOLUME` and `CARDTHINGS_UPLOADS_VOLUME` in the deployment's uncommitted `.env` file.
 
+## Initialize a new installation
+
+Creating a database requires an explicit command:
+
+```bash
+npm run db:migrate -- --initialize
+```
+
+For a new Docker installation, initialize the configured named volume before starting the app:
+
+```bash
+docker compose --profile tools run --rm manager npm run db:migrate -- --initialize
+docker compose up --build -d app
+```
+
+Normal runtime connections and migrations require an existing database file. If a database or mount disappears, startup fails instead of silently creating an empty database. Check the configured path and recover the existing state; do not use `--initialize` as a recovery command. Explicit in-memory databases remain available for isolated builds and tests.
+
 ## Migrations
 
 Schema changes are deliberate:
@@ -58,7 +75,7 @@ Set `CARDTHINGS_DATA_VOLUME=cardthings-data-restored-20261009` in the uncommitte
 
 ## Test fixtures
 
-Production and development have no seed command. The Playwright server recreates only `data/e2e.sqlite*` and runs `scripts/seed-test.ts` with an explicit test-only guard. The script rejects every other database path.
+Production and development have no seed command. Before deleting files or running migrations, the Playwright server loads environment configuration and requires `CARDTHINGS_TEST_SEED=true` plus a database path resolving to `data/e2e.sqlite`. It then recreates only `data/e2e.sqlite*`, explicitly initializes that test database, and runs `scripts/seed-test.ts` with a second test-only guard. Both guards reject every other database path. Run the suite through `npm run test:e2e`; do not point it at an established installation.
 
 Create production categories, optional tags, cards, and external sources through `/admin`.
 

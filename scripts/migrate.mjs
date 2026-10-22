@@ -14,9 +14,16 @@ const value = configured.startsWith("file:") ? configured.slice(5) : configured;
 const databasePath = path.isAbsolute(value)
   ? value
   : path.resolve(process.cwd(), value);
+const initialize = process.argv.slice(2).includes("--initialize");
 
-fs.mkdirSync(path.dirname(databasePath), { recursive: true });
-const sqlite = new Database(databasePath);
+if (initialize) {
+  fs.mkdirSync(path.dirname(databasePath), { recursive: true });
+} else if (!fs.existsSync(databasePath)) {
+  throw new Error(
+    `Database is missing at ${databasePath}. Check the configured path and data mount. Use --initialize only for an intentional new installation.`,
+  );
+}
+const sqlite = new Database(databasePath, { fileMustExist: !initialize });
 sqlite.pragma("foreign_keys = ON");
 
 try {

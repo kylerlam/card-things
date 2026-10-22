@@ -1,4 +1,3 @@
-import fs from "node:fs";
 import path from "node:path";
 
 import Database from "better-sqlite3";
@@ -16,11 +15,9 @@ export function resolveDatabasePath(configured = process.env.DATABASE_URL) {
 }
 
 export function createDatabase(databasePath = resolveDatabasePath()) {
-  if (databasePath !== ":memory:") {
-    fs.mkdirSync(path.dirname(databasePath), { recursive: true });
-  }
-
-  const sqlite = new Database(databasePath);
+  const sqlite = new Database(databasePath, {
+    fileMustExist: databasePath !== ":memory:",
+  });
   sqlite.pragma("foreign_keys = ON");
   if (databasePath !== ":memory:") sqlite.pragma("journal_mode = WAL");
 

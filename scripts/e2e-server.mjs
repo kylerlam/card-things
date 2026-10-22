@@ -2,8 +2,22 @@ import { execFileSync, spawn } from "node:child_process";
 import fs from "node:fs";
 import path from "node:path";
 
+import nextEnv from "@next/env";
+
 const projectRoot = process.cwd();
+nextEnv.loadEnvConfig(projectRoot);
+
 const databasePath = path.resolve(projectRoot, "data/e2e.sqlite");
+const configured = process.env.DATABASE_URL?.trim() || "data/dev.sqlite";
+const value = configured.startsWith("file:") ? configured.slice(5) : configured;
+if (
+  process.env.CARDTHINGS_TEST_SEED !== "true" ||
+  path.resolve(projectRoot, value) !== databasePath
+) {
+  throw new Error("Test server is restricted to data/e2e.sqlite with CARDTHINGS_TEST_SEED=true.");
+}
+process.env.DATABASE_URL = databasePath;
+
 const tsxCli = path.resolve(projectRoot, "node_modules/tsx/dist/cli.mjs");
 const nextCli = path.resolve(projectRoot, "node_modules/next/dist/bin/next");
 
@@ -19,7 +33,7 @@ function runNode(args) {
   });
 }
 
-runNode(["scripts/migrate.mjs"]);
+runNode(["scripts/migrate.mjs", "--initialize"]);
 runNode([tsxCli, "scripts/seed-test.ts"]);
 runNode([tsxCli, "scripts/create-admin.ts"]);
 
