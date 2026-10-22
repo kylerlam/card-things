@@ -1,18 +1,29 @@
 import { expect, test } from "@playwright/test";
 import sharp from "sharp";
 
-test("site header centers Home and keeps the enlarged account avatar at the right edge", async ({ page, baseURL }) => {
+test("site header centers the navigation group and keeps the enlarged account avatar at the right edge", async ({ page, baseURL }) => {
   const navigation = page.getByRole("navigation", { name: "主要導覽" });
   const home = navigation.getByRole("link", { name: "首頁", exact: true });
+  const menu = navigation.getByRole("group", { name: "網站選單" });
 
-  async function expectCenteredHome() {
+  async function expectNavigationLayout() {
     const header = await navigation.boundingBox();
-    const link = await home.boundingBox();
-    expect(Math.abs(header!.x + header!.width / 2 - link!.x - link!.width / 2)).toBeLessThan(1);
-    expect(Math.abs(header!.y + header!.height / 2 - link!.y - link!.height / 2)).toBeLessThan(1);
-    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(page.viewportSize()!.width);
+    const links = await menu.boundingBox();
     const brand = await navigation.getByRole("link", { name: /CardThings/ }).boundingBox();
-    expect(brand!.x + brand!.width).toBeLessThanOrEqual(link!.x);
+    expect(Math.abs(header!.x + header!.width / 2 - links!.x - links!.width / 2)).toBeLessThan(1);
+    expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(page.viewportSize()!.width);
+    await expect(home).toBeVisible();
+    await expect(menu.getByRole("link", { name: "工具庫", exact: true })).toBeVisible();
+    await expect(menu.getByRole("button", { name: "分類導覽", exact: true })).toBeVisible();
+    await expect(menu.getByRole("link", { name: "關於本站", exact: true })).toBeVisible();
+    if (page.viewportSize()!.width >= 768) {
+      expect(Math.abs(header!.y + header!.height / 2 - links!.y - links!.height / 2)).toBeLessThan(1);
+      expect(brand!.x + brand!.width).toBeLessThanOrEqual(links!.x);
+    } else {
+      expect(links!.y).toBeGreaterThanOrEqual(brand!.y + brand!.height);
+      expect(links!.x).toBeGreaterThanOrEqual(header!.x);
+      expect(links!.x + links!.width).toBeLessThanOrEqual(header!.x + header!.width);
+    }
   }
 
   for (const width of [311, 390, 768, 1440]) {
@@ -21,13 +32,13 @@ test("site header centers Home and keeps the enlarged account avatar at the righ
     await expect(page).toHaveTitle("CardThings · 卡片內容分享 · 導航探索");
     await expect(navigation.getByText("卡片內容分享 · 導航探索")).toHaveCount(0);
     expect(await page.locator("body").evaluate((element) => getComputedStyle(element).fontSize)).toBe("17px");
-    expect(await home.evaluate((element) => getComputedStyle(element).fontSize)).toBe("14.875px");
+    expect(await home.evaluate((element) => getComputedStyle(element).fontSize)).toBe(width <= 360 ? "12.75px" : "14.875px");
     await expect(navigation.getByRole("link", { name: "登入", exact: true })).toBeVisible();
-    await expectCenteredHome();
+    await expectNavigationLayout();
   }
   await page.goto("/auth");
   await expect(navigation.getByRole("link", { name: "登入", exact: true })).toHaveCount(0);
-  await expectCenteredHome();
+  await expectNavigationLayout();
   await page.getByLabel("電子郵件或 Demo 帳號").fill("cardthings");
   await page.getByLabel("密碼", { exact: true }).fill("password");
   await page.getByRole("button", { name: "登入", exact: true }).click();
@@ -46,12 +57,38 @@ test("site header centers Home and keeps the enlarged account avatar at the righ
     const account = navigation.getByRole("link", { name: "我的帳戶：cardthings", exact: true });
     await expect(account).toBeVisible();
     await expect(account.getByRole("img", { name: "cardthings 的頭像", exact: true })).toBeVisible();
-    await expectCenteredHome();
+    await expectNavigationLayout();
     const header = await navigation.boundingBox();
     const avatar = await account.boundingBox();
     expect(avatar!.width).toBeCloseTo(36 * 1.3, 1);
     expect(avatar!.height).toBeCloseTo(36 * 1.3, 1);
     expect(Math.abs(header!.x + header!.width - avatar!.x - avatar!.width)).toBeLessThan(1);
-    expect(Math.abs(header!.y + header!.height / 2 - avatar!.y - avatar!.height / 2)).toBeLessThan(1);
+    const brand = await navigation.getByRole("link", { name: /CardThings/ }).boundingBox();
+    expect(Math.abs(brand!.y + brand!.height / 2 - avatar!.y - avatar!.height / 2)).toBeLessThan(1);
+  }
+});
+
+
+test("category navigation is keyboard accessible and stays inside narrow viewports", async ({ page }) => {
+  for (const width of [311, 1440]) {
+    await page.setViewportSize({ width, height: 900 });
+    await page.goto("/");
+    const trigger = page.getByRole("button", { name: "分類導覽", exact: true });
+    await trigger.focus();
+    await page.keyboard.press("ArrowDown");
+    const menu = page.getByRole("menu", { name: "用途分類" });
+    await expect(menu).toBeVisible();
+    await expect(menu.getByRole("menuitem", { name: "全部卡片", exact: true })).toBeFocused();
+    const bounds = await menu.boundingBox();
+    expect(bounds!.x).toBeGreaterThanOrEqual(0);
+    expect(bounds!.x + bounds!.width).toBeLessThanOrEqual(width);
+    await page.keyboard.press("Escape");
+    await expect(menu).toBeHidden();
+    await expect(trigger).toBeFocused();
+    await trigger.click();
+    await expect(menu).toBeVisible();
+    // The popup can cover the hero on a narrow screen; click the page gutter.
+    await page.mouse.click(4, 4);
+    await expect(menu).toBeHidden();
   }
 });

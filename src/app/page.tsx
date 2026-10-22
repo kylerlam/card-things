@@ -7,14 +7,16 @@ import { ArrowUpIcon } from "lucide-react";
 
 export const dynamic = "force-dynamic";
 
-export default function Home() {
+export default async function Home({ searchParams }: { searchParams: Promise<Record<string, string | string[] | undefined>> }) {
+  const params = await searchParams;
   const categories = listCategories();
   const tools = listPublishedTools();
+  const initialCategory = categories.find((item) => item.slug === params.category)?.slug ?? "all";
 
   return (
     <>
       <SiteHeader />
-      <main id="top" className="page-shell py-10 sm:py-14">
+      <main className="page-shell py-10 sm:py-14">
         <div className="mb-8">
           <p className="eyebrow">工具探索</p>
           <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl">
@@ -24,7 +26,7 @@ export default function Home() {
             精選軟體與工具，匯集功能介紹與下載來源。
           </p>
         </div>
-        <CatalogueExplorer categories={categories} tools={tools} />
+        <CatalogueExplorer key={initialCategory} initialCategory={initialCategory} categories={categories} tools={tools} />
         <a
           href="#top"
           aria-label="回到頂部"

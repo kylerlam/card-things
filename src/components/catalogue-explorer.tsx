@@ -18,7 +18,7 @@ import {
 import { Input } from "@/components/ui/input";
 import { ToolIcon } from "@/components/tool-icon";
 import type { CatalogueTool } from "@/lib/catalog";
-import { readCatalogueView, rememberCatalogueView } from "@/lib/catalogue-navigation";
+import { catalogueNavigationEvent, readCatalogueView, rememberCatalogueView } from "@/lib/catalogue-navigation";
 import { cn } from "@/lib/utils";
 
 type Category = {
@@ -35,17 +35,30 @@ const serverView = () => null;
 export function CatalogueExplorer({
   categories,
   tools,
+  initialCategory = allCategory,
 }: {
   categories: Category[];
   tools: CatalogueTool[];
+  initialCategory?: string;
 }) {
   const savedView = useSyncExternalStore(subscribeToView, readCatalogueView, serverView);
   const [selectedCategory, setCategory] = useState<string | null>(null);
   const [searchQuery, setQuery] = useState<string | null>(null);
-  const category = selectedCategory ?? savedView?.category ?? allCategory;
+  const category = selectedCategory ?? savedView?.category ?? initialCategory;
   const query = searchQuery ?? savedView?.query ?? "";
   const deferredQuery = useDeferredValue(query.trim().toLocaleLowerCase());
   const restoredView = useRef(false);
+
+  useEffect(() => {
+    function navigate(event: Event) {
+      const requested = (event as CustomEvent<{ category: string }>).detail.category;
+      setCategory(categories.some((item) => item.slug === requested) ? requested : allCategory);
+      setQuery("");
+      restoredView.current = true;
+    }
+    window.addEventListener(catalogueNavigationEvent, navigate);
+    return () => window.removeEventListener(catalogueNavigationEvent, navigate);
+  }, [categories]);
 
   useEffect(() => {
     if (!savedView || restoredView.current || deferredQuery !== query.trim().toLocaleLowerCase()) return;
