@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { UserRoundIcon } from "lucide-react";
 
+import { AvatarEditor } from "@/components/avatar-editor";
 import { Button, buttonVariants } from "@/components/ui/button";
 import { Field, FieldDescription, FieldGroup, FieldLabel } from "@/components/ui/field";
 import { Input } from "@/components/ui/input";
@@ -18,7 +19,7 @@ export function UserAccount({
   user,
 }: {
   initialView: View;
-  user: { publicId: string; name: string; email: string; role?: string | null };
+  user: { publicId: string; name: string; email: string; image: string | null; role?: string | null };
 }) {
   const router = useRouter();
   const [view, setView] = useState<View>(initialView);
@@ -87,7 +88,7 @@ export function UserAccount({
               >
                 <UserRoundIcon className="mb-4 size-5" />
                 <strong className="block">管理個人資料</strong>
-                <span className="text-sm text-muted-foreground">更新名稱或密碼</span>
+                <span className="text-sm text-muted-foreground">更新頭像、名稱或密碼</span>
               </button>
             </div>
           </section>
@@ -108,6 +109,7 @@ export function UserAccount({
               </div>
             </dl>
 
+            <div className="mt-6"><AvatarEditor image={user.image} name={name} /></div>
             <div className="mt-6 grid gap-6 xl:grid-cols-2">
               <form
                 className="soft-surface p-4"

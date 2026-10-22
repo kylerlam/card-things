@@ -7,7 +7,7 @@ import { db } from "@/db";
 import { schema, user } from "@/db/schema";
 import { createPublicId } from "@/lib/public-id";
 
-function validateUsername(value: string, currentUserId?: string) {
+export function validateUsername(value: string, currentUserId?: string) {
   const name = value.trim();
   if (name.length < 2 || name.length > 60) {
     throw new APIError("BAD_REQUEST", {

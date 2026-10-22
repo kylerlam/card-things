@@ -4,7 +4,15 @@ This guide covers the persistent state used by the first CardThings milestone. I
 
 ## Environment separation
 
-Local development defaults to `data/dev.sqlite`. Playwright uses `data/e2e.sqlite` and recreates only that scoped file. Docker uses `/app/data/cardthings.sqlite` inside the `cardthings-data` named volume. Upload storage is reserved in the separate `cardthings-uploads` volume; uploads are not implemented in this milestone.
+Local development defaults to `data/dev.sqlite`. Playwright uses `data/e2e.sqlite` and `uploads/e2e`, and recreates only the scoped database file. Docker uses `/app/data/cardthings.sqlite` inside the `cardthings-data` named volume. Avatars persist under `UPLOAD_DIR/avatars` in the separate uploads volume, while the user's existing image field stores the application URL. Back up both data and uploads together.
+
+## Avatars and profile administration
+
+Avatar selection accepts PNG, JPEG, or WebP up to 8 MiB, 8192 pixels per side, and 16,777,216 total pixels. The editor provides square cropping, zoom, and positioning before exporting a 512×512 PNG. The upload endpoint limits the exported file to 2 MiB, verifies and re-encodes it on the server, and writes a new random filename. Only the authenticated owner or an administrator can read the current avatar. Replaced files remain on disk for recovery, but their old URLs no longer serve them.
+
+Administrators can edit ordinary users' names, email addresses, and avatars and reset their passwords. User IDs and roles are not editable through these endpoints; administrator targets are rejected. A changed email address becomes unverified, and changing email or resetting the password revokes that user's existing sessions. Password resets require at least 12 characters and use the existing password hashing implementation.
+
+Mutation requests require the exact public origin configured by `BETTER_AUTH_URL`; keep it aligned with the external URL when running behind a proxy.
 
 Never point development or test commands at a production database. Keep each production deployment on its own volume names by setting `CARDTHINGS_DATA_VOLUME` and `CARDTHINGS_UPLOADS_VOLUME` in the deployment's uncommitted `.env` file.
 
@@ -86,7 +94,7 @@ Set `CARDTHINGS_DATA_VOLUME=cardthings-data-restored-20261009` in the uncommitte
 
 ## Test fixtures
 
-Production and development have no seed command. Before deleting files or running migrations, the Playwright server loads environment configuration and requires `CARDTHINGS_TEST_SEED=true` plus a database path resolving to `data/e2e.sqlite`. It then recreates only `data/e2e.sqlite*`, explicitly initializes that test database, and runs `scripts/seed-test.ts` with a second test-only guard. Both guards reject every other database path. Run the suite through `npm run test:e2e`; do not point it at an established installation.
+Production and development have no seed command. Before deleting files or running migrations, the Playwright server loads environment configuration and requires `CARDTHINGS_TEST_SEED=true`, a database path resolving to `data/e2e.sqlite`, and an upload directory resolving to `uploads/e2e`. It then recreates only `data/e2e.sqlite*`, explicitly initializes that test database, and runs `scripts/seed-test.ts` with a second test-only guard. Both guards reject every other database path. Run the suite through `npm run test:e2e`; do not point it at an established installation.
 
 Create production categories, optional tags, cards, and external sources through `/admin`.
 

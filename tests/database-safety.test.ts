@@ -77,7 +77,7 @@ describe("database initialization safety", () => {
 });
 
 describe("end-to-end preflight", () => {
-  it.each(["wrong path", "missing flag", "dotenv path"])(
+  it.each(["wrong path", "missing flag", "dotenv path", "wrong upload path"])(
     "rejects %s before deleting test files or migrating another database",
     (scenario) => {
       const directory = temporaryDirectory();
@@ -101,6 +101,9 @@ describe("end-to-end preflight", () => {
       } else if (scenario === "dotenv path") {
         delete env.DATABASE_URL;
         fs.writeFileSync(path.join(directory, ".env"), `DATABASE_URL=${selected}\n`);
+      } else if (scenario === "wrong upload path") {
+        env.DATABASE_URL = expected;
+        env.UPLOAD_DIR = path.join(directory, "real-uploads");
       }
       const result = spawnSync(process.execPath, [path.join(projectRoot, "scripts/e2e-server.mjs")], {
         cwd: directory,

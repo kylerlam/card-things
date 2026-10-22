@@ -1,5 +1,6 @@
 "use client";
 
+import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { UserRoundIcon } from "lucide-react";
@@ -36,10 +37,10 @@ export function AccountNav() {
         title={session.user.name}
         className={cn(
           buttonVariants({ variant: "outline", size: "icon" }),
-          "rounded-full text-sm font-bold",
+          "overflow-hidden rounded-full p-0 text-sm font-bold",
         )}
       >
-        {session.user.name.trim().slice(0, 1).toUpperCase() || <UserRoundIcon />}
+        {session.user.image ? <Image src={session.user.image} alt={`${session.user.name} 的頭像`} width={36} height={36} unoptimized className="size-full object-cover" /> : session.user.name.trim().slice(0, 1).toUpperCase() || <UserRoundIcon />}
       </Link>
     );
   }

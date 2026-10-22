@@ -14,6 +14,8 @@ CardThings stores descriptions and links, not installer binaries. Official and m
 - Real email/password registration, login, session, profile-name, and password management
 - One shared login page with server-verified routing to the user or administrator workspace
 - Unique usernames enforced by the database and checked during registration and profile updates
+- Local avatar upload with click or drag-and-drop selection, square cropping, zoom, and position controls
+- Administrator editing of ordinary users' names, email addresses, and avatars, plus password resets; IDs and roles remain unchanged
 - Server-authorized administrator access and tool, category, and tag CRUD
 - Draft and published tool states
 - SQLite migrations, persistent Docker volumes, and documented backup/restore procedures

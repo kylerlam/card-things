@@ -1,3 +1,4 @@
+import { AvatarEditor } from "@/components/avatar-editor";
 import { requireAdmin } from "@/lib/admin-auth";
 
 export default async function AdminProfilePage() {
@@ -7,8 +8,9 @@ export default async function AdminProfilePage() {
     <section className="wire-panel p-5 sm:p-6">
       <h2 className="text-2xl font-bold">個人資料管理</h2>
       <p className="mt-2 text-muted-foreground">
-        只讀顯示目前已驗證的管理員身份。
+        查看管理員身份，或更新你的頭像。
       </p>
+      <div className="mt-6"><AvatarEditor image={session.user.image ?? null} name={session.user.name} /></div>
       <dl className="mt-6 grid gap-4 sm:grid-cols-2">
         <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">用戶 ID</dt><dd className="mt-2 font-semibold">{session.user.publicId}</dd></div>
         <div className="soft-surface bg-muted p-4"><dt className="text-sm text-muted-foreground">角色</dt><dd className="mt-2 font-semibold">管理員</dd></div>

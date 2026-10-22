@@ -11,7 +11,7 @@ export default function AdminUsersPage() {
     <section className="wire-panel p-5">
       <h2 className="text-2xl font-bold">用戶管理</h2>
       <p className="mt-2 text-sm text-muted-foreground">
-        搜尋真實伺服器帳戶，並核對角色與驗證狀態。
+        搜尋帳戶、編輯一般用戶資料，或重設登入密碼。
       </p>
       <AdminUserList
         users={users.map((item) => ({
@@ -20,6 +20,7 @@ export default function AdminUsersPage() {
           email: item.email,
           role: item.role,
           emailVerified: item.emailVerified,
+          image: item.image,
           createdAt: item.createdAt.toISOString().slice(0, 10),
         }))}
       />

@@ -8,15 +8,18 @@ const projectRoot = process.cwd();
 nextEnv.loadEnvConfig(projectRoot);
 
 const databasePath = path.resolve(projectRoot, "data/e2e.sqlite");
+const uploadPath = path.resolve(projectRoot, "uploads/e2e");
 const configured = process.env.DATABASE_URL?.trim() || "data/dev.sqlite";
 const value = configured.startsWith("file:") ? configured.slice(5) : configured;
 if (
   process.env.CARDTHINGS_TEST_SEED !== "true" ||
-  path.resolve(projectRoot, value) !== databasePath
+  path.resolve(projectRoot, value) !== databasePath ||
+  path.resolve(projectRoot, process.env.UPLOAD_DIR || "uploads") !== uploadPath
 ) {
-  throw new Error("Test server is restricted to data/e2e.sqlite with CARDTHINGS_TEST_SEED=true.");
+  throw new Error("Test server is restricted to data/e2e.sqlite, uploads/e2e, and CARDTHINGS_TEST_SEED=true.");
 }
 process.env.DATABASE_URL = databasePath;
+process.env.UPLOAD_DIR = uploadPath;
 
 const tsxCli = path.resolve(projectRoot, "node_modules/tsx/dist/cli.mjs");
 const nextCli = path.resolve(projectRoot, "node_modules/next/dist/bin/next");

@@ -37,6 +37,7 @@ export default defineConfig({
       ADMIN_PASSWORD: "E2e-Only-Password-2026!",
       ADMIN_NAME: "E2E Admin",
       CARDTHINGS_TEST_SEED: "true",
+      UPLOAD_DIR: "uploads/e2e",
     },
   },
 });

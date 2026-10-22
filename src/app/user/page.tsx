@@ -27,6 +27,7 @@ export default async function UserPage({
             publicId: session.user.publicId,
             name: session.user.name,
             email: session.user.email,
+            image: session.user.image ?? null,
             role: session.user.role,
           }}
         />
