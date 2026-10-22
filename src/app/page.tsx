@@ -1,7 +1,7 @@
 import { CatalogueExplorer } from "@/components/catalogue-explorer";
 import { SiteFooter, SiteHeader } from "@/components/site-header";
 import { buttonVariants } from "@/components/ui/button";
-import { listCategories, listPublishedTools } from "@/lib/catalog";
+import { listCategories, listPublishedTools, listTags } from "@/lib/catalog";
 import { cn } from "@/lib/utils";
 import { ArrowUpIcon } from "lucide-react";
 
@@ -16,17 +16,8 @@ export default async function Home({ searchParams }: { searchParams: Promise<Rec
   return (
     <>
       <SiteHeader />
-      <main className="page-shell py-10 sm:py-14">
-        <div className="mb-8">
-          <p className="eyebrow">工具探索</p>
-          <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl">
-            發現實用好工具
-          </h1>
-          <p className="mt-3 max-w-2xl text-lg leading-8">
-            精選軟體與工具，匯集功能介紹與下載來源。
-          </p>
-        </div>
-        <CatalogueExplorer key={initialCategory} initialCategory={initialCategory} categories={categories} tools={tools} />
+      <main className="page-shell py-6 sm:py-8">
+        <CatalogueExplorer key={initialCategory} initialCategory={initialCategory} categories={categories} tags={listTags().map(({ id, name, slug }) => ({ id, name, slug }))} tools={tools} />
         <a
           href="#top"
           aria-label="回到頂部"

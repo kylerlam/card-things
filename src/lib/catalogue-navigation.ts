@@ -1,4 +1,4 @@
-export type CatalogueView = { category: string; query: string; x: number; y: number };
+export type CatalogueView = { category: string; tag?: string; query: string; x: number; y: number };
 
 export const catalogueNavigationEvent = "cardthings:catalogue-navigation";
 

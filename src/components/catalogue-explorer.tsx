@@ -2,7 +2,7 @@
 
 import { useDeferredValue, useEffect, useMemo, useRef, useState, useSyncExternalStore } from "react";
 import Link from "next/link";
-import { ArrowUpRightIcon, SearchIcon } from "lucide-react";
+import { ArrowUpRightIcon, SearchIcon, XIcon } from "lucide-react";
 
 import { Badge } from "@/components/ui/badge";
 import { buttonVariants, Button } from "@/components/ui/button";
@@ -28,23 +28,34 @@ type Category = {
   description: string | null;
 };
 
+type Tag = { id: string; name: string; slug: string };
+
 const allCategory = "all";
 const subscribeToView = () => () => {};
 const serverView = () => null;
 
 export function CatalogueExplorer({
   categories,
+  tags,
   tools,
   initialCategory = allCategory,
 }: {
   categories: Category[];
+  tags: Tag[];
   tools: CatalogueTool[];
   initialCategory?: string;
 }) {
   const savedView = useSyncExternalStore(subscribeToView, readCatalogueView, serverView);
   const [selectedCategory, setCategory] = useState<string | null>(null);
+  const [selectedTag, setTag] = useState<string | null>(null);
   const [searchQuery, setQuery] = useState<string | null>(null);
+  const [tagQuery, setTagQuery] = useState("");
+  const [showAllTags, setShowAllTags] = useState(false);
   const category = selectedCategory ?? savedView?.category ?? initialCategory;
+  const activeCategory = categories.find((item) => item.slug === category);
+  const requestedTag = selectedTag ?? savedView?.tag ?? "";
+  const tag = tags.some((item) => item.id === requestedTag) ? requestedTag : "";
+  const activeTag = tags.find((item) => item.id === tag);
   const query = searchQuery ?? savedView?.query ?? "";
   const deferredQuery = useDeferredValue(query.trim().toLocaleLowerCase());
   const restoredView = useRef(false);
@@ -53,6 +64,7 @@ export function CatalogueExplorer({
     function navigate(event: Event) {
       const requested = (event as CustomEvent<{ category: string }>).detail.category;
       setCategory(categories.some((item) => item.slug === requested) ? requested : allCategory);
+      setTag("");
       setQuery("");
       restoredView.current = true;
     }
@@ -69,10 +81,26 @@ export function CatalogueExplorer({
     return () => cancelAnimationFrame(frame);
   }, [deferredQuery, query, savedView]);
 
+  const orderedTags = useMemo(() => {
+    const usage = new Map<string, number>();
+    for (const tool of tools) {
+      for (const item of tool.tags) usage.set(item.id, (usage.get(item.id) ?? 0) + 1);
+    }
+    return [...tags].sort((a, b) => (usage.get(b.id) ?? 0) - (usage.get(a.id) ?? 0) || a.name.localeCompare(b.name, "zh-Hant"));
+  }, [tags, tools]);
+  const normalizedTagQuery = tagQuery.trim().toLocaleLowerCase();
+  const matchingTags = orderedTags.filter((item) => item.name.toLocaleLowerCase().includes(normalizedTagQuery));
+  const expandedTags = showAllTags || !!normalizedTagQuery;
+  const previewTags = expandedTags ? matchingTags : matchingTags.slice(0, 10);
+  const visibleTags = activeTag && !previewTags.some((item) => item.id === tag)
+    ? [activeTag, ...(expandedTags ? previewTags : previewTags.slice(0, 9))]
+    : previewTags;
+
   const filtered = useMemo(
     () =>
       tools.filter((tool) => {
         const inCategory = category === allCategory || tool.categorySlug === category;
+        const hasTag = !tag || tool.tags.some((item) => item.id === tag);
         const haystack = [
           tool.name,
           tool.summary,
@@ -81,73 +109,103 @@ export function CatalogueExplorer({
         ]
           .join(" ")
           .toLocaleLowerCase();
-        return inCategory && (!deferredQuery || haystack.includes(deferredQuery));
+        return inCategory && hasTag && (!deferredQuery || haystack.includes(deferredQuery));
       }),
-    [category, deferredQuery, tools],
+    [category, tag, deferredQuery, tools],
   );
 
   function clearFilters() {
     setCategory(allCategory);
+    setTag("");
     setQuery("");
   }
 
   return (
     <div id="catalogue" className="grid gap-6 lg:grid-cols-[230px_minmax(0,1fr)]">
-      <aside className="wire-panel self-start bg-card p-5" aria-labelledby="category-title">
-        <h2 id="category-title" className="mb-3 text-xl font-bold">
-          按用途分類
+      <aside className="wire-panel self-start bg-card p-4" aria-labelledby="tag-title">
+        <h2 id="tag-title" className="mb-3 text-lg font-bold">
+          標籤篩選
         </h2>
-        <div className="flex flex-col gap-2">
+        {tags.length > 10 ? (
+          <Input
+            type="search"
+            value={tagQuery}
+            onChange={(event) => setTagQuery(event.target.value)}
+            placeholder="搜尋標籤"
+            aria-label="搜尋標籤"
+            className="mb-3 h-9"
+          />
+        ) : null}
+        <div className="flex max-h-72 flex-wrap gap-2 overflow-y-auto">
           <Button
             type="button"
-            variant={category === allCategory ? "default" : "outline"}
-            aria-pressed={category === allCategory}
-            onClick={() => setCategory(allCategory)}
+            size="sm"
+            variant={!tag ? "default" : "outline"}
+            aria-pressed={!tag}
+            onClick={() => setTag("")}
           >
-            全部卡片
+            全部標籤
           </Button>
-          {categories.map((item) => (
+          {visibleTags.map((item) => (
             <Button
               key={item.id}
               type="button"
-              variant={category === item.slug ? "default" : "outline"}
-              aria-pressed={category === item.slug}
-              onClick={() => setCategory(item.slug)}
+              size="sm"
+              variant={tag === item.id ? "default" : "outline"}
+              aria-pressed={tag === item.id}
+              onClick={() => setTag(item.id)}
+              className="max-w-full"
             >
-              {item.name}
+              <span className="truncate">{item.name}</span>
             </Button>
           ))}
+          {!matchingTags.length ? <p className="text-sm text-muted-foreground">沒有符合的標籤。</p> : null}
         </div>
+        {tags.length > 10 && !normalizedTagQuery ? (
+          <Button type="button" variant="link" size="sm" className="mt-2 px-0" onClick={() => setShowAllTags((value) => !value)} aria-expanded={showAllTags}>
+            {showAllTags ? "收合標籤" : "顯示全部標籤"}
+          </Button>
+        ) : null}
       </aside>
 
       <div className="min-w-0">
-        <section className="wire-panel mb-6 p-5 sm:p-6" aria-labelledby="search-title">
-          <h2 id="search-title" className="mb-2 text-lg font-bold">
-            搜尋卡片或分類
-          </h2>
-          <div className="flex flex-col gap-2 sm:flex-row">
+        <div className="mb-3 flex items-end justify-between gap-4">
+          <h1 className="text-2xl font-bold">卡片列表</h1>
+          <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
+            顯示 {filtered.length} / {tools.length} 張卡片
+          </p>
+        </div>
+        <div className="mb-6">
+          <div className="flex flex-col gap-2 sm:flex-row sm:items-center">
             <div className="relative flex-1">
-              <SearchIcon className="pointer-events-none absolute top-1/2 left-3 size-4 -translate-y-1/2 text-muted-foreground" />
+              <SearchIcon className="pointer-events-none absolute top-1/2 left-0 size-4 -translate-y-1/2 text-muted-foreground" />
               <Input
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="例如：擷取 / 傳檔 / 開源"
-                aria-label="搜尋卡片或分類"
-                className="h-10 pl-9"
+                placeholder="搜尋標籤、分類或工具名稱"
+                aria-label="搜尋標籤、分類或工具名稱"
+                className="h-12 rounded-none border-0 border-b border-border bg-transparent pr-0 pl-7 shadow-none focus-visible:border-primary focus-visible:ring-0 dark:bg-transparent"
               />
             </div>
-            <Button type="button" variant="outline" onClick={clearFilters}>
+            <Button type="button" variant="ghost" size="sm" className="self-end sm:self-auto" onClick={clearFilters}>
               清除條件
             </Button>
           </div>
-        </section>
-
-        <div className="mb-3 flex items-end justify-between gap-4">
-          <h2 className="text-2xl font-bold">卡片列表</h2>
-          <p className="text-sm text-muted-foreground" role="status" aria-live="polite">
-            顯示 {filtered.length} / {tools.length} 張卡片
-          </p>
+          {activeCategory || activeTag ? (
+            <div className="mt-3 flex flex-wrap gap-2" role="group" aria-label="目前篩選條件">
+              {activeCategory ? (
+                <Button type="button" variant="secondary" size="sm" onClick={() => setCategory(allCategory)} aria-label={`清除分類：${activeCategory.name}`}>
+                  分類：{activeCategory.name}<XIcon />
+                </Button>
+              ) : null}
+              {activeTag ? (
+                <Button type="button" variant="secondary" size="sm" onClick={() => setTag("")} aria-label={`清除標籤：${activeTag.name}`}>
+                  標籤：{activeTag.name}<XIcon />
+                </Button>
+              ) : null}
+            </div>
+          ) : null}
         </div>
 
         {filtered.length ? (
@@ -177,7 +235,7 @@ export function CatalogueExplorer({
                 <CardFooter>
                   <Link
                     href={`/tools/${tool.slug}`}
-                    onNavigate={() => rememberCatalogueView({ category, query, x: window.scrollX, y: window.scrollY }, `/tools/${tool.slug}`)}
+                    onNavigate={() => rememberCatalogueView({ category, tag, query, x: window.scrollX, y: window.scrollY }, `/tools/${tool.slug}`)}
                     className={cn(
                       buttonVariants({ variant: "outline" }),
                       "w-full",
@@ -192,7 +250,7 @@ export function CatalogueExplorer({
           </div>
         ) : (
           <div className="wire-panel p-10 text-center text-muted-foreground">
-            沒有符合目前條件的卡片。請調整搜尋或分類。
+            沒有符合目前條件的卡片。請調整搜尋、分類或標籤。
           </div>
         )}
       </div>

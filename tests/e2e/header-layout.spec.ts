@@ -87,7 +87,7 @@ test("category navigation is keyboard accessible and stays inside narrow viewpor
     await expect(trigger).toBeFocused();
     await trigger.click();
     await expect(menu).toBeVisible();
-    // The popup can cover the hero on a narrow screen; click the page gutter.
+    // The popup can cover catalogue controls on a narrow screen; click the page gutter.
     await page.mouse.click(4, 4);
     await expect(menu).toBeHidden();
   }

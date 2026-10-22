@@ -3,14 +3,15 @@ import { expect, test } from "@playwright/test";
 test("public catalogue filters and opens a dedicated detail route", async ({ page }) => {
   await page.goto("/");
   await expect(page).toHaveTitle(/CardThings/);
-  await expect(page.getByRole("heading", { name: "發現實用好工具" })).toBeVisible();
+  await expect(page.getByRole("heading", { name: "卡片列表", level: 1 })).toBeVisible();
+  await expect(page.getByText("發現實用好工具", { exact: true })).toHaveCount(0);
   await expect(page.getByText("LabNote")).toHaveCount(0);
   await expect(page.getByRole("link", { name: /Demo/i })).toHaveCount(0);
   await expect(page.getByRole("button", { name: /收藏/ })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "卡片分類" })).toHaveCount(0);
   await expect(page.getByRole("link", { name: "管理入口" })).toHaveCount(0);
 
-  await page.getByRole("searchbox", { name: "搜尋卡片或分類" }).fill("傳送");
+  await page.getByRole("searchbox", { name: "搜尋標籤、分類或工具名稱" }).fill("傳送");
   await expect(page.getByText("RelayDrop", { exact: true })).toBeVisible();
   await expect(page.getByText("FrameSnap", { exact: true })).toHaveCount(0);
 

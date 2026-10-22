@@ -59,7 +59,7 @@ test("admin authorization and catalogue CRUD use the real database", async (
   await expect(page.getByText("E2E Card", { exact: true })).toBeVisible();
 
   await page.goto("/");
-  await page.getByRole("searchbox", { name: "搜尋卡片或分類" }).fill("端對端");
+  await page.getByRole("searchbox", { name: "搜尋標籤、分類或工具名稱" }).fill("端對端");
   await expect(page.getByText("E2E Card", { exact: true })).toBeVisible();
   await page.getByRole("link", { name: /查看用途與取得方式/ }).click();
   await expect(page).toHaveURL(/\/tools\/e2e-tool$/);
