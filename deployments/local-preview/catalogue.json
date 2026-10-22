@@ -1,0 +1,58 @@
+{
+  "categories": [
+    { "name": "檔案與同步", "slug": "files-sync", "description": "裝置之間的檔案傳輸與資料交換工具。", "order": 10 },
+    { "name": "剪貼簿管理", "slug": "clipboard", "description": "保存、搜尋與重用剪貼簿內容。", "order": 20 },
+    { "name": "畫面與擷取", "slug": "capture", "description": "截圖、標註與畫面參考工具。", "order": 30 }
+  ],
+  "tags": [
+    { "name": "開源", "slug": "open-source" },
+    { "name": "跨平台", "slug": "cross-platform" },
+    { "name": "macOS", "slug": "macos" }
+  ],
+  "cards": [
+    {
+      "name": "LocalSend",
+      "slug": "localsend",
+      "summary": "透過區域網絡在手機與電腦之間傳送檔案和文字，不需網際網絡或第三方伺服器。",
+      "description": "LocalSend 是免費、開源的跨平台檔案傳輸工具，讓附近裝置透過區域網絡交換檔案及文字訊息。支援 Windows、macOS、Linux、Android 與 iOS，採用 HTTPS 加密傳輸，不依賴第三方伺服器，適合在不同系統之間分享照片、文件與其他檔案。",
+      "category": "檔案與同步",
+      "tags": ["開源", "跨平台", "macOS"],
+      "installation": "從官方下載頁選擇 Windows、macOS、Linux、Android 或 iOS 版本。在傳送與接收裝置上開啟 LocalSend，將裝置連到同一區域網絡後選擇檔案與接收端；如無法發現裝置，請核對區域網絡權限及防火牆設定。",
+      "license": "Apache-2.0；免費、開源。",
+      "officialUrl": "https://github.com/localsend/localsend",
+      "sources": [
+        { "label": "官方下載頁", "provider": "LocalSend", "platform": "Windows / macOS / Linux / Android / iOS", "url": "https://localsend.org/download" },
+        { "label": "GitHub 官方發行版本", "provider": "LocalSend · GitHub", "platform": "依發行版本選擇", "url": "https://github.com/localsend/localsend/releases" }
+      ]
+    },
+    {
+      "name": "Maccy",
+      "slug": "maccy",
+      "summary": "輕量的 macOS 剪貼簿管理工具，快速搜尋、選取並重用先前複製的內容。",
+      "description": "Maccy 是使用原生 macOS 介面的輕量剪貼簿管理工具，可保存複製歷史、以鍵盤搜尋內容，並將常用項目釘選以便重複使用。資料儲存在本機，適合頻繁複製文字、連結與其他內容的工作流程。目前官方版本要求 macOS Sonoma 14 或更新版本，原始碼採 MIT 授權。",
+      "category": "剪貼簿管理",
+      "tags": ["開源", "macOS"],
+      "installation": "需要 macOS Sonoma 14 或更新版本。可從官方 GitHub Releases 下載，或使用 Homebrew 指令 brew install maccy。啟動後可用 Shift + Command + C 開啟歷史列表；如需自動貼上，請依官方說明開啟輔助使用權限。",
+      "license": "MIT；開源，可由 GitHub 取得免費發行版本。",
+      "officialUrl": "https://github.com/p0deje/Maccy",
+      "sources": [
+        { "label": "GitHub 官方發行版本", "provider": "Maccy · GitHub", "platform": "macOS 14+", "url": "https://github.com/p0deje/Maccy/releases" },
+        { "label": "官方網站與 App Store 入口", "provider": "Maccy", "platform": "macOS 14+", "url": "https://maccy.app/" }
+      ]
+    },
+    {
+      "name": "Snipaste",
+      "slug": "snipaste",
+      "summary": "快速截圖、標註並將圖片釘在螢幕上，方便比對畫面與保留工作參考。",
+      "description": "Snipaste 結合截圖、圖片標註與桌面貼圖功能，可將截圖或剪貼簿內容顯示為置頂浮動視窗，並調整縮放、旋轉與透明度。支援 Windows、macOS 和 Linux，適合整理操作步驟、比對畫面與保留參考資料。Snipaste 為專有軟體；2.x 個人非商業用途免費，商業用途需購買 Pro 授權。",
+      "category": "畫面與擷取",
+      "tags": ["跨平台", "macOS"],
+      "installation": "從官方下載頁選擇 Windows Portable、macOS Universal 或 Linux AppImage，並依平台完成啟動。基本操作為 F1 截圖、F3 貼圖；快捷鍵可在設定中調整。",
+      "license": "專有軟體；Snipaste 2.x 個人非商業用途免費，商業用途需 Pro 授權。官方條款：https://www.snipaste.com/eula.html",
+      "officialUrl": "https://www.snipaste.com/",
+      "sources": [
+        { "label": "官方下載頁", "provider": "Snipaste", "platform": "Windows / macOS / Linux", "url": "https://www.snipaste.com/download.html" }
+      ]
+    }
+  ]
+}
