@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("admin workspace stays within the viewport during navigation and editing", async ({ page }) => {
+test("admin workspace stays within the viewport during navigation and editing", async ({ page }, testInfo) => {
   await page.goto("/auth");
   await page.getByLabel("電子郵件或 Demo 帳號").fill("admin@example.test");
   await page.getByLabel("密碼", { exact: true }).fill("E2e-Only-Password-2026!");
@@ -16,6 +16,24 @@ test("admin workspace stays within the viewport during navigation and editing", 
 
   await expectViewportFits();
   const navigation = page.getByRole("navigation", { name: "管理員導覽" });
+  async function expectNavigationFits() {
+    await expect.poll(() => navigation.evaluate((element) => {
+      const bounds = element.getBoundingClientRect();
+      const links = [...element.querySelectorAll("a")].filter((link) => link.getClientRects().length > 0);
+      return links.length === 6 && element.scrollWidth <= element.clientWidth && links.every((link) => {
+        const item = link.getBoundingClientRect();
+        return item.left >= bounds.left - 1 && item.right <= bounds.right + 1 &&
+          item.top >= bounds.top - 1 && item.bottom <= bounds.bottom + 1 &&
+          link.scrollWidth <= link.clientWidth;
+      });
+    })).toBe(true);
+  }
+  for (const width of testInfo.project.name === "mobile-chrome" ? [311, 320, 390, 768] : [1024, 1440]) {
+    await page.setViewportSize({ width, height: width < 1024 ? 532 : 1000 });
+    await expectViewportFits();
+    await expectNavigationFits();
+  }
+  await page.setViewportSize(testInfo.project.name === "mobile-chrome" ? { width: 311, height: 532 } : { width: 1440, height: 1000 });
   for (const [name, route] of [
     ["用戶管理", "/admin/users"],
     ["卡片管理", "/admin/tools"],
@@ -27,6 +45,7 @@ test("admin workspace stays within the viewport during navigation and editing", 
     await expect(page).toHaveURL(route);
     await expect(link).toHaveAttribute("aria-current", "page");
     await expectViewportFits();
+    await expectNavigationFits();
   }
   await navigation.getByRole("link", { name: /^個人資料(管理)?$/ }).click();
   await expect(page).toHaveURL("/admin/profile");

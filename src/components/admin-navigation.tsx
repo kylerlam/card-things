@@ -18,7 +18,7 @@ export function AdminNavigation() {
   const pathname = usePathname();
 
   return (
-    <nav className="flex gap-2 overflow-x-auto pb-1 lg:flex-col" aria-label="管理員導覽">
+    <nav className="grid min-w-0 grid-cols-2 gap-2 sm:grid-cols-3 lg:flex lg:flex-col" aria-label="管理員導覽">
       {navigation.map((item) => {
         const active = item.exact ? pathname === item.href : pathname.startsWith(item.href);
         return (
@@ -27,7 +27,7 @@ export function AdminNavigation() {
             href={item.href}
             className={cn(
               buttonVariants({ variant: active ? "default" : "outline" }),
-              "shrink-0 justify-start",
+              "w-full min-w-0 justify-start px-3 max-[360px]:h-8 max-[360px]:px-2 max-[360px]:text-xs",
             )}
             aria-current={active ? "page" : undefined}
           >
@@ -39,7 +39,7 @@ export function AdminNavigation() {
         href="/admin/profile"
         className={cn(
           buttonVariants({ variant: pathname === "/admin/profile" ? "default" : "outline" }),
-          "shrink-0 justify-start lg:hidden",
+          "w-full min-w-0 justify-start px-3 max-[360px]:h-8 max-[360px]:px-2 max-[360px]:text-xs lg:hidden",
         )}
         aria-current={pathname === "/admin/profile" ? "page" : undefined}
       >
