@@ -8,12 +8,16 @@ import brand from '../content/brand';
 
 export function ItemDialog({
   item,
+  items,
+  onNavigate,
   shareUrl,
   favorite,
   onFavorite,
   onClose,
 }: {
   item: CollectionItem;
+  items: CollectionItem[];
+  onNavigate: (itemId: string) => void;
   shareUrl: string;
   favorite: boolean;
   onFavorite: () => void;
@@ -22,6 +26,9 @@ export function ItemDialog({
   const ref = useRef<HTMLDialogElement>(null);
   const returnFocus = useRef<HTMLElement | null>(null);
   const url = safeItemUrl(item.url);
+  const position = items.findIndex((entry) => entry.id === item.id);
+  const previous = items[position - 1];
+  const next = items[position + 1];
   useLayoutEffect(() => {
     const dialog = ref.current!;
     returnFocus.current ??= document.activeElement as HTMLElement;
@@ -38,6 +45,11 @@ export function ItemDialog({
       target?.focus();
     };
   }, []);
+
+  useLayoutEffect(() => {
+    ref.current?.querySelector<HTMLButtonElement>('.close-button')?.focus({ preventScroll: true });
+    ref.current?.scrollTo({ top: 0 });
+  }, [item.id]);
 
   return (
     <dialog
@@ -117,12 +129,35 @@ export function ItemDialog({
             are sample content.
           </p>
         ) : null}
+        {position >= 0 ? (
+          <nav className="detail-navigation" aria-label="Browse filtered items">
+            <button
+              className="secondary-button"
+              aria-label="Previous item"
+              disabled={!previous}
+              onClick={() => previous && onNavigate(previous.id)}
+            >
+              Previous
+            </button>
+            <p role="status">
+              {position + 1} of {items.length}
+            </p>
+            <button
+              className="secondary-button"
+              aria-label="Next item"
+              disabled={!next}
+              onClick={() => next && onNavigate(next.id)}
+            >
+              Next
+            </button>
+          </nav>
+        ) : null}
         <div className="dialog-actions">
           <button className="primary-button" aria-pressed={favorite} onClick={onFavorite}>
             <Icon name="heart" fill={favorite ? 'currentColor' : 'none'} />
             {favorite ? 'Saved to favorites' : 'Save to favorites'}
           </button>
-          <CopyLinkButton url={shareUrl} label="Copy item link" />
+          <CopyLinkButton key={shareUrl} url={shareUrl} label="Copy item link" />
           {url ? (
             <a className="secondary-button" href={url} target="_blank" rel="noreferrer">
               Visit resource

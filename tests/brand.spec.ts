@@ -90,7 +90,8 @@ test('configured colors reach real controls, headings, focus, and dialog states'
     .click();
   const action = page.getByRole('dialog').locator('.primary-button');
   await expect(action).toHaveCSS('background-color', await color('accent'));
-  await page.keyboard.press('Tab');
+  await page.keyboard.press('Shift+Tab');
+  await page.keyboard.press('Shift+Tab');
   await expect(action).toBeFocused();
   await expect(action).toHaveCSS('outline-color', await color('focus-ring'));
   if (!isMobile) {
