@@ -29,3 +29,10 @@ Record confirmed, meaningful corrections that can prevent repeated mistakes. Kee
 - **Mistaken assumption:** Server, cookie, and role implementation details were useful registration guidance.
 - **Confirmed decision:** Remove the technical side panel and redundant login navigation on the login page; keep actionable field guidance such as password length and username uniqueness beside the inputs.
 - **Prevention:** Explain what users can do and how to complete the form, and do not advertise account capabilities that have not been implemented.
+
+## Read current annotations before each iteration
+
+- **Context:** Iterating from screenshots and annotations in the owner's `修改方向` folder.
+- **Mistaken assumption:** A request to continue iterating meant the agent should choose additional fixes independently.
+- **Confirmed decision:** Re-read the folder for each iteration and use the current annotations to define the work. The owner accepted the earlier mobile administrator layout fix, but that acceptance does not expand future scope.
+- **Prevention:** Map each change to a current annotation. List incidental findings separately and wait for an explicit scope decision before implementing them.

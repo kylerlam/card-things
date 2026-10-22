@@ -4,6 +4,8 @@
 
 CardThings is a card-based website for organizing and showcasing collections. Prioritize the current site's confirmed practical requirements. Avoid speculative generalization or expansion into a commercial platform without an explicit scope decision.
 
+For screenshot-driven iterations, read the owner's current annotation folder at the start of each iteration. Use those annotations to define scope; report incidental findings separately before implementing additional changes.
+
 Separate deployment-specific content, configuration, and private data from reusable framework code and examples. Never commit secrets.
 
 ## Language and coordination
