@@ -60,7 +60,7 @@ test("catalogue keeps official and fallback icons inside larger circular frames"
     expect(frame.circleWidth).toBeCloseTo(frame.circleHeight, 1);
     expect(frame.radius).toBeGreaterThanOrEqual(frame.circleWidth / 2);
     expect(frame.overflow).toBe("hidden");
-    expect(frame.background).not.toBe("rgba(0, 0, 0, 0)");
+    expect(frame.background).toBe("rgba(0, 0, 0, 0)");
     expect(frame.contained).toBe(true);
   }
   await expect(official).toHaveCSS("object-fit", "contain");
