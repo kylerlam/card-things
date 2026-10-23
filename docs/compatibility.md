@@ -2,6 +2,14 @@
 
 Verified on macOS ARM64 on 2026-10-09 using Node.js 22.14 and Playwright 1.64.0. The checks use official Playwright browser builds in isolated profiles.
 
+## Freya integration verification (2026-10-23)
+
+Integration combines `feat/freya-collection-v1` at `78ec008` with `freya/lab` at `99f613c`. The original source baseline `992d1e1` has the same tree as its earlier squash merge `793a5a6`; conflict resolution applies later browsing changes against that baseline. Both branch parents are retained. The lab card editor, collection settings, data import/export, image preflight, startup recovery, and stale-draft protection remain available.
+
+The development matrix covers 414 cases across schema/logic checks and five desktop/mobile browser projects. The full run passed 413 and exposed one asynchronous export test that clicked before image preflight completed. After waiting for the visible import-complete status, that case passed in all five projects (5 focused checks). The combined import/browsing/editing/favorite-backup regression also passed in all five projects. The brand focus test uses keyboard navigation around the real action rather than assuming the previous dialog button count.
+
+The complete production subdirectory matrix passed 385 checks with zero failures, skips, or retries. Brand/content validation, TypeScript, production build, formatting, and diff checks pass. The existing CI workflow is unchanged; its source-branch condition skips the integration PR, so local results do not imply GitHub-hosted test execution. The rendered preview index includes refreshed lab states and new desktop/mobile list, exact-tag, and favorite-backup captures.
+
 ## Freya iteration verification (2026-10-22)
 
 The ten-version Freya iteration passed `npm run check` on macOS ARM64 with Node.js 22.14.0, npm 11.2.0, and Playwright 1.64.0. The browser engines remain Chromium 156.0.8078.4, Firefox 157.0, and WebKit 27.2.
