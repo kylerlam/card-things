@@ -19,7 +19,7 @@ export function ToolIcon({ name, officialUrl }: { name: string; officialUrl: str
 
   return (
     <div className="grid size-[3.6rem] shrink-0 place-items-center rounded-lg border border-primary/10 bg-secondary p-[0.1875rem] text-secondary-foreground">
-      <div className="grid size-full place-items-center overflow-hidden rounded-full">
+      <div className="grid size-full place-items-center">
         {sources[index] ? (
           <Image
             src={sources[index]}

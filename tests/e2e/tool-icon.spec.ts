@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("catalogue keeps official and fallback icons inside larger circular frames", async ({ page }) => {
+test("catalogue keeps official and fallback icons complete inside larger rounded-square frames", async ({ page }) => {
   let brokenImageRequested = false;
   await page.route("**/api/tool-icon?**", async (route) => {
     const officialUrl = new URL(route.request().url()).searchParams.get("url") ?? "";
@@ -15,7 +15,7 @@ test("catalogue keeps official and fallback icons inside larger circular frames"
   });
   await page.route("https://icon-fixture.test/official.svg", (route) => route.fulfill({
     contentType: "image/svg+xml",
-    body: '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><circle cx="20" cy="20" r="16" fill="#4f46e5"/></svg>',
+    body: '<svg xmlns="http://www.w3.org/2000/svg" width="40" height="40"><rect width="40" height="40" fill="#4f46e5"/></svg>',
   }));
 
   await page.goto("/");
@@ -35,21 +35,22 @@ test("catalogue keeps official and fallback icons inside larger circular frames"
     official,
   ]) {
     const frame = await icon.evaluate((element) => {
-      const circle = element.parentElement!;
-      const square = circle.parentElement!;
-      const circleStyle = getComputedStyle(circle);
+      const content = element.parentElement!;
+      const square = content.parentElement!;
+      const contentStyle = getComputedStyle(content);
       const squareStyle = getComputedStyle(square);
       const outer = square.getBoundingClientRect();
-      const inner = circle.getBoundingClientRect();
+      const inner = content.getBoundingClientRect();
       const image = element.getBoundingClientRect();
       return {
         rem: parseFloat(getComputedStyle(document.documentElement).fontSize),
         width: outer.width, height: outer.height,
         padding: parseFloat(squareStyle.paddingLeft),
         gap: inner.left - outer.left - parseFloat(squareStyle.borderLeftWidth),
-        circleWidth: inner.width, circleHeight: inner.height,
-        radius: parseFloat(circleStyle.borderRadius), overflow: circleStyle.overflow,
-        background: circleStyle.backgroundColor,
+        innerWidth: inner.width, innerHeight: inner.height,
+        radius: parseFloat(contentStyle.borderRadius), overflow: contentStyle.overflow,
+        outerRadius: parseFloat(squareStyle.borderRadius),
+        background: contentStyle.backgroundColor,
         contained: image.left >= inner.left && image.top >= inner.top && image.right <= inner.right + 0.1 && image.bottom <= inner.bottom + 0.1,
       };
     });
@@ -57,9 +58,10 @@ test("catalogue keeps official and fallback icons inside larger circular frames"
     expect(frame.height).toBeCloseTo(frame.width, 1);
     expect(frame.padding).toBeCloseTo(0.375 * frame.rem / 2, 1);
     expect(frame.gap).toBeCloseTo(frame.padding, 1);
-    expect(frame.circleWidth).toBeCloseTo(frame.circleHeight, 1);
-    expect(frame.radius).toBeGreaterThanOrEqual(frame.circleWidth / 2);
-    expect(frame.overflow).toBe("hidden");
+    expect(frame.innerWidth).toBeCloseTo(frame.innerHeight, 1);
+    expect(frame.radius).toBe(0);
+    expect(frame.outerRadius).toBeGreaterThan(0);
+    expect(frame.overflow).toBe("visible");
     expect(frame.background).toBe("rgba(0, 0, 0, 0)");
     expect(frame.contained).toBe(true);
   }
