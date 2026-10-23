@@ -1,6 +1,6 @@
 import { expect, test } from "@playwright/test";
 
-test("catalogue keeps official and fallback icons complete inside larger rounded-square frames", async ({ page }) => {
+test("catalogue frames official and fallback icons with solid white 2px circles", async ({ page }) => {
   let brokenImageRequested = false;
   await page.route("**/api/tool-icon?**", async (route) => {
     const officialUrl = new URL(route.request().url()).searchParams.get("url") ?? "";
@@ -49,6 +49,8 @@ test("catalogue keeps official and fallback icons complete inside larger rounded
         gap: inner.left - outer.left - parseFloat(squareStyle.borderLeftWidth),
         innerWidth: inner.width, innerHeight: inner.height,
         radius: parseFloat(contentStyle.borderRadius), overflow: contentStyle.overflow,
+        borderWidth: contentStyle.borderWidth, borderColor: contentStyle.borderColor,
+        borderStyle: contentStyle.borderStyle, opacity: contentStyle.opacity,
         outerRadius: parseFloat(squareStyle.borderRadius),
         background: contentStyle.backgroundColor,
         contained: image.left >= inner.left && image.top >= inner.top && image.right <= inner.right + 0.1 && image.bottom <= inner.bottom + 0.1,
@@ -59,9 +61,13 @@ test("catalogue keeps official and fallback icons complete inside larger rounded
     expect(frame.padding).toBeCloseTo(0.375 * frame.rem / 2, 1);
     expect(frame.gap).toBeCloseTo(frame.padding, 1);
     expect(frame.innerWidth).toBeCloseTo(frame.innerHeight, 1);
-    expect(frame.radius).toBe(0);
+    expect(frame.radius).toBeGreaterThanOrEqual(frame.innerWidth / 2);
     expect(frame.outerRadius).toBeGreaterThan(0);
-    expect(frame.overflow).toBe("visible");
+    expect(frame.overflow).toBe("hidden");
+    expect(frame.borderWidth).toBe("2px");
+    expect(frame.borderColor).toBe("rgb(255, 255, 255)");
+    expect(frame.borderStyle).toBe("solid");
+    expect(frame.opacity).toBe("1");
     expect(frame.background).toBe("rgba(0, 0, 0, 0)");
     expect(frame.contained).toBe(true);
   }
