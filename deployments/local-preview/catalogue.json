@@ -50,6 +50,7 @@
       "installation": "從官方下載頁選擇 Windows Portable、macOS Universal 或 Linux AppImage，並依平台完成啟動。基本操作為 F1 截圖、F3 貼圖；快捷鍵可在設定中調整。",
       "license": "專有軟體；Snipaste 2.x 個人非商業用途免費，商業用途需 Pro 授權。官方條款：https://www.snipaste.com/eula.html",
       "officialUrl": "https://www.snipaste.com/",
+      "iconUrl": "https://www.snipaste.com/img/logo.svg",
       "sources": [
         { "label": "官方下載頁", "provider": "Snipaste", "platform": "Windows / macOS / Linux", "url": "https://www.snipaste.com/download.html" }
       ]

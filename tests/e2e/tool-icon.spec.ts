@@ -65,3 +65,26 @@ test("catalogue keeps official and fallback icons inside larger circular frames"
   }
   await expect(official).toHaveCSS("object-fit", "contain");
 });
+
+
+test("icon API prefers the configured official logo and preserves safe website fallbacks", async ({ request }) => {
+  const cases = [
+    {
+      url: "https://www.snipaste.com/",
+      sources: ["https://www.snipaste.com/img/logo.svg", "https://www.snipaste.com/favicon.ico"],
+    },
+    {
+      url: "https://example.test/download",
+      sources: ["https://example.test/favicon.ico"],
+    },
+    {
+      url: "http://example.test/",
+      sources: [],
+    },
+  ];
+  for (const { url, sources } of cases) {
+    const response = await request.get(`/api/tool-icon?url=${encodeURIComponent(url)}`);
+    expect(response.status()).toBe(200);
+    expect(await response.json()).toEqual({ sources });
+  }
+});

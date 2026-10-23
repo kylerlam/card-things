@@ -10,7 +10,7 @@ export function ToolIcon({ name, officialUrl }: { name: string; officialUrl: str
   useEffect(() => {
     if (!officialUrl) return;
     const controller = new AbortController();
-    fetch(`/api/tool-icon?url=${encodeURIComponent(officialUrl)}`, { signal: controller.signal })
+    fetch(`/api/tool-icon?url=${encodeURIComponent(officialUrl)}`, { signal: controller.signal, cache: "no-cache" })
       .then((response) => response.json())
       .then((result: { sources: string[] }) => setSources(result.sources))
       .catch(() => {});
