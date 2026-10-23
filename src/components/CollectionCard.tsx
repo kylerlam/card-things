@@ -95,12 +95,16 @@ export function CollectionCard({
   onOpen,
   onFavorite,
   collection,
+  activeTag,
+  onTag,
 }: {
   item: CollectionItem;
   favorite: boolean;
   onOpen: () => void;
   onFavorite: () => void;
   collection: Collection;
+  activeTag: string;
+  onTag: (tag: string) => void;
 }) {
   return (
     <article className="collection-card">
@@ -126,7 +130,15 @@ export function CollectionCard({
       <div className="card-footer">
         <ul className="tags" aria-label="Tags">
           {item.tags.map((tag) => (
-            <li key={tag}>{tag}</li>
+            <li key={tag}>
+              <button
+                aria-label={`Filter by tag ${tag}`}
+                aria-pressed={activeTag === tag}
+                onClick={() => onTag(activeTag === tag ? '' : tag)}
+              >
+                {tag}
+              </button>
+            </li>
           ))}
         </ul>
         <button

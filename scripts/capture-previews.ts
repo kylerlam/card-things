@@ -15,6 +15,12 @@ try {
   await desktop.evaluate(() => localStorage.clear());
   await desktop.reload();
   await desktop.screenshot({ path: `${output}collection-desktop.png` });
+  await desktop.getByRole('button', { name: 'List view', exact: true }).click();
+  await desktop.screenshot({ path: `${output}collection-list-desktop.png` });
+  await desktop.getByRole('button', { name: 'Filter by tag Design', exact: true }).first().click();
+  await desktop.screenshot({ path: `${output}collection-filters-desktop.png` });
+  await desktop.getByRole('button', { name: 'Clear filters', exact: true }).click();
+  await desktop.getByRole('button', { name: 'Grid view', exact: true }).click();
 
   await desktop.getByRole('button', { name: 'Add card', exact: true }).click();
   const desktopEditor = desktop.getByRole('dialog', { name: 'Add a card' });
@@ -89,6 +95,9 @@ try {
   await mobile.evaluate(() => localStorage.clear());
   await mobile.reload();
   await mobile.screenshot({ path: `${output}collection-mobile.png` });
+  await mobile.getByRole('button', { name: 'List view', exact: true }).click();
+  await mobile.screenshot({ path: `${output}collection-list-mobile.png` });
+  await mobile.getByRole('button', { name: 'Grid view', exact: true }).click();
   await mobile.getByRole('button', { name: 'Add card', exact: true }).click();
   const mobileEditor = mobile.getByRole('dialog', { name: 'Add a card' });
   await mobileEditor.getByLabel('Title').fill('Field Notes');
@@ -127,6 +136,8 @@ try {
   await syncWriter.getByRole('button', { name: 'Favorite Orbit Studio' }).click();
   await syncTarget.getByText('Favorites updated from another tab.').waitFor();
   await syncTarget.screenshot({ path: `${output}cross-tab-favorites-desktop.png` });
+  await syncTarget.getByRole('button', { name: 'Favorites 1', exact: true }).click();
+  await syncTarget.screenshot({ path: `${output}favorites-backup-desktop.png` });
   await syncTarget.getByRole('button', { name: 'View Orbit Studio' }).click();
   await syncTarget
     .getByRole('dialog', { name: 'Orbit Studio' })

@@ -2,7 +2,25 @@
 
 Verified on macOS ARM64 on 2026-10-09 using Node.js 22.14 and Playwright 1.64.0. The checks use official Playwright browser builds in isolated profiles.
 
-## Coverage
+## Freya iteration verification (2026-10-22)
+
+The ten-version Freya iteration passed `npm run check` on macOS ARM64 with Node.js 22.14.0, npm 11.2.0, and Playwright 1.64.0. The browser engines remain Chromium 156.0.8078.4, Firefox 157.0, and WebKit 27.2.
+
+| Project | Development root | Production subdirectory |
+| --- | --- | --- |
+| Desktop Chromium, 1440 x 1000 | 41 passed | 45 passed |
+| Mobile Chromium, 390 x 844 | 41 passed | 45 passed |
+| Desktop Firefox, 1440 x 1000 | 41 passed | 45 passed |
+| Desktop WebKit, 1440 x 1000 | 41 passed | 45 passed |
+| Mobile WebKit, iPhone 13 preset | 41 passed | 45 passed |
+
+Together with 44 logic/schema checks, the final full run passed 249 development and 225 production checks, with zero failures, skips, or retries. This includes cross-tab storage synchronization, initial storage denial, exact tags, extended sorting, list layouts, detail history/focus, actual backup downloads/imports, invalid/oversized backups, and delayed import during in-memory favorite changes.
+
+Final screenshots exposed neighboring atlas pixels in list thumbnails. After the aspect-ratio correction, formatting/build and 15 focused production list/accessibility checks passed across all five projects. Built-page smoke review at 1440 x 1000 and 390 x 844 found no console warnings/errors, error overlay, or mobile overflow. Screenshots remain outside the repository. See the [iteration record](freya-iterations.md) for scope and reproduction.
+
+GitHub-hosted CI is prepared but has not been executed. Physical-device and manual screen-reader coverage remain separate work.
+
+## Initial baseline coverage
 
 | Project | Engine version | Viewport / emulation | Development root | Production subdirectory |
 | --- | --- | --- | --- | --- |
@@ -18,7 +36,7 @@ Every browser project exercises guided collection settings and card editing, can
 
 ## Brand configuration verification
 
-Brand checks cover initial HTML metadata and theme values with JavaScript disabled, visible identity, detail labels, real control colors, focus states, and desktop hover states. An isolated copy with a blue Studio Shelf palette, alternate metadata/favicon, and `example: false` passed 15 focused development checks in the earlier milestone. The default collection and palette remain in the repository.
+Brand checks cover initial HTML metadata and theme values with JavaScript disabled, visible identity, detail labels, real control colors, focus states, and desktop hover states. An isolated copy with a blue Studio Shelf palette, alternate metadata/favicon, and `example: false` passed 15 focused development checks and all 145 production checks across the same five projects. That initial default collection and palette were preserved by the extraction; subsequent Freya palette changes are recorded separately.
 
 Default desktop and mobile collection/detail captures retained identical element geometry, colors, borders, outlines, and shadows after extraction into `src/content/brand.ts`. Three of four screenshots were pixel-identical; the desktop detail had 30 changed pixels out of 1,440,000 despite equal measured styles and geometry. Visual review found no layout or appearance regression.
 

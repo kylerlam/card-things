@@ -2,7 +2,7 @@
 
 ## Scope
 
-This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, title or date sorting, item details, guided collection settings and card editing, browser-local favorites, a downloadable starter, and validated JSON import/export. Items may use local images or generated text covers. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, case-insensitively, across title, description, details, category, and tags.
+This experimental frontend is a static collection browser with optional browser-local collection data. It includes responsive navigation, a card wall, search, one category filter at a time, four title/date sorting orders, exact tag filters, grid/list layouts, sequential details, item details, guided collection settings and card editing, browser-local favorites, a downloadable starter, and validated JSON import/export. Items may use local images or generated text covers. Search, category, and favorites filters compose together. Search matches every whitespace-separated term, ignoring case and accents, across title, description, details, category IDs and labels, and tags.
 
 The example collection is illustrative. It does not represent real tools, endorsements, personal collections, or a connected service. There is no account, backend, database, tracking, paid API, or remote font. Favorites use the versioned `cardthings:favorites:v1` key, and the browser collection uses the separate versioned `cardthings:collection:v1` key. Imports and guided card changes synchronize across other open tabs on the same origin, but not between browsers or devices. If storage is unavailable, favorites and collection changes still work for the current visit with an explanatory status message.
 
@@ -214,7 +214,7 @@ Restart the development server after brand edits so the server-generated metadat
 npm test -- tests/brand.spec.ts
 ```
 
-The original default theme preserves all existing color values. This configuration provides static customization; it does not add an editor, theme switcher, account, or backend.
+The Freya default theme uses indigo accents. This configuration provides static customization; it does not add an editor, theme switcher, account, or backend.
 
 ### A short check after customization
 
@@ -240,7 +240,9 @@ Use “Copy link” in the header to share a collection view, or inside details 
 | --- | --- | --- |
 | `q` | Search text, capped at 200 characters | Empty |
 | `category` | A category ID from the collection | All categories |
-| `sort` | `title` for alphabetical order | Recently added |
+| `sort` | `title`, `title-desc`, or `oldest` | Recently added |
+| `tag` | An exact configured tag | No tag filter |
+| `layout` | `list` for compact rows | Card grid |
 | `view` | `favorites` for this browser's favorites | All items |
 | `item` | A valid item ID to open its details | No detail open |
 
@@ -268,3 +270,15 @@ Open `http://127.0.0.1:4175/collections/card-things/`. The server binds only to 
 ## Current boundaries
 
 The browser workspace edits cards, collection copy, and category additions or appearance. It intentionally does not remove categories or cards, upload image bytes, or change site branding and metadata. Favorites and collection changes sync between open tabs on the same origin, but not between browsers or devices. The collection remains small and fully client-side; pagination and very large collections are future work. Bundled content is validated before building, and runtime changes are validated before activation. The app does not fetch collection data from a server. No additional backend or framework is required for this milestone.
+
+## Freya browsing and data portability
+
+Tags on cards toggle an exact tag filter. The active-filter strip removes individual criteria; Clear filters and the empty-state Reset filters retain the favorites view, sort, and layout. Home or sidebar navigation starts a fresh category/favorites view while retaining sort and layout. Tag, sort, and layout choices survive sharing, refresh, and browser history. Unknown URL values normalize to defaults.
+
+Previous and Next in details follow the current filtered/sorted results and stop at the endpoints. Browsing details replaces the current detail history entry; closing returns once to the original collection view and restores the opening card's focus when it still exists. Direct shared details close safely within the collection. Details outside the current results omit sequential navigation.
+
+In Favorites, Export favorites downloads `cardthings-favorites.json` containing only `{ "version": 1, "favorites": ["item-id"] }`. Import favorites reads that JSON locally and merges matching IDs with existing saved favorites. Unknown IDs are ignored, repeated IDs are deduplicated, and invalid versions, malformed data, or files larger than 1 MiB are rejected before favorites change. Backups contain IDs, not collection text, images, or accounts; the receiving site must use matching stable IDs. Browser storage failures retain favorites for the current visit and show a notice; export still provides a local copy.
+
+## One-command quality gate
+
+After browser installation and with preview ports free, run `npm run check`. It executes format checking, the validated production build, the complete development suite, and all static subdirectory checks. The Freya GitHub workflow uses the same command only for pushes from `feat/freya-collection-v1` and PRs whose source branch has that name. It has read-only contents permission and no publishing step. Action revisions are pinned to the official [checkout v7.0.1](https://github.com/actions/checkout/releases/tag/v7.0.1) and [setup-node v7.1.0](https://github.com/actions/setup-node/releases/tag/v7.1.0) commits.
