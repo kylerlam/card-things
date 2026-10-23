@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from 'react';
 import { filterItems } from './lib/collection';
 import { useCollectionUrl } from './lib/useCollectionUrl';
 import { CopyLinkButton } from './components/CopyLinkButton';
+import { FavoritesBackup } from './components/FavoritesBackup';
 import { useFavorites } from './lib/useFavorites';
 import { Sidebar } from './components/Sidebar';
 import { CollectionCard } from './components/CollectionCard';
@@ -24,13 +25,14 @@ export default function App() {
     syncMessage: collectionSyncMessage,
     loadMessage: collectionLoadMessage,
   } = useCollectionData();
-  const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail } =
+  const { view, shareUrl, updateView, updateQuery, finishSearch, closeDetail, navigateDetail } =
     useCollectionUrl(collection);
-  const { query, category, favoritesOnly, sort, itemId } = view;
+  const { query, category, tag, favoritesOnly, sort, itemId, layout } = view;
   const selectedItem = collection.items.find((item) => item.id === itemId);
   const {
     favorites,
     toggleFavorite,
+    importFavorites,
     savedLocally,
     syncMessage: favoritesSyncMessage,
     loadMessage: favoritesLoadMessage,
@@ -50,6 +52,7 @@ export default function App() {
     favorites,
     favoritesOnly,
     sort,
+    tag,
   );
   const currentLabel = favoritesOnly
     ? 'Favorites'
@@ -77,9 +80,18 @@ export default function App() {
   useEffect(() => {
     if (collectionSyncMessage) setWorkspaceMessage('');
   }, [collectionSyncMessage]);
+  function clearFilters() {
+    updateView({ query: '', category: 'all', tag: '', itemId: '' });
+  }
 
   function navigate(nextCategory: string, nextFavorites: boolean) {
-    updateView({ category: nextCategory, favoritesOnly: nextFavorites, query: '', itemId: '' });
+    updateView({
+      category: nextCategory,
+      favoritesOnly: nextFavorites,
+      query: '',
+      tag: '',
+      itemId: '',
+    });
   }
 
   return (
@@ -157,6 +169,13 @@ export default function App() {
               : collection.description}
           </p>
         </section>
+        {favoritesOnly ? (
+          <FavoritesBackup
+            items={collection.items}
+            favorites={favorites}
+            onImport={importFavorites}
+          />
+        ) : null}
         <div className="search-box">
           <Icon name="search" />
           <label htmlFor="collection-search" className="sr-only">
@@ -209,16 +228,61 @@ export default function App() {
             <select
               id="sort"
               value={sort}
-              onChange={(event) =>
-                updateView({ sort: event.target.value === 'title' ? 'title' : 'recent' })
-              }
+              onChange={(event) => updateView({ sort: event.target.value as typeof sort })}
             >
               <option value="recent">Recently added</option>
+              <option value="oldest">Oldest first</option>
               <option value="title">Title: A to Z</option>
+              <option value="title-desc">Title: Z to A</option>
             </select>
             <Icon name="chevron" />
           </div>
+          <div className="layout-control" role="group" aria-label="Collection layout">
+            <button
+              aria-label="Grid view"
+              aria-pressed={layout === 'grid'}
+              onClick={() => updateView({ layout: 'grid' })}
+            >
+              <Icon name="grid" />
+            </button>
+            <button
+              aria-label="List view"
+              aria-pressed={layout === 'list'}
+              onClick={() => updateView({ layout: 'list' })}
+            >
+              <Icon name="list" />
+            </button>
+          </div>
         </div>
+        {query || category !== 'all' || tag ? (
+          <div className="active-filters" role="group" aria-label="Active filters">
+            <span>Filtered by</span>
+            {query ? (
+              <button onClick={() => updateView({ query: '' })} aria-label="Remove search filter">
+                <span>Search: {query}</span>
+                <Icon name="close" />
+              </button>
+            ) : null}
+            {category !== 'all' ? (
+              <button
+                onClick={() => updateView({ category: 'all' })}
+                aria-label="Remove category filter"
+              >
+                <span>{collection.categories.find((entry) => entry.id === category)?.label}</span>
+                <Icon name="close" />
+              </button>
+            ) : null}
+            {tag ? (
+              <button onClick={() => updateView({ tag: '' })} aria-label="Remove tag filter">
+                <span>Tag: {tag}</span>
+                <Icon name="close" />
+              </button>
+            ) : null}
+            <button className="clear-filters" onClick={clearFilters}>
+              Clear filters
+            </button>
+          </div>
+        ) : null}
         {!savedLocally ? (
           <p role="status" className="storage-note">
             Favorites are available for this visit. Your browser could not save them for next time.
@@ -231,7 +295,10 @@ export default function App() {
           </p>
         ) : null}
         {items.length ? (
-          <section className="card-grid" aria-label="Collection items">
+          <section
+            className={`card-grid${layout === 'list' ? ' card-list' : ''}`}
+            aria-label="Collection items"
+          >
             {items.map((item) => (
               <CollectionCard
                 key={item.id}
@@ -240,24 +307,35 @@ export default function App() {
                 onOpen={() => updateView({ itemId: item.id })}
                 onFavorite={() => toggleFavorite(item.id)}
                 collection={collection}
+                activeTag={tag}
+                onTag={(tag) => updateView({ tag })}
               />
             ))}
           </section>
         ) : (
           <section className="empty-state">
-            <Icon name={favoritesOnly && !query && category === 'all' ? 'heart' : 'search'} />
+            <Icon
+              name={favoritesOnly && !query && !tag && category === 'all' ? 'heart' : 'search'}
+            />
             <h2>
-              {favoritesOnly && !query && category === 'all'
+              {favoritesOnly && !query && !tag && category === 'all'
                 ? 'A place for your favorites.'
                 : 'Nothing here just yet.'}
             </h2>
             <p>
-              {favoritesOnly && !query && category === 'all'
+              {favoritesOnly && !query && !tag && category === 'all'
                 ? 'Tap a heart on any card to keep it here.'
                 : 'Try a different search or clear your filters to explore again.'}
             </p>
-            <button className="primary-button" onClick={() => navigate('all', false)}>
-              {favoritesOnly && !query && category === 'all'
+            <button
+              className="primary-button"
+              onClick={() =>
+                favoritesOnly && !query && !tag && category === 'all'
+                  ? navigate('all', false)
+                  : clearFilters()
+              }
+            >
+              {favoritesOnly && !query && !tag && category === 'all'
                 ? 'Explore all items'
                 : 'Reset filters'}
             </button>
@@ -270,8 +348,9 @@ export default function App() {
       </main>
       {selectedItem && !editor ? (
         <ItemDialog
-          key={selectedItem.id}
           item={selectedItem}
+          items={items}
+          onNavigate={navigateDetail}
           shareUrl={shareUrl}
           favorite={favorites.includes(selectedItem.id)}
           onFavorite={() => toggleFavorite(selectedItem.id)}
@@ -298,7 +377,13 @@ export default function App() {
                 : `${item.title} is available for this visit. Browser storage is unavailable.`,
             );
             if (!editing)
-              updateView({ category: 'all', favoritesOnly: false, query: '', itemId: item.id });
+              updateView({
+                category: 'all',
+                favoritesOnly: false,
+                query: '',
+                tag: '',
+                itemId: item.id,
+              });
           }}
           onCancel={() => {
             const creating = !editor.item;
@@ -313,12 +398,12 @@ export default function App() {
           source={source}
           onImport={(next) => {
             setWorkspaceMessage('');
-            updateView({ category: 'all', favoritesOnly: false, query: '', itemId: '' });
+            updateView({ category: 'all', favoritesOnly: false, query: '', tag: '', itemId: '' });
             return importCollection(next);
           }}
           onReset={() => {
             setWorkspaceMessage('');
-            updateView({ category: 'all', favoritesOnly: false, query: '', itemId: '' });
+            updateView({ category: 'all', favoritesOnly: false, query: '', tag: '', itemId: '' });
             return resetCollection();
           }}
           onOpenSettings={() => {

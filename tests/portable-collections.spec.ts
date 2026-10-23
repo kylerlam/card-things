@@ -150,6 +150,7 @@ test('exports the exact active collection and resets with confirmation', async (
   await page.goto('./');
   await openData(page);
   await importJson(page, importedCollection);
+  await expect(page.getByRole('dialog').getByRole('status')).toContainText('Imported 1 items');
   const downloadPromise = page.waitForEvent('download');
   await page.getByRole('button', { name: 'Export', exact: true }).click();
   const download = await downloadPromise;

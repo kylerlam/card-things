@@ -1,6 +1,6 @@
 # CardThings
 
-A small collection browser built with React, TypeScript, and Vite. Browse cards, search, filter by category, sort, customize collection settings, add or edit cards in the browser, save local favorites, import or export a collection as JSON, and share a filtered view or an item's details. The included twelve entries are fictional example content.
+A small collection browser built with React, TypeScript, and Vite. Browse cards, search, filter by category or exact tag, choose grid or list view, sort in four orders, customize collection settings, add or edit cards in the browser, save local favorites, import or export a collection as JSON, and share a filtered view or an item's details. The included twelve entries are fictional example content.
 
 This experimental frontend currently lives on `freya/lab`. The default `main` branch still contains the initial documentation, so use the branch in the command below to try the app. See the [rendered preview index](docs/previews/README.md) for committed desktop, mobile, editor, settings, dialog, starter, validation, synchronization, empty-state, and image-fallback screenshots from this version.
 
@@ -32,7 +32,7 @@ Use **Collection data** to open **Collection settings**, download Starter JSON, 
 3. Edit `src/content/brand.ts` for the name, page metadata, favicon path, and theme colors. The [brand configuration guide](docs/development.md#change-the-brand) explains the typed fields and a blue-brand example; components read the same configuration.
 4. Run `npm run validate:brand` and `npm run validate:content`, then rebuild and preview. Validation identifies invalid fields, colors, and missing local assets. Keep private data and credentials out of the source and covers.
 
-Cards and collection settings can be edited in the guided local workspace, edited in files, or moved between CardThings sites with **Collection data**. The forms and runtime imports use the same collection rules and same-site image checks; unavailable or unsafe image paths never replace the active data. Successful changes stay in browser-local storage and can be reset to the bundled example. Collection changes and favorites update across other open tabs on the same origin, with an on-page notice; malformed external changes are ignored. The workspace does not remove categories or cards, upload image files, change site branding, or publish a site. There is no account system. Browser state does not sync between devices. Exported collection JSON excludes saved favorites, and shared links carry filters and item IDs rather than collection data.
+Cards and collection settings can be edited in the guided local workspace, edited in files, or moved between CardThings sites with **Collection data**. The forms and runtime imports use the same collection rules and same-site image checks; unavailable or unsafe image paths never replace the active data. Successful changes stay in browser-local storage and can be reset to the bundled example. Collection changes and favorites update across other open tabs on the same origin, with an on-page notice; malformed external changes are ignored. The workspace does not remove categories or cards, upload image files, change site branding, or publish a site. There is no account system. Browser state does not sync between devices. Use Export favorites and Import favorites in the Favorites view to transfer a validated local backup between browsers. Exported collection JSON excludes saved favorites, and shared links carry filters and item IDs rather than collection data.
 
 ## Build and preview locally
 
@@ -72,10 +72,13 @@ For the bundled example's automated browser checks, stop local previews first:
 
 ```sh
 npx playwright install chromium firefox webkit
-npm test
-npm run test:static
+npm run check
 ```
 
 Browser installation is optional for running the app. The full browser suite expects the bundled demo's titles, categories, images, and counts; adapt those expectations for your own dataset. The [development guide](docs/development.md#run-and-verify) explains validation tests and test ports.
 
 See the [development and content guide](docs/development.md), [asset and performance notes](docs/assets.md), and [compatibility results](docs/compatibility.md) for the implementation's verified behavior and current limits.
+
+The single `check` command runs formatting, brand/content validation, TypeScript/build, all five browser projects, and the production subdirectory suite. The branch-scoped GitHub workflow runs the same checks for Freya pushes and pull requests. It has read-only permissions and performs no deployment. Hosted execution is separate from local validation.
+
+See the [ten-version Freya iteration record](docs/freya-iterations.md) for the changes and verification evidence. All iterations remain on `feat/freya-collection-v1`.

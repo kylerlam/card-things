@@ -14,6 +14,22 @@ These images are captured from the running CardThings application and committed 
 
 ![CardThings collection at mobile width](collection-mobile.png)
 
+## List layout and tag filters
+
+1440 × 1000 and 390 × 844 Chromium viewports. Compact rows retain card actions and image crops; the filtered desktop view shows an exact tag and its removable filter.
+
+![CardThings list layout at desktop width](collection-list-desktop.png)
+
+![CardThings list layout at mobile width](collection-list-mobile.png)
+
+![CardThings exact tag filter](collection-filters-desktop.png)
+
+## Portable favorites
+
+1440 × 1000 Chromium viewport. The Favorites view retains saved cards and offers local JSON backup and import.
+
+![CardThings favorites backup controls](favorites-backup-desktop.png)
+
 ## Guided card editor — desktop
 
 1440 × 1000 Chromium viewport with a new card draft. Required content, optional metadata, and the beginning of the cover section fit in one scrollable modal.
