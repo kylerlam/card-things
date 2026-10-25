@@ -1,34 +1,33 @@
 # CardThings
 
-CardThings is a self-hosted catalogue for curated, link-based collections. Visitors browse public cards and dedicated detail pages; authenticated users manage their account; administrators manage cards, categories, tags, publication state, and external download sources.
+CardThings is a self-hosted catalogue for curated, link-based collections. Visitors browse public cards and dedicated detail pages; authenticated users manage their account; administrators manage cards, categories, tags, publication state, and related external links.
 
-CardThings stores descriptions and links, not installer binaries. Official and mirror files remain with their external providers.
-
-![CardThings public catalogue](docs/previews/catalogue-desktop.png)
+Each deployment chooses its own subject, such as books, bookmarks, software, or another collection. New installations start without cards, categories, tags, or images. CardThings stores descriptions and links; linked content remains with its external providers.
 
 ## Features
 
 - Public catalogue with text, category, and Tag discovery
-- Published-only detail routes with version, installation, source, licence, episode, and download metadata
-- Explicit official or mirror source labels; every download opens the external provider
+- Published-only detail routes with descriptions, supplementary notes, and related links
+- Optional per-card images with consistent frames and preserved aspect ratios
+- Custom link labels and providers; every resource link opens its external source
 - Real email/password registration, login, session, profile-name, and password management
 - One shared login page with server-verified routing to the user or administrator workspace
 - Unique usernames enforced by the database and checked during registration and profile updates
 - Local avatar upload with click or drag-and-drop selection, square cropping, zoom, and position controls
 - Administrator editing of ordinary users' names, email addresses, and avatars, plus password resets; IDs and roles remain unchanged
-- Server-authorized administrator access and tool, category, and tag CRUD
-- Draft and published tool states
+- Server-authorized administrator access and card, category, and tag CRUD
+- Draft and published card states
 - SQLite migrations, persistent Docker volumes, and documented backup/restore procedures
-- Protected administrator overview, user listing, tool, category, tag, and profile pages
+- Protected administrator overview, user listing, card, category, tag, and profile pages
 
 Favourites are intentionally deferred and are not shown in the current interface.
 
-Purpose categories stay broad; see [Catalogue taxonomy](docs/catalogue-taxonomy.md) for the current grouping. Narrower capabilities belong in tags.
+Categories and tags belong to each deployment. See [Catalogue taxonomy](docs/catalogue-taxonomy.md) for guidance. Optional edition/version, supplementary notes, source details, and related content fields can be left blank when they do not fit a collection.
 
 ## Routes
 
-- `/` — public catalogue, search, category filters, and tool cards
-- `/tools/:slug` — published card details and external download sources
+- `/` — public catalogue, search, category filters, and collection cards
+- `/tools/:slug` — published card details and related external links
 - `/auth` — shared login and registration; the server sends administrators to `/admin` and ordinary users to `/user`
 - `/user` — authenticated account overview and profile security
 - `/admin/login` — compatibility redirect to the shared `/auth` entry
@@ -78,11 +77,21 @@ Passwords must be at least 12 characters. No default administrator exists. Start
 npm run dev
 ```
 
-Production and development databases start without catalogue samples. Create categories, optional tags, cards, and external download links through `/admin`.
+Production and development databases start without catalogue samples. Create categories, optional tags, cards, optional image URLs, and related links through `/admin`. A card image can use an HTTP(S) URL or a same-site absolute path. Explicit images take precedence over automatic website or repository icon discovery, and their original aspect ratio is preserved.
+
+## Framework and site content
+
+`main` and `dev` share the preserved development history. Their current framework trees contain no real collection catalogue, private account records, or deployment artwork; future code commits must keep deployment data separate. Earlier commits retain the former deployment files and artwork: deleting current files does not erase their historical copies. Preserve published commit IDs and add framework extraction or maintenance changes as new commits. `dev` is the experimental base for new features; `main` contains the reviewed, stable version. During development, `dev` may lead `main`.
+
+Create focused feature branches from `dev` and squash each coherent feature into `dev` after review. Once checks pass and the owner approves a release, fast-forward `main` to the tested `dev` commit without squashing the release again. The two branches then point to the same commit. Use a version tag to identify a stable release.
+
+Each installation owns its database, account records, category names, tags, images, and links. Keep those records, image files, and private configuration in that installation's storage and independent private backups, outside current framework trees and future code commits. Database schemas, migrations, shared interface assets, and isolated synthetic test fixtures remain version-controlled. The application reads card records from SQLite; it does not import a deployment-specific catalogue JSON file at startup. A fresh deployment remains empty until its administrator adds content or deliberately restores its own database and files.
+
+The existing `/tools/` and `/admin/tools/` paths remain stable for compatibility and can serve any collection subject.
 
 ## Local demo accounts
 
-The local preview uses the same [login page](http://127.0.0.1:3310/auth) for both roles:
+Optional local demo accounts use the same `/auth` login page for both roles:
 
 | Login | Password | Role | Destination |
 | --- | --- | --- | --- |

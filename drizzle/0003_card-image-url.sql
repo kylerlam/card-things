@@ -1,0 +1,1 @@
+ALTER TABLE `tools` ADD `image_url` text;

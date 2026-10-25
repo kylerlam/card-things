@@ -5,7 +5,7 @@ import { expect, test } from "@playwright/test";
 test("category, tag, and text filters intersect and can be cleared independently", async ({ page }) => {
   await page.goto("/?category=transfer#catalogue");
   const tags = page.getByRole("complementary", { name: "標籤篩選" });
-  const search = page.getByRole("searchbox", { name: "搜尋標籤、分類或工具名稱" });
+  const search = page.getByRole("searchbox", { name: "搜尋標籤、分類或卡片名稱" });
   const empty = page.getByText("沒有符合目前條件的卡片。請調整搜尋、分類或標籤。", { exact: true });
 
   await tags.getByRole("button", { name: "本機優先", exact: true }).click();

@@ -18,7 +18,7 @@ export function SiteNavigation({ categories }: { categories: Array<{ id: string;
   return (
     <div className="col-span-2 row-start-2 flex min-w-0 items-center justify-self-center gap-1 md:col-span-1 md:col-start-2 md:row-start-1" role="group" aria-label="網站選單">
       <Link href="/#top" className={linkClass} aria-current={pathname === "/" ? "page" : undefined}>首頁</Link>
-      <Link href="/#catalogue" className={linkClass} onNavigate={() => navigateToCatalogue()}>工具庫</Link>
+      <Link href="/#catalogue" className={linkClass} onNavigate={() => navigateToCatalogue()}>收藏庫</Link>
       <Menu.Root modal={false} onOpenChange={(_, details) => { closeReason.current = details.reason; }}>
         <Menu.Trigger className={linkClass}>
           分類導覽
@@ -26,7 +26,7 @@ export function SiteNavigation({ categories }: { categories: Array<{ id: string;
         </Menu.Trigger>
         <Menu.Portal>
           <Menu.Positioner side="bottom" align="center" sideOffset={8} collisionPadding={16}>
-            <Menu.Popup className="wire-panel flex w-56 max-w-[calc(100vw-2rem)] flex-col p-2 outline-none" aria-label="用途分類" finalFocus={() => closeReason.current !== "item-press"}>
+            <Menu.Popup className="wire-panel flex w-56 max-w-[calc(100vw-2rem)] flex-col p-2 outline-none" aria-label="收藏分類" finalFocus={() => closeReason.current !== "item-press"}>
               <Menu.Group>
                 <Menu.LinkItem closeOnClick render={<Link href="/#catalogue" onNavigate={() => navigateToCatalogue()} />} className={cn(buttonVariants({ variant: "ghost" }), "w-full justify-start px-3")}>
                   全部卡片

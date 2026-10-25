@@ -2,11 +2,9 @@
 
 ## Purpose and scope
 
-CardThings is a card-based website for organizing and showcasing collections. Prioritize the current site's confirmed practical requirements. Avoid speculative generalization or expansion into a commercial platform without an explicit scope decision.
+CardThings is a card-based website for organizing and showcasing collections. Support independently deployed collections such as books, bookmarks, software, and other curated items. Avoid speculative generalization or expansion into a commercial platform without an explicit scope decision.
 
-For screenshot-driven iterations, read the owner's current annotation folder at the start of each iteration. Use those annotations to define scope; report incidental findings separately before implementing additional changes.
-
-Separate deployment-specific content, configuration, and private data from reusable framework code and examples. Never commit secrets.
+Keep the current framework trees on main and dev reusable and empty by default. Real collection content, artwork, runtime databases, account records, private configuration, and secrets belong to each deployment and must not be added to future code commits. Preserve the existing published commit history: legacy commits retain earlier deployment files, and deleting current files does not remove those historical copies. Database schemas, migrations, shared interface assets, and isolated synthetic test fixtures remain part of the framework.
 
 ## Language and coordination
 
@@ -16,18 +14,18 @@ AI agents are expected to perform most coding and GitHub work. Parallel agents s
 
 ## Git workflow
 
-- Use a new short-lived task branch from current `dev` for every file change, including source code, tests, dependencies, deployment configuration, agent behavior rules, documentation, links, and design references. Keep one coherent task per branch.
-- Use descriptive branch names, such as `feat/card-search`, `fix/mobile-layout`, or `docs/project-guidelines`. Branch names are distinct from Conventional Commit messages.
-- Commit each completed, coherent change locally before handing it off for review. Waiting for approval to push does not mean leaving completed work uncommitted.
-- Push only when the repository owner requests or approves it. When authorized, push the task branch, open a draft PR targeting `dev`, and run relevant available checks. Do not push file changes directly to `dev` or `main` unless the owner explicitly directs otherwise.
-- Keep `main` reviewed, checked, and releasable. Promote accepted work from `dev` to `main` only with the repository owner's explicit approval.
-- Briefly document meaningful implementation steps, approaches considered, check results, and known limitations in the PR. Provide a useful review record without private reasoning or raw command dumps.
-- Wait for the repository owner's explicit approval before merging. Then clean up merged task branches as appropriate.
-- Being on `main` does not prove deployment. Tags or releases may identify published versions.
+- Keep `main` stable, reviewed, checked, and releasable.
+- Preserve existing published commit IDs. Extract or improve the generic framework through new commits rather than replacing the established history.
+- Use the persistent `dev` branch as the experimental base for new features and integration. It may lead `main` with unreleased changes, but both branches share the same generic-code history.
+- Start focused feature branches from `dev` and squash each coherent, reviewed feature into `dev`. Use descriptive branch names and separate worktrees when isolation is useful.
+- After checks and explicit owner approval, fast-forward `main` to the tested `dev` commit without another release-level squash. Both branches align after a release; tags identify stable versions.
+- The `freya` and `lab` lines of work are paused. Do not start, modify, merge, delete, repurpose, or clean up their branches or worktrees unless the repository owner explicitly resumes them.
+- Commit and push only when the user asks for Git work. Run relevant available checks and preserve a useful review record without private reasoning or raw command dumps.
+- Merge into `main` only after explicit owner approval. Being on `main` does not prove deployment; tags or releases may identify published versions.
 
 ## Validation and lessons
 
-Find actual project checks when they exist; do not invent commands, CI, features, or design approval requirements. Report checks run, failed, or unavailable, and never claim unrun tests passed.
+Find actual project checks when they exist; do not invent a framework, commands, CI, features, or design approval requirements. Report checks run, failed, or unavailable, and never claim unrun tests passed.
 
 Consult relevant entries in `docs/lesson-learned.md` during planning and before repeating affected work. Record confirmed, meaningful corrections rather than every disagreement or temporary preference. Promote only durable, confirmed project decisions into this file.
 

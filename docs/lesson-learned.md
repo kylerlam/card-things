@@ -32,14 +32,21 @@ Record confirmed, meaningful corrections that can prevent repeated mistakes. Kee
 
 ## Read current annotations before each iteration
 
-- **Context:** Iterating from screenshots and annotations in the owner's `修改方向` folder.
+- **Context:** Iterating from screenshots and annotations in the current annotation folder.
 - **Mistaken assumption:** A request to continue iterating meant the agent should choose additional fixes independently.
 - **Confirmed decision:** Re-read the folder for each iteration and use the current annotations to define the work. The owner accepted the earlier mobile administrator layout fix, but that acceptance does not expand future scope.
 - **Prevention:** Map each change to a current annotation. List incidental findings separately and wait for an explicit scope decision before implementing them.
 
-## Use application artwork for curated icons
+## Keep shared card behavior separate from deployment content
 
-- **Context:** Reviewing missing and blurred logos after importing the software catalogue.
-- **Mistaken assumption:** A repository avatar or a small website favicon reliably represented the installed application's icon at card size.
-- **Confirmed decision:** Prefer clear official application artwork, with a colour variant when available, and preserve the original branding.
-- **Prevention:** Save reviewed vectors or high-resolution rasters locally, record their official sources, and serve configured icons before attempting external metadata discovery. Verify actual loaded image dimensions in the browser.
+- **Context:** Separating personal site content while simplifying development and stable releases.
+- **Mistaken assumption:** Keeping site data on dev and removing it for main would be a maintainable long-term workflow.
+- **Confirmed decision:** Current framework trees and future code commits contain only the reusable, empty-by-default application. dev is the experimental feature base; main shares that history and aligns with tested dev at release. Real site content and artwork stay in deployment storage and private backups; legacy commits retain previously published deployment files.
+- **Prevention:** Keep shared display rules in code and actual card records and images outside Git. Squash focused features into dev, fast-forward approved releases to main, and identify stable commits with tags instead of repeatedly rewriting release history.
+
+## Preserve established history when extracting the framework
+
+- **Context:** Restoring the full development history after reviewing a seven-phase reconstruction.
+- **Mistaken assumption:** Extracting the generic framework required replacing established commits with reconstructed milestones.
+- **Confirmed decision:** Preserve the original 36 development commits and their IDs, then add the generic framework extraction as a new commit. The seven-phase rewrite is abandoned.
+- **Prevention:** Back up history before branch changes, append reviewed changes, and distinguish cleaning the current tree from removing files from historical commits.

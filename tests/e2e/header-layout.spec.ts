@@ -13,7 +13,7 @@ test("site header centers the navigation group and keeps the enlarged account av
     expect(Math.abs(header!.x + header!.width / 2 - links!.x - links!.width / 2)).toBeLessThan(1);
     expect(await page.evaluate(() => document.documentElement.scrollWidth)).toBe(page.viewportSize()!.width);
     await expect(home).toBeVisible();
-    await expect(menu.getByRole("link", { name: "工具庫", exact: true })).toBeVisible();
+    await expect(menu.getByRole("link", { name: "收藏庫", exact: true })).toBeVisible();
     await expect(menu.getByRole("button", { name: "分類導覽", exact: true })).toBeVisible();
     await expect(menu.getByRole("link", { name: "關於本站", exact: true })).toBeVisible();
     if (page.viewportSize()!.width >= 768) {
@@ -76,7 +76,7 @@ test("category navigation is keyboard accessible and stays inside narrow viewpor
     const trigger = page.getByRole("button", { name: "分類導覽", exact: true });
     await trigger.focus();
     await page.keyboard.press("ArrowDown");
-    const menu = page.getByRole("menu", { name: "用途分類" });
+    const menu = page.getByRole("menu", { name: "收藏分類" });
     await expect(menu).toBeVisible();
     await expect(menu.getByRole("menuitem", { name: "全部卡片", exact: true })).toBeFocused();
     const bounds = await menu.boundingBox();

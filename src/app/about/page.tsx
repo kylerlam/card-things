@@ -9,7 +9,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "關於本站",
-  description: "認識 CardThings 的工具收錄方向、下載來源與回饋方式。",
+  description: "認識 CardThings 的收藏方式、相關來源與回饋管道。",
 };
 
 export default function AboutPage() {
@@ -21,38 +21,38 @@ export default function AboutPage() {
           <p className="eyebrow">CardThings</p>
           <h1 className="mt-2 text-3xl font-extrabold tracking-tight sm:text-5xl">關於本站</h1>
           <p className="mt-3 text-lg leading-8">
-            把實用的軟體與工具整理成卡片，讓你從用途、功能介紹與取得來源，找到適合自己的選擇。
+            把書籍、書籤、軟體或其他收藏整理成卡片，透過介紹、分類、標籤與相關連結，分享自己想收錄的內容。
           </p>
-          <Link href="/#catalogue" className={cn(buttonVariants(), "mt-6")}>瀏覽工具庫</Link>
+          <Link href="/#catalogue" className={cn(buttonVariants(), "mt-6")}>瀏覽收藏庫</Link>
         </div>
 
         <div className="grid gap-5 lg:grid-cols-2">
           <section className="wire-panel p-5 sm:p-6" aria-labelledby="selection-title">
             <h2 id="selection-title" className="text-2xl font-bold">收錄方向</h2>
             <p className="mt-3 leading-7 text-muted-foreground">
-              優先整理具有明確用途與可查證來源的工具，並按日常需求分類，方便瀏覽與比較。
+              每個站點自行決定收藏主題、分類與標籤，並為每張卡片填寫介紹和相關來源，方便瀏覽與查找。
             </p>
             <ul className="mt-5 flex list-disc flex-col gap-3 pl-5 leading-7">
-              <li><strong>用途清楚：</strong>說明工具解決的問題與主要功能。</li>
-              <li><strong>來源明確：</strong>提供官方網站或專案來源，並標示下載提供者。</li>
-              <li><strong>資訊實用：</strong>整理支援平台、安裝提示與授權資訊，協助你自行判斷。</li>
+              <li><strong>主題自選：</strong>依自己的收藏方向新增卡片。</li>
+              <li><strong>介紹完整：</strong>整理名稱、簡介、圖片與補充說明。</li>
+              <li><strong>連結清楚：</strong>提供閱讀、取得或其他相關來源，並自行命名連結。</li>
             </ul>
           </section>
 
           <section className="wire-panel p-5 sm:p-6" aria-labelledby="downloads-title">
-            <h2 id="downloads-title" className="text-2xl font-bold">下載與來源</h2>
+            <h2 id="downloads-title" className="text-2xl font-bold">內容與來源</h2>
             <p className="mt-3 leading-7 text-muted-foreground">
-              CardThings 提供工具介紹與來源導航。點擊卡片內的下載來源，會前往對應的外部網站；安裝檔由該來源提供，本站不代管或重新託管。
+              CardThings 提供收藏介紹與來源導航。點擊卡片內的相關連結，會前往對應的外部網站；書籍頁面、檔案或其他內容由該來源提供。
             </p>
             <p className="mt-4 leading-7 text-muted-foreground">
-              工具的版本、價格、授權與安裝方式，請以來源網站的最新資訊為準。
+              內容的版本、取得方式與使用條款，請以來源網站的最新資訊為準。
             </p>
           </section>
 
           <section className="wire-panel p-5 sm:p-6 lg:col-span-2" aria-labelledby="feedback-title">
             <h2 id="feedback-title" className="text-2xl font-bold">回報與建議</h2>
             <p className="mt-3 max-w-3xl leading-7 text-muted-foreground">
-              發現卡片資料有誤、連結失效，或想推薦工具，可以到專案的 GitHub Issues 提出，並附上相關卡片與來源連結。
+              站點內容由各站管理員維護。若發現 CardThings 的功能問題或有改進建議，可以到專案的 GitHub Issues 提出。
             </p>
             <a
               href="https://github.com/kylerlam/card-things/issues"

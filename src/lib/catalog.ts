@@ -25,6 +25,7 @@ export type CatalogueTool = {
   version: string | null;
   installation: string | null;
   sourceLicense: string | null;
+  imageUrl: string | null;
   officialUrl: string | null;
   episodeUrl: string | null;
   tags: Array<{ id: string; name: string; slug: string }>;
@@ -67,6 +68,7 @@ function attachTags(
     version: string | null;
     installation: string | null;
     sourceLicense: string | null;
+    imageUrl: string | null;
     officialUrl: string | null;
     episodeUrl: string | null;
   }>,
@@ -116,6 +118,7 @@ function baseToolQuery() {
       version: tools.version,
       installation: tools.installation,
       sourceLicense: tools.sourceLicense,
+      imageUrl: tools.imageUrl,
       officialUrl: tools.officialUrl,
       episodeUrl: tools.episodeUrl,
     })

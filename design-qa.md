@@ -1,43 +1,14 @@
-# Design QA
+# Design verification
 
-This ledger verifies the implemented review slice against the approved low-fidelity direction without publishing private planning material.
+The shared framework keeps the current card layout, palette, typography, navigation, and image sizing rules. Deployment content is not part of a visual specification.
 
-## Fidelity checklist
+Verify these flows against each candidate build:
 
-- [x] Public header, constrained content width, monochrome surfaces, and thin outlined controls
-- [x] Purpose-first catalogue with a left category rail
-- [x] Search plus independently toggleable platform buttons
-- [x] Three-column desktop cards with separate detail and favourite actions
-- [x] Favourite login detour returns to the originating catalogue or detail page
-- [x] Visible back-to-top control
-- [x] Visitor Demo includes login, registration, validation errors, empty states, favourites, private custom tools, profile editing, and logout
-- [x] Administrator navigation separates users, tools, purpose categories, tags, and administrator profile
-- [x] Explicit ordinary-user and administrator Demo personas use separate browser-session stores
-- [x] Isolated administrator tool, purpose-category, and tag CRUD includes edit, delete, reset, and empty/error outcomes
-- [x] Existing administrator routes remain protected by server-side role checks
-- [x] Mobile visitor navigation and profile content stack without horizontal page overflow
+- An explicitly initialized database opens an empty catalogue with no preloaded categories, tags, or cards.
+- Invented cards can represent books, bookmarks, or another collection without software-specific required metadata.
+- Card images retain their aspect ratio; an explicit image takes precedence over automatic icon discovery.
+- Search, category and tag filters, detail navigation, and return-to-list state work on desktop and mobile.
+- Account and administrator routes retain server-side authorization.
+- Administrator forms and navigation fit narrow viewports without page overflow.
 
-## Interaction and safety review
-
-- Demo account state uses `sessionStorage` and is labelled on every relevant entry page.
-- No Demo password, email message, CAPTCHA response, or uploaded avatar is sent to the server.
-- The Demo cannot grant administrator access. `/admin` continues to use Better Auth and server-side authorization.
-- `/demo/admin` never calls the authentication API or server actions; its administrator label is explicitly qualified as a permissionless Demo.
-- Pending favourites are resolved from published server data rather than trusting names supplied in a URL.
-- Empty, cancel, remove, logout, back, search, and invalid registration states have working outcomes.
-
-## Evidence
-
-Rendered screenshots live in `docs/screenshots/`. Automated Playwright coverage exercises the public and Demo flows on desktop and mobile Chrome and the protected administrator flow on desktop Chrome.
-
-## Source-to-render comparison
-
-| Reference cue | Implemented result | Review |
-| --- | --- | --- |
-| Monochrome, low-fidelity shell with a constrained canvas | Shared header, thin outlined panels, muted fills, and compact controls | Passed |
-| Persistent administrator navigation | Responsive side rail on desktop and horizontal navigation on mobile | Passed |
-| Separate user, tool, purpose-category, Tag, and profile areas | Each destination has an independent view and working Demo interactions | Passed |
-| Overview cards and direct management shortcuts | Counts, user summary, and tool/category/Tag shortcuts remain visible without adding stock-CMS chrome | Passed |
-| Dense forms that remain reviewable | Two-column desktop fields collapse to one column without horizontal page overflow | Passed |
-
-Final result: **passed**.
+Run the repository's lint, typecheck, unit tests, browser tests, and production build. Capture screenshots and console findings outside the repository using an isolated test database. Report actual results for the candidate under review; this checklist does not assert that unrun checks passed.

@@ -110,6 +110,18 @@ export function ToolForm({
           </Field>
 
           <Field>
+            <FieldLabel htmlFor="tool-image-url">卡片圖片 URL（選填）</FieldLabel>
+            <Input
+              id="tool-image-url"
+              name="imageUrl"
+              defaultValue={tool?.imageUrl ?? ""}
+              maxLength={2048}
+              placeholder="圖片網址或 /images/cover.png"
+            />
+            <FieldDescription>可使用封面、自選圖片或標誌；留白時會嘗試使用相關網站的圖示。</FieldDescription>
+          </Field>
+
+          <Field>
             <FieldLabel htmlFor="tool-description">完整介紹</FieldLabel>
             <Textarea
               id="tool-description"
@@ -169,7 +181,7 @@ export function ToolForm({
           </div>
 
           <Field>
-            <FieldLabel htmlFor="tool-version">版本</FieldLabel>
+            <FieldLabel htmlFor="tool-version">版本或版次（選填）</FieldLabel>
             <Input id="tool-version" name="version" defaultValue={tool?.version ?? ""} />
           </Field>
 
@@ -254,7 +266,7 @@ export function ToolForm({
           </FieldSet>
 
           <Field>
-            <FieldLabel htmlFor="tool-installation">安裝提示</FieldLabel>
+            <FieldLabel htmlFor="tool-installation">補充說明（選填）</FieldLabel>
             <Textarea
               id="tool-installation"
               name="installation"
@@ -273,7 +285,7 @@ export function ToolForm({
               />
             </Field>
             <Field>
-              <FieldLabel htmlFor="tool-official-url">官方介紹 URL</FieldLabel>
+              <FieldLabel htmlFor="tool-official-url">相關來源 URL（選填）</FieldLabel>
               <Input
                 id="tool-official-url"
                 name="officialUrl"
@@ -284,18 +296,18 @@ export function ToolForm({
           </div>
 
           <Field>
-            <FieldLabel htmlFor="tool-episode-url">影片介紹 URL</FieldLabel>
+            <FieldLabel htmlFor="tool-episode-url">相關內容 URL（選填）</FieldLabel>
             <Input
               id="tool-episode-url"
               name="episodeUrl"
               type="url"
               defaultValue={tool?.episodeUrl ?? ""}
             />
-            <FieldDescription>可連到短影片或其他卡片介紹內容。</FieldDescription>
+            <FieldDescription>可連到閱讀筆記、影片或其他相關內容。</FieldDescription>
           </Field>
 
           <FieldSet>
-            <FieldLegend>下載來源</FieldLegend>
+            <FieldLegend>資源連結</FieldLegend>
             <FieldDescription>最多三個來源；每列需同時填寫名稱、提供者與 URL。</FieldDescription>
             <div className="flex flex-col gap-3">
               {sourceRows.map((source, index) => (
@@ -307,13 +319,13 @@ export function ToolForm({
                     placeholder="提供者"
                   />
                   <NativeSelect name="sourceKind" defaultValue={source?.kind ?? "official"} className="w-full">
-                    <NativeSelectOption value="official">官方</NativeSelectOption>
-                    <NativeSelectOption value="mirror">鏡像</NativeSelectOption>
+                    <NativeSelectOption value="official">主要來源</NativeSelectOption>
+                    <NativeSelectOption value="mirror">其他來源</NativeSelectOption>
                   </NativeSelect>
                   <Input
                     name="sourcePlatform"
                     defaultValue={source?.platform ?? ""}
-                    placeholder="適用系統"
+                    placeholder="補充標示（選填）"
                   />
                   <Input
                     name="sourceUrl"

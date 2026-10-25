@@ -16,6 +16,7 @@ import {
   toolTags,
 } from "@/db/schema";
 import { requireAdmin } from "@/lib/admin-auth";
+import { isCardImageUrl } from "@/lib/card-image-url";
 
 const slug = z
   .string()
@@ -58,6 +59,7 @@ const toolSchema = z.object({
   version: z.string().trim().max(80).optional(),
   installation: z.string().trim().max(2_000).optional(),
   sourceLicense: z.string().trim().max(200).optional(),
+  imageUrl: z.string().trim().max(2048).refine((value) => !value || isCardImageUrl(value), "Use an HTTP(S) or same-site image URL.").transform((value) => value || null),
   officialUrl: optionalUrl,
   episodeUrl: optionalUrl,
 });
@@ -214,6 +216,7 @@ export async function saveTool(formData: FormData) {
     version: requiredString(formData, "version") || undefined,
     installation: requiredString(formData, "installation") || undefined,
     sourceLicense: requiredString(formData, "sourceLicense") || undefined,
+    imageUrl: requiredString(formData, "imageUrl"),
     officialUrl: requiredString(formData, "officialUrl"),
     episodeUrl: requiredString(formData, "episodeUrl"),
   });
@@ -230,6 +233,7 @@ export async function saveTool(formData: FormData) {
     version: parsed.version ?? null,
     installation: parsed.installation ?? null,
     sourceLicense: parsed.sourceLicense ?? null,
+    imageUrl: parsed.imageUrl,
     officialUrl: parsed.officialUrl,
     episodeUrl: parsed.episodeUrl,
     updatedAt: new Date(),

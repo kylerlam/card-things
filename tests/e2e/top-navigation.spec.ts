@@ -2,10 +2,10 @@ import { expect, test } from "@playwright/test";
 
 test("public navigation opens the catalogue, category filters, and About without signing in", async ({ page, baseURL }) => {
   const navigation = page.getByRole("navigation", { name: "主要導覽" });
-  const search = page.getByRole("searchbox", { name: "搜尋標籤、分類或工具名稱" });
+  const search = page.getByRole("searchbox", { name: "搜尋標籤、分類或卡片名稱" });
   await page.goto("/about");
   await expect(page.getByRole("heading", { name: "關於本站", exact: true })).toBeVisible();
-  await navigation.getByRole("link", { name: "工具庫", exact: true }).click();
+  await navigation.getByRole("link", { name: "收藏庫", exact: true }).click();
   await expect(page).toHaveURL(`${baseURL}/#catalogue`);
   await expect(page.getByRole("button", { name: "全部標籤", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(search).toHaveValue("");
@@ -37,13 +37,13 @@ test("public navigation opens the catalogue, category filters, and About without
   await expect(page).toHaveURL(`${baseURL}/?category=capture#catalogue`);
   await expect(page.getByRole("button", { name: "清除分類：畫面與擷取", exact: true })).toBeVisible();
   await expect(search).toHaveValue("");
-  await page.getByRole("link", { name: /查看用途與取得方式/ }).click();
+  await page.getByRole("link", { name: /查看卡片詳情/ }).click();
   await expect(page).toHaveURL(`${baseURL}/tools/framesnap`);
   await navigation.getByRole("button", { name: "分類導覽", exact: true }).click();
   await page.locator('a[href="/?category=transfer#catalogue"]').click();
   await expect(page.getByText("RelayDrop", { exact: true })).toBeVisible();
   await expect(search).toHaveValue("");
-  await navigation.getByRole("link", { name: "工具庫", exact: true }).click();
+  await navigation.getByRole("link", { name: "收藏庫", exact: true }).click();
   await expect(page).toHaveURL(`${baseURL}/#catalogue`);
   await expect(page.getByRole("button", { name: "全部標籤", exact: true })).toHaveAttribute("aria-pressed", "true");
   await expect(page.getByText("FrameSnap", { exact: true })).toBeVisible();
@@ -54,7 +54,7 @@ test("public navigation opens the catalogue, category filters, and About without
 
 test("search supports continuous typing and caret edits while invalid category links remain clearable", async ({ page }) => {
   await page.goto("/?source=preview&category=unknown#catalogue");
-  const search = page.getByRole("searchbox", { name: "搜尋標籤、分類或工具名稱" });
+  const search = page.getByRole("searchbox", { name: "搜尋標籤、分類或卡片名稱" });
   const navigation = page.getByRole("navigation", { name: "主要導覽" });
   await expect(page.getByRole("button", { name: "全部標籤", exact: true })).toHaveAttribute("aria-pressed", "true");
   await page.getByRole("button", { name: "本機優先", exact: true }).click();
@@ -73,10 +73,10 @@ test("search supports continuous typing and caret edits while invalid category l
   await expect(search).toHaveValue("");
   await expect(page.getByRole("button", { name: "全部標籤", exact: true })).toHaveAttribute("aria-pressed", "true");
 
-  await navigation.getByRole("link", { name: "工具庫", exact: true }).click();
+  await navigation.getByRole("link", { name: "收藏庫", exact: true }).click();
   await page.getByRole("button", { name: "本機優先", exact: true }).click();
   await search.fill("Relay");
-  await navigation.getByRole("link", { name: "工具庫", exact: true }).click();
+  await navigation.getByRole("link", { name: "收藏庫", exact: true }).click();
   await expect(search).toHaveValue("");
   await expect(page.getByRole("button", { name: "全部標籤", exact: true })).toHaveAttribute("aria-pressed", "true");
 

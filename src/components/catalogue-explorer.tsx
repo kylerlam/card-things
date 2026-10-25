@@ -183,8 +183,8 @@ export function CatalogueExplorer({
                 type="search"
                 value={query}
                 onChange={(event) => setQuery(event.target.value)}
-                placeholder="搜尋標籤、分類或工具名稱"
-                aria-label="搜尋標籤、分類或工具名稱"
+                placeholder="搜尋標籤、分類或卡片名稱"
+                aria-label="搜尋標籤、分類或卡片名稱"
                 className="h-12 rounded-none border-0 border-b border-border bg-transparent pr-0 pl-7 shadow-none focus-visible:border-primary focus-visible:ring-0 dark:bg-transparent"
               />
             </div>
@@ -214,7 +214,7 @@ export function CatalogueExplorer({
               <Card key={tool.id} className="h-full">
                 <CardHeader>
                   <div className="flex items-center gap-3">
-                    <ToolIcon key={tool.officialUrl} name={tool.name} officialUrl={tool.officialUrl} />
+                    <ToolIcon key={tool.imageUrl ?? tool.officialUrl} name={tool.name} imageUrl={tool.imageUrl} officialUrl={tool.officialUrl} />
                     <div>
                       <CardTitle>{tool.name}</CardTitle>
                       <CardDescription>{tool.categoryName}</CardDescription>
@@ -241,7 +241,7 @@ export function CatalogueExplorer({
                       "w-full",
                     )}
                   >
-                    查看用途與取得方式
+                    查看卡片詳情
                     <ArrowUpRightIcon data-icon="inline-end" />
                   </Link>
                 </CardFooter>

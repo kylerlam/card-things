@@ -3,33 +3,35 @@
 import { useEffect, useState } from "react";
 import Image from "next/image";
 
-export function ToolIcon({ name, officialUrl }: { name: string; officialUrl: string | null }) {
-  const [sources, setSources] = useState<string[]>([]);
-  const [index, setIndex] = useState(0);
+export function ToolIcon({ name, imageUrl, officialUrl }: { name: string; imageUrl?: string | null; officialUrl: string | null }) {
+  const [resolved, setResolved] = useState<{ url: string; sources: string[] } | null>(null);
+  const [failedSources, setFailedSources] = useState<string[]>([]);
+  const sources = imageUrl ? [imageUrl] : resolved?.url === officialUrl ? resolved.sources : [];
+  const source = sources.find((url) => !failedSources.includes(url));
 
   useEffect(() => {
-    if (!officialUrl) return;
+    if (imageUrl || !officialUrl) return;
     const controller = new AbortController();
     fetch(`/api/tool-icon?url=${encodeURIComponent(officialUrl)}`, { signal: controller.signal, cache: "no-cache" })
       .then((response) => response.json())
-      .then((result: { sources: string[] }) => setSources(result.sources))
+      .then((result: { sources: string[] }) => setResolved({ url: officialUrl, sources: result.sources }))
       .catch(() => {});
     return () => controller.abort();
-  }, [officialUrl]);
+  }, [imageUrl, officialUrl]);
 
   return (
     <div className="grid size-[3.6rem] shrink-0 place-items-center rounded-lg border border-primary/10 bg-secondary p-[0.1875rem] text-secondary-foreground">
-      <div className="grid size-full place-items-center overflow-hidden rounded-full border-2 border-white">
-        {sources[index] ? (
+      <div className={`grid size-full place-items-center overflow-hidden border-2 border-white ${imageUrl ? "rounded-md" : "rounded-full"}`}>
+        {source ? (
           <Image
-            src={sources[index]}
-            alt={`${name} 圖示`}
+            src={source}
+            alt={`${name} ${imageUrl ? "圖片" : "圖示"}`}
             width={48}
             height={48}
             unoptimized
             referrerPolicy="no-referrer"
             className="size-full object-contain"
-            onError={() => setIndex((current) => current + 1)}
+            onError={() => setFailedSources((current) => [...current, source])}
           />
         ) : (
           <svg

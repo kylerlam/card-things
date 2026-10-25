@@ -140,6 +140,7 @@ export const tools = sqliteTable(
     version: text("version"),
     installation: text("installation"),
     sourceLicense: text("source_license"),
+    imageUrl: text("image_url"),
     officialUrl: text("official_url"),
     episodeUrl: text("episode_url"),
     createdAt: timestamp("created_at"),

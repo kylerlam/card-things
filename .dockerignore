@@ -14,3 +14,7 @@ playwright-report
 !.env.example
 npm-debug.log*
 .DS_Store
+
+# Site-specific collection content
+deployments/local-preview
+public/tool-icons

@@ -52,15 +52,15 @@ export default async function ToolDetail({
             </div>
             {tool.installation ? (
               <section className="mt-9 border-t border-border pt-7">
-                <h2 className="text-2xl font-bold">安裝提示</h2>
+                <h2 className="text-2xl font-bold">補充說明</h2>
                 <p className="mt-3 whitespace-pre-line leading-7">{tool.installation}</p>
               </section>
             ) : null}
 
             <section className="mt-9 border-t border-border pt-7">
-              <h2 className="text-2xl font-bold">來源與授權</h2>
+              <h2 className="text-2xl font-bold">來源與使用說明</h2>
               <p className="mt-3 leading-7">
-                {tool.sourceLicense ?? "請在官方來源核對最新授權資訊。"}
+                {tool.sourceLicense ?? "請在相關來源核對最新資訊及使用條款。"}
               </p>
               {tool.officialUrl ? (
                 <a
@@ -69,7 +69,7 @@ export default async function ToolDetail({
                   rel="noreferrer"
                   className={cn(buttonVariants({ variant: "outline" }), "mt-4")}
                 >
-                  官方介紹頁
+                  相關來源頁
                   <ArrowUpRightIcon data-icon="inline-end" />
                 </a>
               ) : null}
@@ -80,8 +80,8 @@ export default async function ToolDetail({
             {tool.episodeUrl ? (
               <Card>
                 <CardHeader>
-                  <CardTitle>影片介紹</CardTitle>
-                  <CardDescription>先看介紹，再選擇合適的來源。</CardDescription>
+                  <CardTitle>相關內容</CardTitle>
+                  <CardDescription>查看這張卡片的延伸介紹。</CardDescription>
                 </CardHeader>
                 <CardFooter>
                   <a
@@ -99,9 +99,9 @@ export default async function ToolDetail({
 
             <Card>
               <CardHeader>
-                <h2 className="text-base leading-none font-semibold">安裝與下載</h2>
+                <h2 className="text-base leading-none font-semibold">相關連結</h2>
                 <CardDescription>
-                  檔案保留在外部提供者；CardThings 不代理或重新託管。
+                  內容保留在各來源；依連結名稱選擇要前往的頁面。
                 </CardDescription>
               </CardHeader>
               <CardContent className="flex flex-col gap-3">
@@ -117,7 +117,7 @@ export default async function ToolDetail({
                           </span>
                         </div>
                         <Badge variant={source.kind === "official" ? "default" : "secondary"}>
-                          {source.kind === "official" ? "官方" : "鏡像"}
+                          {source.kind === "official" ? "主要來源" : "其他來源"}
                         </Badge>
                       </div>
                       <a
@@ -132,7 +132,7 @@ export default async function ToolDetail({
                     </div>
                   ))
                 ) : (
-                  <p className="text-sm text-muted-foreground">尚未提供下載來源。</p>
+                  <p className="text-sm text-muted-foreground">尚未提供相關連結。</p>
                 )}
               </CardContent>
             </Card>

@@ -27,7 +27,7 @@ export async function SiteHeader() {
 export function SiteFooter() {
   return (
     <footer className="page-shell mt-16 border-t border-border py-8 text-xs text-muted-foreground">
-      CardThings 提供介紹與來源導航；安裝檔由各外部來源提供。
+      CardThings 展示收藏介紹與相關連結；外部內容由各來源提供。
     </footer>
   );
 }

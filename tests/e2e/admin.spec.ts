@@ -52,16 +52,16 @@ test("admin authorization and catalogue CRUD use the real database", async (
   await expect(page.getByLabel("已選 Tag").getByText("開源")).toBeVisible();
   await page.getByPlaceholder("來源名稱").first().fill("正式下載");
   await page.getByPlaceholder("提供者").first().fill("Example Provider");
-  await page.getByPlaceholder("適用系統").first().fill("Web");
+  await page.getByPlaceholder("補充標示（選填）").first().fill("Web");
   await page.getByPlaceholder("https://…").first().fill("https://example.com/e2e-tool");
   await page.getByRole("button", { name: "建立卡片" }).click();
   await expect(page).toHaveURL(/\/admin\/tools$/);
   await expect(page.getByText("E2E Card", { exact: true })).toBeVisible();
 
   await page.goto("/");
-  await page.getByRole("searchbox", { name: "搜尋標籤、分類或工具名稱" }).fill("端對端");
+  await page.getByRole("searchbox", { name: "搜尋標籤、分類或卡片名稱" }).fill("端對端");
   await expect(page.getByText("E2E Card", { exact: true })).toBeVisible();
-  await page.getByRole("link", { name: /查看用途與取得方式/ }).click();
+  await page.getByRole("link", { name: /查看卡片詳情/ }).click();
   await expect(page).toHaveURL(/\/tools\/e2e-tool$/);
   await expect(page.getByRole("link", { name: "前往來源" })).toHaveAttribute(
     "href",

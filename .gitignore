@@ -53,3 +53,7 @@ yarn-error.log*
 
 # typescript
 *.tsbuildinfo
+
+# Site-specific collection content
+/deployments/local-preview/
+/public/tool-icons/
