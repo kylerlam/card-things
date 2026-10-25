@@ -36,3 +36,10 @@ Record confirmed, meaningful corrections that can prevent repeated mistakes. Kee
 - **Mistaken assumption:** A request to continue iterating meant the agent should choose additional fixes independently.
 - **Confirmed decision:** Re-read the folder for each iteration and use the current annotations to define the work. The owner accepted the earlier mobile administrator layout fix, but that acceptance does not expand future scope.
 - **Prevention:** Map each change to a current annotation. List incidental findings separately and wait for an explicit scope decision before implementing them.
+
+## Use application artwork for curated icons
+
+- **Context:** Reviewing missing and blurred logos after importing the software catalogue.
+- **Mistaken assumption:** A repository avatar or a small website favicon reliably represented the installed application's icon at card size.
+- **Confirmed decision:** Prefer clear official application artwork, with a colour variant when available, and preserve the original branding.
+- **Prevention:** Save reviewed vectors or high-resolution rasters locally, record their official sources, and serve configured icons before attempting external metadata discovery. Verify actual loaded image dimensions in the browser.

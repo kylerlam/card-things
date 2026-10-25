@@ -1,5 +1,7 @@
 import { expect, test } from "@playwright/test";
 
+import catalogue from "../../deployments/local-preview/catalogue.json";
+
 test("catalogue frames official and fallback icons with solid white 2px circles", async ({ page }) => {
   let brokenImageRequested = false;
   await page.route("**/api/tool-icon?**", async (route) => {
@@ -75,12 +77,12 @@ test("catalogue frames official and fallback icons with solid white 2px circles"
 });
 
 
-test("icon API prefers the configured official logo and preserves safe website fallbacks", async ({ request }) => {
+test("icon API uses configured official logos and preserves safe website fallbacks", async ({ request }) => {
   const cases = [
-    {
-      url: "https://www.snipaste.com/",
-      sources: ["https://www.snipaste.com/img/logo.svg", "https://www.snipaste.com/favicon.ico"],
-    },
+    ...catalogue.cards.filter((card) => card.iconUrl).map((card) => ({
+      url: card.officialUrl,
+      sources: [card.iconUrl],
+    })),
     {
       url: "https://example.test/download",
       sources: ["https://example.test/favicon.ico"],
